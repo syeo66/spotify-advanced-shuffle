@@ -1,1 +1,1 @@
-# spotifiy-advanced-shuffle
+# Spotify Advance Shuffle
