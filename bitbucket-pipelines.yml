@@ -3,7 +3,7 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: php:7.2
+image: node
 
 pipelines:
   branches:
@@ -14,7 +14,7 @@ pipelines:
             caches: 
                 - node
             script:
-                - apt-get update && apt-get install -y unzip rsync ssh nodejs
+                - apt-get update && apt-get install -y unzip rsync ssh
                 - npm install
                 - npm run build
                 - rsync -az --exclude .git --exclude .env --exclude node_modules $BITBUCKET_CLONE_DIR/src/ $PUBLISHING_TARGET
