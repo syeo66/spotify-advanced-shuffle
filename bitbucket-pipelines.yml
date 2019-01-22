@@ -16,5 +16,5 @@ pipelines:
             script:
                 - apt-get update && apt-get install -y unzip rsync ssh
                 - npm install
-                - npm run build
+                - CLIENT_ID=$CLIENT_ID npm run build
                 - rsync -az --exclude .git --exclude .env --exclude node_modules $BITBUCKET_CLONE_DIR/src/ $PUBLISHING_TARGET
