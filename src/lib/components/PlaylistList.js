@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { retrievePlaylists } from '../actions';
 
+
 class PlaylistList extends Component {
     componentDidMount() {
         this.props.retrievePlaylists(this.props.authenticated);

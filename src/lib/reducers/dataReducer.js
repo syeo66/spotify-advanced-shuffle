@@ -11,6 +11,7 @@ import {
     TOGGLE_CONFIG,
     UPDATE_CONFIG,
 } from "../actions/types";
+import db from '../database';
 
 export default (state = {}, action) => {
     switch (action.type) {

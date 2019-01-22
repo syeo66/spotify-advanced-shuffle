@@ -12,6 +12,7 @@ import {
     TOGGLE_CONFIG,
     UPDATE_CONFIG,
 } from "./types";
+import db from '../database';
 
 export const fetchUser = () => dispatch => {
     for (const entry of window.location.hash.substr(1).split('&')) {
@@ -86,8 +87,37 @@ export const retrieveUserData = authenticated => dispatch => {
     });
 }
 
+export const importDb = _ => dispatch => {
+    doImportDb(dispatch);
+}
+
+const doImportDb = dispatch => {
+    db.tracks.toArray(objects => {
+        const payload = {
+            items: objects.map(object => {
+                return {
+                    track: {
+                        id: object.id,
+                        uri: object.uri,
+                        name: object.name,
+                        artists: [{name: object.artist}],
+                        album: {
+                            name:object.album,
+                            images:[{url:object.image}]
+                        },
+                    }
+                };     
+            }),
+        };
+        dispatch({
+            type: FETCH_LIBRARY,
+            payload: payload,
+        });
+    });
+}
+
 export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1/me/tracks?limit=50", append = false) => dispatch => {
-    fetch(url, { 
+    fetch(url, {
         method: 'get', 
         headers: new Headers({
             'Authorization': 'Bearer '+authenticated
@@ -95,13 +125,24 @@ export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1
     })
     .then(response => response.json())
     .then(response => {
-        if (response.next && response.total > response.offset + response.limit) {
+        let objects = [];
+        for (const item of response.items) {
+            const track = item.track;
+            const itemObject = {
+                id: track.id,
+                uri: track.uri,
+                name: track.name,
+                artist: track.artists[0].name,
+                album: track.album.name,
+                image: track.album.images[0].url,
+            };
+            objects.push(itemObject);
+        }
+        db.tracks.bulkPut(objects);
+        doImportDb(dispatch);
+        if (response.next) {
             retrieveLibrary(authenticated, response.next, true)(dispatch);
         }
-        dispatch({
-            type: append ? APPEND_LIBRARY : FETCH_LIBRARY,
-            payload: response,
-        });
     });
 }
 

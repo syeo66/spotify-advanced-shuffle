@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { retrieveLibrary, nextPage, previousPage } from '../actions';
+import { importDb, retrieveLibrary, nextPage, previousPage } from '../actions';
 
 class TrackList extends Component {
     componentDidMount() {
+        this.props.importDb();
         this.props.retrieveLibrary(this.props.authenticated);
     }
 
@@ -64,4 +65,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { retrieveLibrary, nextPage, previousPage })(TrackList);
+export default connect(mapStateToProps, { importDb, retrieveLibrary, nextPage, previousPage })(TrackList);
