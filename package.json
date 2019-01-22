@@ -1,0 +1,49 @@
+{
+  "name": "spotify-shuffle",
+  "version": "0.1.0",
+  "description": "Advanced Shuffle for Spotify",
+  "main": "index.js",
+  "scripts": {
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --progress -p",
+    "watch": "webpack --progress --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/RedOchsenbein/putget.git"
+  },
+  "author": "Red Ochsenbein <red@redochsenbein.ch>",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/RedOchsenbein/spotify-shuffle#readme",
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "dotenv": "^6.2.0",
+    "firebase": "^5.8.0",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.4",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-redux": "^6.0.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "rxjs": "^6.3.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/plugin-transform-async-to-generator": "^7.1.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.3.1",
+    "babel-loader": "^8.0.4",
+    "css-loader": "^1.0.0",
+    "dotenv-webpack": "^1.7.0",
+    "lite-server": "^2.4.0",
+    "react-router-dom": "^4.3.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.1.2"
+  }
+}
