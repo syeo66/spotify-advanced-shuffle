@@ -151,8 +151,8 @@ class ShuffleButton extends Component {
                             && minutes >= this.props.config.trackMinutes) {
                             return;
                         }
-                        minutes += this.props.library[number].track.duration_ms / 60000;
-                        return this.props.library[number].track.uri;
+                        minutes += this.props.library[number].duration_ms / 60000;
+                        return this.props.library[number].uri;
                     }).filter(el => el != null);
                     this.addRandomTracks(playlist, tracks);
                 });

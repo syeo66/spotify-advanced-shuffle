@@ -131,6 +131,7 @@ export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1
                 artist: track.artists[0].name,
                 album: track.album.name,
                 image: track.album.images[0].url,
+                duration_ms: track.duration_ms,
                 isSynced: 1,
             };
             objects.push(itemObject);
