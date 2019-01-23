@@ -3,7 +3,6 @@ import {
     FETCH_USER, 
     FETCH_PLAYER,
     FETCH_LIBRARY, 
-    APPEND_LIBRARY, 
     PREVIOUS_PAGE,
     NEXT_PAGE,
     FETCH_PLAYLISTS,
@@ -12,6 +11,7 @@ import {
     TOGGLE_CONFIG,
     UPDATE_CONFIG,
 } from "./types";
+import db from '../database';
 
 export const fetchUser = () => dispatch => {
     for (const entry of window.location.hash.substr(1).split('&')) {
@@ -86,8 +86,47 @@ export const retrieveUserData = authenticated => dispatch => {
     });
 }
 
+export const importDb = _ => dispatch => {
+    db.tracks.toCollection().modify(track => {
+        track.isSynced = 0;
+    });
+    doImportDb(dispatch);
+}
+
+const doPurgeDb = _ => {
+    db.tracks.where('isSynced').equals(0).delete()
+        .then(count => console.log('Purged '+count+' entries.'));
+}
+
+const doImportDb = (dispatch, currentCount = 0, totalCount = 0) => {
+    db.tracks.toArray(objects => {
+        const payload = {
+            total: totalCount,
+            current: currentCount,
+            items: objects.map(object => {
+                return {
+                    track: {
+                        id: object.id,
+                        uri: object.uri,
+                        name: object.name,
+                        artists: [{name: object.artist}],
+                        album: {
+                            name:object.album,
+                            images:[{url:object.image}]
+                        },
+                    }
+                };
+            }),
+        };
+        dispatch({
+            type: FETCH_LIBRARY,
+            payload: payload,
+        });
+    });
+}
+
 export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1/me/tracks?limit=50", append = false) => dispatch => {
-    fetch(url, { 
+    fetch(url, {
         method: 'get', 
         headers: new Headers({
             'Authorization': 'Bearer '+authenticated
@@ -95,13 +134,28 @@ export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1
     })
     .then(response => response.json())
     .then(response => {
-        if (response.next && response.total > response.offset + response.limit) {
+        let objects = [];
+        for (const item of response.items) {
+            const track = item.track;
+            const itemObject = {
+                id: track.id,
+                uri: track.uri,
+                name: track.name,
+                artist: track.artists[0].name,
+                album: track.album.name,
+                image: track.album.images[0].url,
+                isSynced: 1,
+            };
+            objects.push(itemObject);
+        }
+        db.tracks.bulkPut(objects);
+        if (response.offset + response.items.length >= response.total) {
+            doPurgeDb();
+        }
+        doImportDb(dispatch, response.offset + response.items.length, response.total);
+        if (response.next) {
             retrieveLibrary(authenticated, response.next, true)(dispatch);
         }
-        dispatch({
-            type: append ? APPEND_LIBRARY : FETCH_LIBRARY,
-            payload: response,
-        });
     });
 }
 

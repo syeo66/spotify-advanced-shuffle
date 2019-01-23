@@ -11,6 +11,7 @@ import {
     TOGGLE_CONFIG,
     UPDATE_CONFIG,
 } from "../actions/types";
+import db from '../database';
 
 export default (state = {}, action) => {
     switch (action.type) {
@@ -40,12 +41,14 @@ export default (state = {}, action) => {
             return {
                 ...state,
                 library: library,
+                current: action.payload.current,
                 librarySize: action.payload.total,
             };
         case FETCH_LIBRARY:
             return {
                 ...state,
                 library: action.payload.items,
+                current: action.payload.current,
                 librarySize: action.payload.total,
             };
         case FETCH_USER:
