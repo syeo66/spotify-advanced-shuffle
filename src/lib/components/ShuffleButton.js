@@ -206,7 +206,7 @@ class ShuffleButton extends Component {
     }
 
     render() {
-        const enabled = !this.state.shuffleIsLoading && this.props.library && this.props.library.length == this.props.librarySize;
+        const enabled = !this.state.shuffleIsLoading && this.props.library && this.props.library.length >= this.props.librarySize * .9;
         const icon = this.state.shuffleIsLoading ? "fas fa-compact-disc fa-spin" : "fas fa-random";
         return (
             <button className="btn btn-primary" disabled={!enabled} onClick={this.startShuffle}><i className={icon} />&nbsp;Shuffle</button>
