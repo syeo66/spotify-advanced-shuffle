@@ -87,7 +87,6 @@ export const retrieveUserData = authenticated => dispatch => {
 }
 
 export const importDb = _ => dispatch => {
-    console.log('importDb');
     db.tracks.toCollection().modify(track => {
         track.isSynced = 0;
     });
@@ -100,10 +99,7 @@ const doPurgeDb = _ => {
 }
 
 const doImportDb = (dispatch, currentCount = 0, totalCount = 0) => {
-    console.log('doImportDb', totalCount);
-    console.log('start');
     db.tracks.toArray(objects => {
-        console.log('end');
         const payload = {
                 total: totalCount,
                 current: currentCount,
