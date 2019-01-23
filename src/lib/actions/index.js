@@ -87,6 +87,7 @@ export const retrieveUserData = authenticated => dispatch => {
 }
 
 export const importDb = _ => dispatch => {
+    console.log('importDb');
     db.tracks.toCollection().modify(track => {
         track.isSynced = 0;
     });
@@ -99,25 +100,15 @@ const doPurgeDb = _ => {
 }
 
 const doImportDb = (dispatch, currentCount = 0, totalCount = 0) => {
+    console.log('doImportDb', totalCount);
+    console.log('start');
     db.tracks.toArray(objects => {
+        console.log('end');
         const payload = {
-            total: totalCount,
-            current: currentCount,
-            items: objects.map(object => {
-                return {
-                    track: {
-                        id: object.id,
-                        uri: object.uri,
-                        name: object.name,
-                        artists: [{name: object.artist}],
-                        album: {
-                            name:object.album,
-                            images:[{url:object.image}]
-                        },
-                    }
-                };
-            }),
-        };
+                total: totalCount,
+                current: currentCount,
+                items: objects,
+            };
         dispatch({
             type: FETCH_LIBRARY,
             payload: payload,

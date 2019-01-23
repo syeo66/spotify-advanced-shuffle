@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { importDb, retrieveLibrary, nextPage, previousPage } from '../actions';
+import db from '../database';
 
 class TrackList extends Component {
     componentDidMount() {
+        if (db.isOpen) {
+            this.initDb();
+            return;
+        }
+        db.on('ready', this.initDb.bind(this));
+    }
+
+    initDb() {
         this.props.importDb();
         this.props.retrieveLibrary(this.props.authenticated);
     }
@@ -13,16 +22,16 @@ class TrackList extends Component {
         const currentPage = this.props.currentPage;
         const maxPage = Math.ceil(this.props.library.length / perPage);
         const listItemWindow = this.props.library
-            .sort((a,b) => {return a.track.name.toUpperCase()<b.track.name.toUpperCase() ? -1 : 1})
+            .sort((a,b) => {return a.name.toUpperCase()<b.name.toUpperCase() ? -1 : 1})
             .slice((currentPage-1)*perPage, currentPage*perPage);
         const listItems = listItemWindow.map(entry => 
-            <div className="row mt-1" key={entry.track.id}>
+            <div className="row mt-1" key={entry.id}>
                 <div className="col-md-2 xol-sm-3 col-4 pr-0">
-                    <img src={entry.track.album.images[0].url} className="img-thumbnail img-fluid" />
+                    <img src={entry.image} className="img-thumbnail img-fluid" />
                 </div>
                 <div className="col pl-2">
-                    <strong>{entry.track.name}</strong> <small>{entry.track.popularity}</small><br />
-                    {entry.track.artists[0].name} - {entry.track.album.name}
+                    <strong>{entry.name}</strong><br />
+                    {entry.artist} - {entry.album}
                 </div>
             </div>
         );
