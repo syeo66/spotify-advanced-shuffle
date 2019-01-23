@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 
 const db = new Dexie('spotifyCache');
 db.version(1).stores({
-    tracks: 'id, uri, name, artist, album',
+    tracks: 'id, uri, name, artist, album, isSynced',
 });
 
 export default db;

@@ -3,7 +3,6 @@ import {
     FETCH_USER, 
     FETCH_PLAYER,
     FETCH_LIBRARY, 
-    APPEND_LIBRARY, 
     PREVIOUS_PAGE,
     NEXT_PAGE,
     FETCH_PLAYLISTS,
@@ -88,12 +87,22 @@ export const retrieveUserData = authenticated => dispatch => {
 }
 
 export const importDb = _ => dispatch => {
+    db.tracks.toCollection().modify(track => {
+        track.isSynced = 0;
+    });
     doImportDb(dispatch);
 }
 
-const doImportDb = dispatch => {
+const doPurgeDb = _ => {
+    db.tracks.where('isSynced').equals(0).delete()
+        .then(count => console.log('Purged '+count+' entries.'));
+}
+
+const doImportDb = (dispatch, currentCount = 0, totalCount = 0) => {
     db.tracks.toArray(objects => {
         const payload = {
+            total: totalCount,
+            current: currentCount,
             items: objects.map(object => {
                 return {
                     track: {
@@ -106,7 +115,7 @@ const doImportDb = dispatch => {
                             images:[{url:object.image}]
                         },
                     }
-                };     
+                };
             }),
         };
         dispatch({
@@ -135,11 +144,15 @@ export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1
                 artist: track.artists[0].name,
                 album: track.album.name,
                 image: track.album.images[0].url,
+                isSynced: 1,
             };
             objects.push(itemObject);
         }
         db.tracks.bulkPut(objects);
-        doImportDb(dispatch);
+        if (response.offset + response.items.length >= response.total) {
+            doPurgeDb();
+        }
+        doImportDb(dispatch, response.offset + response.items.length, response.total);
         if (response.next) {
             retrieveLibrary(authenticated, response.next, true)(dispatch);
         }

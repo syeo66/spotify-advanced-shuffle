@@ -41,12 +41,14 @@ export default (state = {}, action) => {
             return {
                 ...state,
                 library: library,
+                current: action.payload.current,
                 librarySize: action.payload.total,
             };
         case FETCH_LIBRARY:
             return {
                 ...state,
                 library: action.payload.items,
+                current: action.payload.current,
                 librarySize: action.payload.total,
             };
         case FETCH_USER:
