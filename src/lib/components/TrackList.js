@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { importDb, retrieveLibrary, nextPage, previousPage } from '../actions';
+import { markDb, loadLibraryFromDb, retrieveLibrary, firstPage, nextPage, previousPage } from '../actions';
 import db from '../database';
 
 class TrackList extends Component {
@@ -12,18 +12,26 @@ class TrackList extends Component {
         db.on('ready', this.initDb.bind(this));
     }
 
+    componentDidUpdate(prevState) {
+        if(prevState.currentPage != this.props.currentPage
+            || prevState.librarySize != this.props.librarySize
+            || prevState.current != this.props.current
+            ) {
+            this.props.loadLibraryFromDb(this.props.currentPage*this.props.itemsPerPage, this.props.itemsPerPage);
+        }
+    }
+
     initDb() {
-        this.props.importDb();
+        this.props.markDb();
         this.props.retrieveLibrary(this.props.authenticated);
+        this.props.firstPage();
     }
 
     render() {
         const perPage = this.props.itemsPerPage;
         const currentPage = this.props.currentPage;
-        const maxPage = Math.ceil(this.props.library.length / perPage);
-        const listItemWindow = this.props.library
-            .sort((a,b) => {return a.name.toUpperCase()<b.name.toUpperCase() ? -1 : 1})
-            .slice((currentPage-1)*perPage, currentPage*perPage);
+        const maxPage = Math.ceil(this.props.librarySize / perPage);
+        const listItemWindow = this.props.library ? this.props.library : [];
         const listItems = listItemWindow.map(entry => 
             <div className="row mt-1" key={entry.id}>
                 <div className="col-md-2 xol-sm-3 col-4 pr-0">
@@ -51,11 +59,15 @@ class TrackList extends Component {
                 </ul>
             </nav>
         );
+        const text = !this.props.library.length ? (
+            <div className="mt-2 text-muted"><i className="fas fa-sync fa-spin fa-3x"></i></div>
+        ) : "";
 
         return (
             <div>
                 {pagination}
                 {listItems}
+                {text}
                 <div className="mt-3">
                     {pagination}
                 </div>
@@ -68,10 +80,11 @@ function mapStateToProps(state) {
     return {
         authenticated: state.auth,
         library: state.data.library ? state.data.library : [],
+        current: state.data.current ? state.data.current : 0,
         librarySize: state.data.librarySize ? state.data.librarySize : 0,
         currentPage: state.data.currentPage ? state.data.currentPage : 1,
         itemsPerPage: state.data.itemsPerPage ? state.data.itemsPerPage : 20,
     }
 }
 
-export default connect(mapStateToProps, { importDb, retrieveLibrary, nextPage, previousPage })(TrackList);
+export default connect(mapStateToProps, { markDb, loadLibraryFromDb, retrieveLibrary, firstPage, nextPage, previousPage })(TrackList);

@@ -12,7 +12,8 @@ const initialState = {
   auth: false,
   data: {
     librarySize: 0,
-    currentPage: 1,
+    dbSize: 0,
+    currentPage: 0,
     itemsPerPage: 20,
     showConfig: false,
     config: {

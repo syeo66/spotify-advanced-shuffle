@@ -2,9 +2,12 @@ import {
     RETRIEVE_AUTH_TOKEN, 
     FETCH_USER, 
     FETCH_PLAYER,
+    LOAD_LIBRARY_PAGE,
     FETCH_LIBRARY, 
+    FIRST_PAGE,
     PREVIOUS_PAGE,
     NEXT_PAGE,
+    DB_COUNT,
     FETCH_PLAYLISTS,
     APPEND_PLAYLISTS,
     FETCH_PLAY_STATE,
@@ -86,30 +89,29 @@ export const retrieveUserData = authenticated => dispatch => {
     });
 }
 
-export const importDb = _ => dispatch => {
+export const loadLibraryFromDb = (offset, limit) => dispatch => {
+    db.tracks.orderBy('name')
+        .offset(offset)
+        .limit(limit)
+        .toArray()
+        .then(results => {
+            dispatch({
+                type: LOAD_LIBRARY_PAGE,
+                payload: results,
+            });
+        });
+    
+}
+
+export const markDb = _ => dispatch => {
     db.tracks.toCollection().modify(track => {
         track.isSynced = 0;
     });
-    doImportDb(dispatch);
 }
 
 const doPurgeDb = _ => {
     db.tracks.where('isSynced').equals(0).delete()
         .then(count => console.log('Purged '+count+' entries.'));
-}
-
-const doImportDb = (dispatch, currentCount = 0, totalCount = 0) => {
-    db.tracks.toArray(objects => {
-        const payload = {
-                total: totalCount,
-                current: currentCount,
-                items: objects,
-            };
-        dispatch({
-            type: FETCH_LIBRARY,
-            payload: payload,
-        });
-    });
 }
 
 export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1/me/tracks?limit=50", append = false) => dispatch => {
@@ -137,13 +139,34 @@ export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1
             objects.push(itemObject);
         }
         db.tracks.bulkPut(objects);
-        if (response.offset + response.items.length >= response.total) {
+        if (response.offset + response.limit >= response.total) {
             doPurgeDb();
         }
-        doImportDb(dispatch, response.offset + response.items.length, response.total);
+        db.tracks.count()
+            .then(count => {
+                dispatch({
+                    type: DB_COUNT,
+                    payload: {
+                        dbSize: count,
+                    },
+                });        
+            });
+        dispatch({
+            type: FETCH_LIBRARY,
+            payload: {
+                current: response.items.length + response.offset,
+                total: response.total,
+            },
+        });
         if (response.next) {
             retrieveLibrary(authenticated, response.next, true)(dispatch);
         }
+    });
+}
+
+export const firstPage = () => dispatch => {
+    dispatch({
+        type: FIRST_PAGE,
     });
 }
 

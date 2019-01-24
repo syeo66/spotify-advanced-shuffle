@@ -1,7 +1,8 @@
 import { 
     FETCH_USER, 
+    LOAD_LIBRARY_PAGE,
     FETCH_LIBRARY, 
-    APPEND_LIBRARY, 
+    FIRST_PAGE,
     PREVIOUS_PAGE, 
     NEXT_PAGE,
     FETCH_PLAYLISTS,
@@ -10,13 +11,19 @@ import {
     FETCH_PLAY_STATE,
     TOGGLE_CONFIG,
     UPDATE_CONFIG,
+    DB_COUNT,
 } from "../actions/types";
 import db from '../database';
 
 export default (state = {}, action) => {
     switch (action.type) {
+        case FIRST_PAGE:
+            return {
+                ...state,
+                currentPage: 1,
+            };
         case NEXT_PAGE:
-            const currentPage = Math.min(Math.ceil(state.library.length / state.itemsPerPage), state.currentPage+1);
+            const currentPage = Math.min(Math.ceil(state.librarySize / state.itemsPerPage), state.currentPage+1);
             return {
                 ...state, 
                 currentPage: currentPage,
@@ -36,20 +43,21 @@ export default (state = {}, action) => {
                 playlists: action.payload.items,
                 playlistsSize: action.payload.total,
             };
-        case APPEND_LIBRARY:
-            const library = state.library.concat(action.payload.items);
+        case LOAD_LIBRARY_PAGE:
             return {
                 ...state,
-                library: library,
-                current: action.payload.current,
-                librarySize: action.payload.total,
+                library: action.payload,
             };
         case FETCH_LIBRARY:
             return {
                 ...state,
-                library: action.payload.items,
                 current: action.payload.current,
                 librarySize: action.payload.total,
+            };
+        case DB_COUNT:
+            return {
+                ...state,
+                dbSize: action.payload.dbSize || 0,
             };
         case FETCH_USER:
             return {...state,user:action.user};

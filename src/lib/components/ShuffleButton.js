@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { retrievePlaylists } from '../actions';
+import db from '../database';
 
 class ShuffleButton extends Component {
     constructor(props) {
@@ -136,27 +137,28 @@ class ShuffleButton extends Component {
         fetch('https://qrng.anu.edu.au/API/jsonI.php?length='+count+'&type=uint16')
             .then(response => response.json())
             .then(numbers => {
-                let minutes = 0;
-                const normaled = numbers.data.map(number => {
-                    return number % this.props.library.length;
-                });
-                const slices = this.chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
-                slices.forEach(chunk => {
-                    if (this.props.config.amountType == 'minutes'
-                        && minutes >= this.props.config.trackMinutes) {
-                        return;
-                    }
-                    let tracks = chunk.map(number => {
+                db.tracks.toArray(library => {
+                    let minutes = 0;
+                    const normaled = numbers.data.map(number => {
+                        return number % library.length;
+                    });
+                    const slices = this.chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
+                    slices.forEach(chunk => {
                         if (this.props.config.amountType == 'minutes'
                             && minutes >= this.props.config.trackMinutes) {
                             return;
                         }
-                        minutes += this.props.library[number].duration_ms / 60000;
-                        return this.props.library[number].uri;
-                    }).filter(el => el != null);
-                    this.addRandomTracks(playlist, tracks);
+                        let tracks = chunk.map(number => {
+                            if (this.props.config.amountType == 'minutes'
+                                && minutes >= this.props.config.trackMinutes) {
+                                return;
+                            }
+                            minutes += library[number].duration_ms / 60000;
+                            return library[number].uri;
+                        }).filter(el => el != null);
+                        this.addRandomTracks(playlist, tracks);
+                    });
                 });
-
             });
     }
 
@@ -206,7 +208,7 @@ class ShuffleButton extends Component {
     }
 
     render() {
-        const enabled = !this.state.shuffleIsLoading && this.props.library && this.props.library.length >= this.props.librarySize * .9;
+        const enabled = !this.state.shuffleIsLoading && this.props.library && this.props.dbSize >= this.props.librarySize * .9;
         const icon = this.state.shuffleIsLoading ? "fas fa-compact-disc fa-spin" : "fas fa-random";
         return (
             <button className="btn btn-primary" disabled={!enabled} onClick={this.startShuffle}><i className={icon} />&nbsp;Shuffle</button>

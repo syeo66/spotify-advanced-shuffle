@@ -2,11 +2,13 @@ export const FETCH_USER = 'FETCH_USER';
 
 export const FETCH_PLAYER = 'FETCH_PLAYER';
 
+export const DB_COUNT = 'DB_COUNT';
+export const LOAD_LIBRARY_PAGE = 'LOAD_LIBRARY_PAGE';
 export const FETCH_LIBRARY = 'FETCH_LIBRARY';
-export const APPEND_LIBRARY = 'APPEND_LIBRARY';
 
 export const RETRIEVE_AUTH_TOKEN = 'RETRIEVE_AUTH_TOKEN';
 
+export const FIRST_PAGE = 'FIRST_PAGE';
 export const PREVIOUS_PAGE = 'PREVIOUS_PAGE';
 export const NEXT_PAGE = 'NEXT_PAGE';
 

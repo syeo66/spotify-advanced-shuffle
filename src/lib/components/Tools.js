@@ -6,8 +6,8 @@ import Configuration from './Configuration';
 
 class Tools extends Component {
     render() {
-        const text = !this.props.library ||  this.props.library.length < this.props.librarySize ? (
-            <div className="mt-2 text-muted"><i className="fas fa-sync fa-spin"></i> Loading... Please wait.</div>
+        const text = !this.props.library ||  this.props.current < this.props.librarySize ? (
+            <div className="mt-2 text-muted"><i className="fas fa-sync fa-spin"></i> Synchronizing...</div>
         ) : "";
         return (
             <div className="mb-3 shadow border p-3 rounded">
