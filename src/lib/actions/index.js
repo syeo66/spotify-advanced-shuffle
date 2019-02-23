@@ -1,15 +1,19 @@
-import { 
-    RETRIEVE_AUTH_TOKEN, 
-    FETCH_USER, 
+import {
+    RETRIEVE_AUTH_TOKEN,
+    FETCH_USER,
     FETCH_PLAYER,
     LOAD_LIBRARY_PAGE,
-    FETCH_LIBRARY, 
+    FETCH_LIBRARY,
     FIRST_PAGE,
     PREVIOUS_PAGE,
     NEXT_PAGE,
     DB_COUNT,
+
     FETCH_PLAYLISTS,
     APPEND_PLAYLISTS,
+    TOGGLE_PLAYLIST,
+    CHECKED_PLAYLISTS,
+
     FETCH_PLAY_STATE,
     TOGGLE_CONFIG,
     UPDATE_CONFIG,
@@ -66,13 +70,13 @@ const doSignOut = dispatch => {
 }
 
 export const retrieveUserData = authenticated => dispatch => {
-    fetch("https://api.spotify.com/v1/me", { 
-        method: 'get', 
+    fetch("https://api.spotify.com/v1/me", {
+        method: 'get',
         headers: new Headers({
             'Authorization': 'Bearer '+authenticated
         }),
     })
-    .then(response => { 
+    .then(response => {
         if (!response.ok) {
             if (response.status == 401) {
                 doSignOut(dispatch);
@@ -100,7 +104,6 @@ export const loadLibraryFromDb = (offset, limit) => dispatch => {
                 payload: results,
             });
         });
-    
 }
 
 export const markDb = _ => dispatch => {
@@ -116,7 +119,7 @@ const doPurgeDb = _ => {
 
 export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1/me/tracks?limit=50", append = false) => dispatch => {
     fetch(url, {
-        method: 'get', 
+        method: 'get',
         headers: new Headers({
             'Authorization': 'Bearer '+authenticated
         }),
@@ -149,7 +152,7 @@ export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1
                     payload: {
                         dbSize: count,
                     },
-                });        
+                });
             });
         dispatch({
             type: FETCH_LIBRARY,
@@ -183,27 +186,41 @@ export const nextPage = () => dispatch => {
 }
 
 export const retrievePlaylists = (authenticated, url = "https://api.spotify.com/v1/me/playlists?limit=50", append = false) => dispatch => {
-    fetch(url, { 
-        method: 'get', 
-        headers: new Headers({
-            'Authorization': 'Bearer '+authenticated
-        }),
-    })
-    .then(response => response.json())
-    .then(response => {
-        if (response.next && response.total > response.offset + response.limit) {
-            retrievePlaylists(authenticated, response.next, true)(dispatch);
-        }
-        dispatch({
-            type: append ? APPEND_PLAYLISTS : FETCH_PLAYLISTS,
-            payload: response,
-        });
+  fetch(url, {
+    method: 'get',
+    headers: new Headers({
+      'Authorization': 'Bearer '+authenticated
+    }),
+  })
+  .then(response => response.json())
+  .then(response => {
+    if (response.next && response.total > response.offset + response.limit) {
+      retrievePlaylists(authenticated, response.next, true)(dispatch);
+    }
+    dispatch({
+      type: append ? APPEND_PLAYLISTS : FETCH_PLAYLISTS,
+      payload: response,
     });
+  });
+}
+
+export const togglePlaylist = (id, userId) => dispatch => {
+  dispatch({
+    type: TOGGLE_PLAYLIST,
+    payload: { id, userId },
+  });
+}
+
+export const setCheckedPlaylists = (checked) => dispatch => {
+  dispatch({
+    type: CHECKED_PLAYLISTS,
+    payload: checked,
+  });
 }
 
 export const retrievePlayerInfo = authenticated => dispatch => {
-    fetch("https://api.spotify.com/v1/me/player/devices", { 
-        method: 'get', 
+    fetch("https://api.spotify.com/v1/me/player/devices", {
+        method: 'get',
         headers: new Headers({
             'Authorization': 'Bearer '+authenticated
         }),
@@ -218,13 +235,13 @@ export const retrievePlayerInfo = authenticated => dispatch => {
 }
 
 export const retrievePlayState = authenticated => dispatch => {
-    fetch("https://api.spotify.com/v1/me/player", { 
-        method: 'get', 
+    fetch("https://api.spotify.com/v1/me/player", {
+        method: 'get',
         headers: new Headers({
             'Authorization': 'Bearer '+authenticated
         }),
     })
-    .then(response => { 
+    .then(response => {
         if (!response.ok) {
             if (response.status == 401) {
                 doSignOut(dispatch);

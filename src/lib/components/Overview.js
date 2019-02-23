@@ -5,7 +5,7 @@ import UserInfo from './UserInfo';
 import TrackList from './TrackList';
 import PlaylistList from './PlaylistList';
 import Tools from './Tools';
-import ProgressBar from './ProgressBar';
+import Progress from './Progress';
 import PlayerInfo from './PlayerInfo';
 import Player from './Player';
 
@@ -15,18 +15,18 @@ class Overview extends Component {
             <div>
                 <div className="row py-2">
                     <div className="col">
-                        <ProgressBar />
+                        <Progress />
                     </div>
                 </div>
                 <div className="row py-1">
-                    <div className="col-md-4 col-lg-3">
+                    <div className="col-md-4">
                         <Tools />
                         <Player />
                         <PlayerInfo />
                         <UserInfo />
                         <PlaylistList />
                     </div>
-                    <div className="col-md-8 col-lg-9">
+                    <div className="col-md-8">
                         <TrackList />
                     </div>
                 </div>

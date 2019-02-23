@@ -77,16 +77,16 @@ class Configuration extends Component {
         if (!this.props.showConfig) {
             return "";
         }
-        
+
         const type = this.props.config.amountType == 'minutes' ? 'Minutes' : 'Trackcount';
-        const value = this.props.config.amountType == 'minutes' 
-            ? this.props.config.trackMinutes 
+        const value = this.props.config.amountType == 'minutes'
+            ? this.props.config.trackMinutes
             : this.props.config.trackCount;
         const sentence = this.props.config.amountType == 'minutes' ? 'hours of music.' : 'random tracks.';
-        const sentenceValue = this.props.config.amountType == 'minutes' 
+        const sentenceValue = this.props.config.amountType == 'minutes'
             ? Math.round(value / 60 * 100) / 100
             : value;
-        const purgeSentence = this.props.config.purgeOnShuffle 
+        const purgeSentence = this.props.config.purgeOnShuffle
             ? "An existing playlist will be purged before adding new tracks."
             : "The tracks will be prepended if there is an existing playlist.";
 
@@ -118,7 +118,7 @@ class Configuration extends Component {
             </div>
         );
     }
-} 
+}
 
 function mapStateToProps(state) {
     return state.data;

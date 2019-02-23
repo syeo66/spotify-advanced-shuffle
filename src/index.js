@@ -16,6 +16,7 @@ const initialState = {
     currentPage: 0,
     itemsPerPage: 20,
     showConfig: false,
+    checkedPlaylists: [],
     config: {
       trackCount: 200, // the track count if type 'count'
       trackMinutes: 60*12, // the minutes if type 'minutes'
