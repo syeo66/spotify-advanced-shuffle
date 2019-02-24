@@ -23,7 +23,7 @@ class TrackList extends Component {
     const librarySize = this.props.loadQueue.reduce((acc, queue) => acc + queue.size, 0);
     const perPage = this.props.itemsPerPage;
     const currentPage = this.props.currentPage;
-    const maxPage = Math.ceil(librarySize / perPage);
+    const maxPage = Math.ceil((this.props.dbSize | librarySize) / perPage);
     const listItemWindow = this.props.library ? this.props.library : [];
     const listItems = listItemWindow.map(entry =>
         <div className="row mt-1" key={entry.id}>
@@ -78,6 +78,7 @@ function mapStateToProps(state) {
     currentPage: state.data.currentPage ? state.data.currentPage : 1,
     itemsPerPage: state.data.itemsPerPage ? state.data.itemsPerPage : 20,
     loadQueue: state.data.loadQueue ? state.data.loadQueue : [],
+    dbSize: state.data.dbSize ? state.data.dbSize : 0,
   }
 }
 

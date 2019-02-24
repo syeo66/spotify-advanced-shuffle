@@ -38,9 +38,7 @@ class Overview extends Component {
         this.props.retrieveLibrary(prevProps.authenticated, queue);
       }
 
-      const isAllLoaded = prevProps.loadQueue
-        ? prevProps.loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true)
-        : false;
+      const isAllLoaded = this.props.loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true);
       if (isAllLoaded) {
         this.props.doPurgeDb();
       }
