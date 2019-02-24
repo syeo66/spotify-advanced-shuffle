@@ -92,7 +92,7 @@ class Configuration extends Component {
 
         return (
             <div className="pt-2 mt-2 border-top border-bottom">
-                <div className="input-group mb-3 ">
+                <div className="input-group mb-1 ">
                     <div className="input-group-prepend">
                         <button className="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{type}</button>
                         <div className="dropdown-menu">
@@ -101,12 +101,12 @@ class Configuration extends Component {
                         </div>
                     </div>
                     <input type="text" className="form-control" onChange={this.handleChange} aria-label="Text input with dropdown button" value={value}/>
-                    <small id="shuffleTypeHelp" className="form-text text-muted">The playlist will be filled with {sentenceValue} {sentence}</small>
                 </div>
+                <small id="shuffleTypeHelp" className="mt-0 mb-3 form-text text-muted">The playlist will be filled with {sentenceValue} {sentence}</small>
 
-                <div className="form-group form-check">
-                    <input type="checkbox" className="form-check-input" id="purgeOnShuffle" onChange={this.handlePurgeChange} checked={this.props.config.purgeOnShuffle} />
-                    <label className="form-check-label" htmlFor="purgeOnShuffle">Purge playlist</label>
+                <div className="form-group form-check custom-switch">
+                    <input type="checkbox" className="custom-control-input" id="purgeOnShuffle" onChange={this.handlePurgeChange} checked={this.props.config.purgeOnShuffle} />
+                    <label className="custom-control-label" htmlFor="purgeOnShuffle">Purge playlist</label>
                     <small id="purgeHelp" className="form-text text-muted">{purgeSentence}</small>
                 </div>
 

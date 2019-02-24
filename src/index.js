@@ -17,6 +17,8 @@ const initialState = {
     itemsPerPage: 20,
     showConfig: false,
     checkedPlaylists: [],
+    loadNext: false,
+    loadCue: [],
     config: {
       trackCount: 200, // the track count if type 'count'
       trackMinutes: 60*12, // the minutes if type 'minutes'

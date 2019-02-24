@@ -112,59 +112,54 @@ export const markDb = _ => dispatch => {
     });
 }
 
-const doPurgeDb = _ => {
+export const doPurgeDb = _ => dispatch => {
     db.tracks.where('isSynced').equals(0).delete()
         .then(count => console.log('Purged '+count+' entries.'));
 }
 
 export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1/me/tracks?limit=50", append = false) => dispatch => {
-    fetch(url, {
-        method: 'get',
-        headers: new Headers({
-            'Authorization': 'Bearer '+authenticated
-        }),
-    })
-    .then(response => response.json())
-    .then(response => {
-        let objects = [];
-        for (const item of response.items) {
-            const track = item.track;
-            const itemObject = {
-                id: track.id,
-                uri: track.uri,
-                name: track.name,
-                artist: track.artists[0].name,
-                album: track.album.name,
-                image: track.album.images[0].url,
-                duration_ms: track.duration_ms,
-                isSynced: 1,
-            };
-            objects.push(itemObject);
-        }
-        db.tracks.bulkPut(objects);
-        if (response.offset + response.limit >= response.total) {
-            doPurgeDb();
-        }
-        db.tracks.count()
-            .then(count => {
-                dispatch({
-                    type: DB_COUNT,
-                    payload: {
-                        dbSize: count,
-                    },
-                });
-            });
-        dispatch({
-            type: FETCH_LIBRARY,
+  fetch(url, {
+    method: 'get',
+    headers: new Headers({
+      'Authorization': 'Bearer '+authenticated
+    }),
+  })
+  .then(response => response.json())
+  .then(response => {
+      let objects = [];
+      for (const item of response.items) {
+        const track = item.track;
+        const itemObject = {
+          id: track.id,
+          uri: track.uri,
+          name: track.name,
+          artist: track.artists[0].name,
+          album: track.album.name,
+          image: track.album.images[0].url,
+          duration_ms: track.duration_ms,
+          isSynced: 1,
+        };
+        objects.push(itemObject);
+      }
+      db.tracks.bulkPut(objects);
+      db.tracks.count()
+        .then(count => {
+          dispatch({
+            type: DB_COUNT,
             payload: {
-                current: response.items.length + response.offset,
-                total: response.total,
+              dbSize: count,
             },
+          });
         });
-        if (response.next) {
-            retrieveLibrary(authenticated, response.next, true)(dispatch);
-        }
-    });
+      dispatch({
+        type: FETCH_LIBRARY,
+        payload: {
+          current: response.items.length + response.offset,
+          total: response.total,
+          next: response.next,
+        },
+      });
+  });
 }
 
 export const firstPage = () => dispatch => {
