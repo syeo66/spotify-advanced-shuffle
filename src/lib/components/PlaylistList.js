@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
+  addToLoadQueue,
   setCheckedPlaylists,
   retrievePlaylists,
   setConfig,
@@ -19,6 +20,18 @@ class PlaylistList extends Component {
   componentDidMount() {
     this.props.retrievePlaylists(this.props.authenticated);
     this.polling = setInterval(_ => this.props.retrievePlaylists(this.props.authenticated), 4900);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.checkedPlaylists !== nextProps.checkedPlaylists) {
+      nextProps.checkedPlaylists.map((id, i) => {
+        const myUrl = 'https://api.spotify.com/v1/playlists/' + id + '/tracks';
+        const found = nextProps.loadQueue.filter(entry => entry.origUrl === myUrl);
+        if (found.length === 0) {
+          this.props.addToLoadQueue(myUrl);
+        }
+      });
+    }
   }
 
   componentWillUpdate() {
@@ -84,10 +97,12 @@ function mapStateToProps(state) {
     user: state.data.user,
     checkedPlaylists: state.data.checkedPlaylists,
     config: state.data.config,
+    loadQueue: state.data.loadQueue,
   }
 }
 
 export default connect(mapStateToProps, {
+  addToLoadQueue,
   setCheckedPlaylists,
   retrievePlaylists,
   setConfig,

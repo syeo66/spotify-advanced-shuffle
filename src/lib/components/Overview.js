@@ -28,13 +28,15 @@ class Overview extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.authenticated
       && nextProps.loadQueue != this.props.loadQueue) {
-      const isLoaded = nextProps.loadQueue.map((queue, i) => {
-        if (queue.isLoaded) {
-          return true;
+      for (let index in nextProps.loadQueue) {
+        const queue = nextProps.loadQueue[index];
+        if ((this.props.loadQueue && queue === this.props.loadQueue[index]) || queue.isLoaded) {
+          continue;
         }
         this.props.retrieveLibrary(nextProps.authenticated, queue);
-        return false;
-      }).reduce((acc, isLoaded) => isLoaded && acc, true);
+      }
+
+      const isLoaded = nextProps.loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true);
       if (isLoaded) {
         this.props.doPurgeDb();
       }
@@ -75,6 +77,7 @@ function mapStateToProps(state) {
   return state.data.user ? {
     user: state.data.user,
     loadQueue: state.data.loadQueue ? state.data.loadQueue : [],
+    checkedPlaylists: state.data.checkedPlaylists ? state.data.checkedPlaylists : [],
   } : {
     user: {
         display_name: 'Loading...'

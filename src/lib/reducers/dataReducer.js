@@ -67,13 +67,11 @@ export default (state = {}, action) => {
         checkedPlaylists: checked,
       };
     case ADD_TO_LOAD_QUEUE:
-      if (!!action.purge) {
-
-      }
       return {
         ...state,
         loadQueue: !!action.purge
         ? [{
+          origUrl: action.payload,
           url: action.payload,
           isLoaded: false,
           current: 0,
@@ -81,6 +79,7 @@ export default (state = {}, action) => {
           next: 0,
         }]
         : [...state.loadQueue, {
+          origUrl: action.payload,
           url: action.payload,
           isLoaded: false,
           current: 0,
@@ -95,7 +94,7 @@ export default (state = {}, action) => {
       };
     case FETCH_LIBRARY:
       const loadQueue = state.loadQueue.map((entry, i) => {
-        if (entry.url = action.payload.url) {
+        if (entry.origUrl === action.payload.origUrl) {
           return {
             ...action.payload,
             url: action.payload.next,
