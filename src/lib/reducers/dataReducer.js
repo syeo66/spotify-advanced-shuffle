@@ -1,19 +1,20 @@
 import {
-    FETCH_USER,
-    LOAD_LIBRARY_PAGE,
-    FETCH_LIBRARY,
-    FIRST_PAGE,
-    PREVIOUS_PAGE,
-    NEXT_PAGE,
-    FETCH_PLAYLISTS,
-    APPEND_PLAYLISTS,
-    FETCH_PLAYER,
-    FETCH_PLAY_STATE,
-    TOGGLE_CONFIG,
-    UPDATE_CONFIG,
-    DB_COUNT,
-    TOGGLE_PLAYLIST,
-    CHECKED_PLAYLISTS,
+  ADD_TO_LOAD_QUEUE,
+  FETCH_USER,
+  LOAD_LIBRARY_PAGE,
+  FETCH_LIBRARY,
+  FIRST_PAGE,
+  PREVIOUS_PAGE,
+  NEXT_PAGE,
+  FETCH_PLAYLISTS,
+  APPEND_PLAYLISTS,
+  FETCH_PLAYER,
+  FETCH_PLAY_STATE,
+  TOGGLE_CONFIG,
+  UPDATE_CONFIG,
+  DB_COUNT,
+  TOGGLE_PLAYLIST,
+  CHECKED_PLAYLISTS,
 } from "../actions/types";
 
 export default (state = {}, action) => {
@@ -24,13 +25,14 @@ export default (state = {}, action) => {
         currentPage: 1,
       };
     case NEXT_PAGE:
-      const currentPage = Math.min(Math.ceil(state.librarySize / state.itemsPerPage), state.currentPage+1);
+      const librarySize = state.loadQueue.reduce((acc, queue) => acc + queue.size, 0);
+      const currentPage = Math.min(Math.ceil(librarySize / state.itemsPerPage), state.currentPage + 1);
       return {
         ...state,
         currentPage: currentPage,
       };
     case PREVIOUS_PAGE:
-      return {...state, currentPage: Math.max(1, state.currentPage-1)};
+      return {...state, currentPage: Math.max(1, state.currentPage - 1)};
     case APPEND_PLAYLISTS:
       const playlists = state.playlists.concat(action.payload.items);
       return {
@@ -64,18 +66,47 @@ export default (state = {}, action) => {
         ...state,
         checkedPlaylists: checked,
       };
-      break;
+    case ADD_TO_LOAD_QUEUE:
+      if (!!action.purge) {
+
+      }
+      return {
+        ...state,
+        loadQueue: !!action.purge
+        ? [{
+          url: action.payload,
+          isLoaded: false,
+          current: 0,
+          size: 0,
+          next: 0,
+        }]
+        : [...state.loadQueue, {
+          url: action.payload,
+          isLoaded: false,
+          current: 0,
+          size: 0,
+          next: 0,
+        }],
+      };
     case LOAD_LIBRARY_PAGE:
       return {
         ...state,
         library: action.payload,
       };
     case FETCH_LIBRARY:
+      const loadQueue = state.loadQueue.map((entry, i) => {
+        if (entry.url = action.payload.url) {
+          return {
+            ...action.payload,
+            url: action.payload.next,
+            isLoaded: !action.payload.next,
+          };
+        }
+        return entry;
+      });
       return {
         ...state,
-        current: action.payload.current,
-        librarySize: action.payload.total,
-        loadNext: action.payload.next,
+        loadQueue,
       };
     case DB_COUNT:
       return {

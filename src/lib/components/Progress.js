@@ -3,23 +3,25 @@ import { connect } from 'react-redux';
 import ProgressBar from './ProgressBar.js';
 
 class Progress extends Component {
-    render() {
-        return (
-            <React.Fragment>
-                {this.props.current !== this.props.librarySize &&
-                    <ProgressBar current={this.props.current} target={this.props.librarySize} />
-                }
-            </React.Fragment>
-        );
-    }
+  render() {
+    return (
+      <React.Fragment>
+        {this.props.loadQueue.map((queue, i) => {
+          if (queue.isLoaded) {
+            return '';
+          }
+          return <ProgressBar key={i} current={queue.current} target={queue.size} />
+          })
+        }
+      </React.Fragment>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    return {
-        library: state.data.library ? state.data.library : [],
-        current: state.data.current ? state.data.current : 0,
-        librarySize: state.data.librarySize ? state.data.librarySize : 0,
-    }
+  return {
+    loadQueue: state.data.loadQueue,
+  }
 }
 
 export default connect(mapStateToProps, { })(Progress);

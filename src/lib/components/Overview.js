@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {
+  addToLoadQueue,
   markDb,
+  doPurgeDb,
   retrieveLibrary,
   retrieveUserData,
 } from '../actions';
@@ -23,17 +25,25 @@ class Overview extends Component {
     db.on('ready', this.initDb);
   }
 
-  componentDidUpdate(prevState) {
+  componentWillReceiveProps(nextProps) {
     if (this.props.authenticated
-      && this.props.loadNext
-      && prevState.loadNext != this.props.loadNext) {
-      this.props.retrieveLibrary(this.props.authenticated, this.props.loadNext);
+      && nextProps.loadQueue != this.props.loadQueue) {
+      const isLoaded = nextProps.loadQueue.map((queue, i) => {
+        if (queue.isLoaded) {
+          return true;
+        }
+        this.props.retrieveLibrary(nextProps.authenticated, queue);
+        return false;
+      }).reduce((acc, isLoaded) => isLoaded && acc, true);
+      if (isLoaded) {
+        this.props.doPurgeDb();
+      }
     }
   }
 
   initDb = () => {
     this.props.markDb();
-    this.props.retrieveLibrary(this.props.authenticated);
+    this.props.addToLoadQueue('https://api.spotify.com/v1/me/tracks?limit=50', true);
   }
 
   render() {
@@ -64,7 +74,7 @@ class Overview extends Component {
 function mapStateToProps(state) {
   return state.data.user ? {
     user: state.data.user,
-    loadNext: state.data.loadNext ? state.data.loadNext : false,
+    loadQueue: state.data.loadQueue ? state.data.loadQueue : [],
   } : {
     user: {
         display_name: 'Loading...'
@@ -73,7 +83,9 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
+  addToLoadQueue,
   markDb,
+  doPurgeDb,
   retrieveLibrary,
   retrieveUserData,
 })(Overview);

@@ -12,11 +12,7 @@ class ShuffleButton extends Component {
         };
     }
 
-    componentDidMount() {
-        this.startShuffle = this.startShuffle.bind(this);
-    }
-
-    startShuffle(event) {
+    startShuffle = event => {
         event.preventDefault();
         this.setState({...this.state, shuffleIsLoading: true});
         const existingPlaylist = this.props.playlists.reduce((accumulator, currentValue) => {
@@ -111,13 +107,13 @@ class ShuffleButton extends Component {
     createRandomPlaylist(authenticated) {
         return new Promise((resolve, reject) => {
             const url = "https://api.spotify.com/v1/me/playlists";
-            fetch(url, { 
-                method: 'post', 
+            fetch(url, {
+                method: 'post',
                 headers: new Headers({
                     'Authorization': 'Bearer '+authenticated
                 }),
                 body: JSON.stringify({
-                    name: this.props.config.randomListName, 
+                    name: this.props.config.randomListName,
                     description: 'Spotify Advanced Shuffle Helper Playlist',
                     public: false,
                 })
@@ -130,7 +126,7 @@ class ShuffleButton extends Component {
     }
 
     fillRandomPlaylist(playlist) {
-        const trackCount = this.props.config.amountType == 'minutes' 
+        const trackCount = this.props.config.amountType == 'minutes'
             ? Math.round(this.props.config.trackMinutes / 2)
             : this.props.config.trackCount;
         const count = Math.min(Math.round(trackCount * 1.1), 1024);
@@ -164,20 +160,20 @@ class ShuffleButton extends Component {
 
     chunkArray(myArray, chunk_size){
         var results = [];
-        
+
         while (myArray.length) {
             results.push(myArray.splice(0, chunk_size));
         }
-        
+
         return results;
     }
 
     addRandomTracks(playlist, trackUris) {
         const authenticated = this.props.authenticated;
         const playlistId = playlist.id;
-        const url = "https://api.spotify.com/v1/playlists/"+playlistId+"/tracks";
+        const url = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
         fetch(url, {
-            method: 'post', 
+            method: 'post',
             headers: new Headers({
                 'Authorization': 'Bearer '+authenticated
             }),
@@ -196,7 +192,7 @@ class ShuffleButton extends Component {
         const authenticated = this.props.authenticated;
         const url = "https://api.spotify.com/v1/me/player/play";
         fetch(url, {
-            method: 'put', 
+            method: 'put',
             headers: new Headers({
                 'Authorization': 'Bearer '+authenticated
             }),
@@ -208,13 +204,14 @@ class ShuffleButton extends Component {
     }
 
     render() {
-        const enabled = !this.state.shuffleIsLoading && this.props.library && this.props.dbSize >= this.props.librarySize * .9;
-        const icon = this.state.shuffleIsLoading ? "fas fa-compact-disc fa-spin" : "fas fa-random";
-        return (
-            <button className="btn btn-primary" disabled={!enabled} onClick={this.startShuffle}><i className={icon} />&nbsp;Shuffle</button>
-        );
+      const librarySize = this.props.loadQueue.reduce((acc, queue) => acc + queue.size, 0);
+      const enabled = !this.state.shuffleIsLoading && librarySize && this.props.dbSize >= librarySize * .9;
+      const icon = this.state.shuffleIsLoading ? "fas fa-compact-disc fa-spin" : "fas fa-random";
+      return (
+        <button className="btn btn-primary" disabled={!enabled} onClick={this.startShuffle}><i className={icon} />&nbsp;Shuffle</button>
+      );
     }
-} 
+}
 
 function mapStateToProps(state) {
     return {

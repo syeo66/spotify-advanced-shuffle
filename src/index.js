@@ -11,14 +11,13 @@ import 'bootstrap';
 const initialState = {
   auth: false,
   data: {
-    librarySize: 0,
     dbSize: 0,
     currentPage: 0,
     itemsPerPage: 20,
     showConfig: false,
     checkedPlaylists: [],
-    loadNext: false,
-    loadCue: [],
+    loadQueue: [],
+    library: false,
     config: {
       trackCount: 200, // the track count if type 'count'
       trackMinutes: 60*12, // the minutes if type 'minutes'

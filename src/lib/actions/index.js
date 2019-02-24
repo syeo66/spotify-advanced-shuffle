@@ -1,18 +1,20 @@
 import {
-    RETRIEVE_AUTH_TOKEN,
-    FETCH_USER,
-    FETCH_PLAYER,
-    LOAD_LIBRARY_PAGE,
-    FETCH_LIBRARY,
-    FIRST_PAGE,
-    PREVIOUS_PAGE,
-    NEXT_PAGE,
     DB_COUNT,
+    FETCH_LIBRARY,
+    FETCH_PLAYER,
+    FETCH_USER,
+    FIRST_PAGE,
+    LOAD_LIBRARY_PAGE,
+    NEXT_PAGE,
+    PREVIOUS_PAGE,
+    RETRIEVE_AUTH_TOKEN,
 
-    FETCH_PLAYLISTS,
+    ADD_TO_LOAD_QUEUE,
+
     APPEND_PLAYLISTS,
-    TOGGLE_PLAYLIST,
     CHECKED_PLAYLISTS,
+    FETCH_PLAYLISTS,
+    TOGGLE_PLAYLIST,
 
     FETCH_PLAY_STATE,
     TOGGLE_CONFIG,
@@ -94,16 +96,16 @@ export const retrieveUserData = authenticated => dispatch => {
 }
 
 export const loadLibraryFromDb = (offset, limit) => dispatch => {
-    db.tracks.orderBy('name')
-        .offset(offset)
-        .limit(limit)
-        .toArray()
-        .then(results => {
-            dispatch({
-                type: LOAD_LIBRARY_PAGE,
-                payload: results,
-            });
-        });
+  db.tracks.orderBy('name')
+    .offset(offset)
+    .limit(limit)
+    .toArray()
+    .then(results => {
+      dispatch({
+        type: LOAD_LIBRARY_PAGE,
+        payload: results,
+      });
+    });
 }
 
 export const markDb = _ => dispatch => {
@@ -117,7 +119,16 @@ export const doPurgeDb = _ => dispatch => {
         .then(count => console.log('Purged '+count+' entries.'));
 }
 
-export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1/me/tracks?limit=50", append = false) => dispatch => {
+export const addToLoadQueue = (url, purge = false) => dispatch => {
+  dispatch({
+    type: ADD_TO_LOAD_QUEUE,
+    payload: url,
+    purge: purge,
+  });
+}
+
+export const retrieveLibrary = (authenticated, queue) => dispatch => {
+  const { url } = queue;
   fetch(url, {
     method: 'get',
     headers: new Headers({
@@ -154,8 +165,9 @@ export const retrieveLibrary = (authenticated, url = "https://api.spotify.com/v1
       dispatch({
         type: FETCH_LIBRARY,
         payload: {
+          ...queue,
           current: response.items.length + response.offset,
-          total: response.total,
+          size: response.total,
           next: response.next,
         },
       });
