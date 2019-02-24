@@ -14,7 +14,7 @@ class ShuffleButton extends Component {
 
     startShuffle = event => {
         event.preventDefault();
-        this.setState({...this.state, shuffleIsLoading: true});
+        this.setState({shuffleIsLoading: true});
         const existingPlaylist = this.props.playlists.reduce((accumulator, currentValue) => {
             return accumulator || (currentValue.name == this.props.config.randomListName ? currentValue : null);
         }, null);
@@ -200,7 +200,7 @@ class ShuffleButton extends Component {
                 context_uri: playlist.uri,
             })
         })
-        .then(response => this.setState({...this.state, shuffleIsLoading: false}));
+        .then(response => this.setState({shuffleIsLoading: false}));
     }
 
     render() {

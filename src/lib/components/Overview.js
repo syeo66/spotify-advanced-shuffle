@@ -25,19 +25,23 @@ class Overview extends Component {
     db.on('ready', this.initDb);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.authenticated
-      && nextProps.loadQueue != this.props.loadQueue) {
-      for (let index in nextProps.loadQueue) {
-        const queue = nextProps.loadQueue[index];
-        if ((this.props.loadQueue && queue === this.props.loadQueue[index]) || queue.isLoaded) {
+  componentDidUpdate(prevProps) {
+    const isAuthenticated = this.props.authenticated;
+    const isQueueChanged = prevProps.loadQueue !== this.props.loadQueue;
+
+    if (isAuthenticated && isQueueChanged) {
+      for (let index in this.props.loadQueue) {
+        const queue = this.props.loadQueue[index];
+        if ((prevProps.loadQueue && queue === prevProps.loadQueue[index]) || queue.isLoaded) {
           continue;
         }
-        this.props.retrieveLibrary(nextProps.authenticated, queue);
+        this.props.retrieveLibrary(prevProps.authenticated, queue);
       }
 
-      const isLoaded = nextProps.loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true);
-      if (isLoaded) {
+      const isAllLoaded = prevProps.loadQueue
+        ? prevProps.loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true)
+        : false;
+      if (isAllLoaded) {
         this.props.doPurgeDb();
       }
     }

@@ -10,7 +10,7 @@ class Progress extends Component {
           if (queue.isLoaded) {
             return '';
           }
-          return <ProgressBar key={i} current={queue.current} target={queue.size} />
+          return <ProgressBar key={queue.origUrl} current={queue.current} target={queue.size} />
           })
         }
       </React.Fragment>

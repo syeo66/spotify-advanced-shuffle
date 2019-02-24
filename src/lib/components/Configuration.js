@@ -43,7 +43,7 @@ class Configuration extends Component {
                 }
             });
         }
-        this.setState({...this.state, defaultsLoaded:true});
+        this.setState({defaultsLoaded: true});
     }
 
     setConfig(key, value) {
