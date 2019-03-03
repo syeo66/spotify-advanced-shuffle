@@ -116,7 +116,7 @@ export const markDb = _ => dispatch => {
 
 export const doPurgeDb = _ => dispatch => {
     db.tracks.where('isSynced').equals(0).delete()
-        .then(count => console.log('Purged '+count+' entries.'));
+      .then(count => console.log('Purged ' + count + ' entries.'));
 }
 
 export const addToLoadQueue = (url, purge = false) => dispatch => {

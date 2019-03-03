@@ -18,9 +18,10 @@
   "homepage": "https://bitbucket.org/RedOchsenbein/spotify-shuffle#readme",
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "color": "^3.1.0",
     "dexie": "^2.0.4",
     "dotenv": "^6.2.0",
-    "firebase": "^5.8.4",
+    "firebase": "^5.8.5",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.7",
     "react": "^16.8.3",
@@ -28,23 +29,24 @@
     "react-redux": "^6.0.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "rgbaster": "^2.1.1",
     "rxjs": "^6.4.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-proposal-class-properties": "^7.3.3",
-    "@babel/plugin-transform-async-to-generator": "^7.1.0",
-    "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/plugin-transform-async-to-generator": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
-    "@babel/runtime": "^7.3.1",
+    "@babel/runtime": "^7.3.4",
     "babel-loader": "^8.0.4",
     "css-loader": "^1.0.0",
     "dotenv-webpack": "^1.7.0",
     "lite-server": "^2.4.0",
     "react-router-dom": "^4.3.1",
     "style-loader": "^0.23.1",
-    "webpack": "^4.29.5",
+    "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
   }
 }
