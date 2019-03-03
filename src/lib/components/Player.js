@@ -11,7 +11,7 @@ class Player extends Component {
       super(props);
       this.state = {
         color: "rgb(30,30,30)",
-        secondary: "rgb(0,0,0)"
+        secondary: "rgb(200,200,200)"
       }
     }
 
@@ -33,13 +33,16 @@ class Player extends Component {
         && item.album.images[0]
         && item.album.images[0].url !== this.oldImage
         ) {
-          analyze(item.album.images[0].url).then(colors => {
+          analyze(item.album.images[0].url, {
+            scale: 0.4,
+          }).then(colors => {
+            console.log(colors);
             const primary = colors[0].color;
             const secondary = colors.reduce((acc, c) =>  {
               if (acc === null
                 && c.color !== primary.color
                 && Color(c.color).isLight() !== Color(primary).isLight()
-                && Color(c.color).contrast(Color(primary)) > 7) {
+                && Color(c.color).contrast(Color(primary)) > 8) {
                 return c;
               }
               return acc;
@@ -66,9 +69,9 @@ class Player extends Component {
       const albumName = item && item.album.name ? item.album.name : '';
 
       return (
-        <div className="my-3 border shadow rounded p-3" style={image}>
+        <div className="my-3 border shadow rounded p-3 player" style={image}>
           <div className="d-flex flex-row mb-2">
-            <button className="btn btn-primary mr-2" style={{
+            <button className="btn btn-primary mr-2 player__player-button" style={{
               color: this.state.secondary,
               backgroundColor: this.state.color,
               border: "1px solid " + this.state.color,
@@ -79,7 +82,7 @@ class Player extends Component {
               {artistName} - {albumName}</small>
             </div>
           </div>
-          <div className="progress" style={{border: "1px solid " + this.state.color, boxShadow: "0 0 5px " + this.state.secondary, backgroundColor: this.state.secondary}}>
+          <div className="progress player__player-progress" style={{border: "1px solid " + this.state.color, boxShadow: "0 0 5px " + this.state.secondary, backgroundColor: this.state.secondary}}>
             <div className="progress-bar" role="progressbar" style={{width: played + "%", backgroundColor: this.state.color}} aria-valuenow={played} aria-valuemin="0" aria-valuemax={100}></div>
           </div>
         </div>

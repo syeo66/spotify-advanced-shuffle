@@ -1,0 +1,8 @@
+.player .player__player-button,
+.player .player__player-progress {
+  transition: color 5000ms, background-color 5000ms, border-color 5000ms, box-shadow 5000ms;
+}
+
+.player .player__player-progress .progress-bar {
+  transition: background-color 5000ms, width 1000ms;
+}
