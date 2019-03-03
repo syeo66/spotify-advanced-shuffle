@@ -4,5 +4,5 @@
 }
 
 .player .player__player-progress .progress-bar {
-  transition: background-color 5000ms, width 1000ms;
+  transition: background-color 5000ms, width linear 1000ms;
 }

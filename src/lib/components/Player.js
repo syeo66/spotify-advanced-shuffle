@@ -36,7 +36,6 @@ class Player extends Component {
           analyze(item.album.images[0].url, {
             scale: 0.4,
           }).then(colors => {
-            console.log(colors);
             const primary = colors[0].color;
             const secondary = colors.reduce((acc, c) =>  {
               if (acc === null
@@ -78,7 +77,9 @@ class Player extends Component {
               boxShadow: "0 0 5px " + this.state.secondary,
             }}><i className={playClass}></i></button>
             <div className="" style={{color: this.state.secondary}}>
-              <small style={{textShadow:"0 0 5px " + this.state.color}}><strong>{itemName}</strong><br />
+              <small style={{
+                textShadow:"0 0 10px " + this.state.color + ", 0 0 5px " + this.state.color + ', 0 0 3px ' + this.state.color,
+              }}><strong>{itemName}</strong><br />
               {artistName} - {albumName}</small>
             </div>
           </div>
