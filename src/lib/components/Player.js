@@ -41,12 +41,13 @@ class Player extends Component {
               if (acc === null
                 && c.color !== primary.color
                 && Color(c.color).isLight() !== Color(primary).isLight()
-                && Color(c.color).contrast(Color(primary)) > 8) {
+                && Color(primary).contrast(Color(c.color)) > 8) {
+                  console.log(c);
                 return c;
               }
               return acc;
             }, null);
-            return this.setState({color: colors[0].color, secondary: secondary ? secondary.color : colors[1].color})
+            return this.setState({color: colors[0].color, secondary: secondary ? secondary.color : Color(primary).isLight() ? 'rgb(30,30,30)' : 'rgb(240,240,240)'})
           });
           this.oldImage = item.album.images[0].url;
       }
