@@ -79,7 +79,7 @@ class Player extends Component {
               {artistName} - {albumName}</small>
             </div>
           </div>
-          <div className="progress" style={{border: "1px solid " + this.state.color, boxShadow: "0 0 5px " + this.state.secondary}}>
+          <div className="progress" style={{border: "1px solid " + this.state.color, boxShadow: "0 0 5px " + this.state.secondary, backgroundColor: this.state.secondary}}>
             <div className="progress-bar" role="progressbar" style={{width: played + "%", backgroundColor: this.state.color}} aria-valuenow={played} aria-valuemin="0" aria-valuemax={100}></div>
           </div>
         </div>
