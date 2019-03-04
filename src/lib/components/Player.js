@@ -40,9 +40,7 @@ class Player extends Component {
             const secondary = colors.reduce((acc, c) =>  {
               if (acc === null
                 && c.color !== primary.color
-                && Color(c.color).isLight() !== Color(primary).isLight()
-                && Color(primary).contrast(Color(c.color)) > 8) {
-                  console.log(c);
+                && Color(primary).contrast(Color(c.color)) > 7) {
                 return c;
               }
               return acc;

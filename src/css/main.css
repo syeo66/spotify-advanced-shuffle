@@ -1,8 +1,22 @@
 .player .player__player-button,
 .player .player__player-progress {
-  transition: color 5000ms, background-color 5000ms, border-color 5000ms, box-shadow 5000ms;
+  transition: color 10s, background-color 10s, border-color 10s, box-shadow 10s;
 }
 
 .player .player__player-progress .progress-bar {
-  transition: background-color 5000ms, width linear 1000ms;
+  transition: background-color 10s, width linear 1000ms;
+}
+
+.player > div > div small {
+  transition: text-shadow 10s;
+  line-height: 1;
+}
+
+.player .player__player-button {
+  align-self: flex-start;
+}
+
+.player > div > div {
+  transition: color 10s;
+  line-height: 1;
 }
