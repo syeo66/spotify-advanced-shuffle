@@ -11,7 +11,8 @@ class Player extends Component {
       super(props);
       this.state = {
         color: "rgb(30,30,30)",
-        secondary: "rgb(200,200,200)"
+        secondary: "rgb(200,200,200)",
+        tertiary: "rgb(190,190,190)",
       }
     }
 
@@ -40,12 +41,24 @@ class Player extends Component {
             const secondary = colors.reduce((acc, c) =>  {
               if (acc === null
                 && c.color !== primary.color
-                && Color(primary).contrast(Color(c.color)) > 7) {
+                && Color(primary).contrast(Color(c.color)) > 3) {
                 return c;
               }
               return acc;
             }, null);
-            return this.setState({color: colors[0].color, secondary: secondary ? secondary.color : Color(primary).isLight() ? 'rgb(30,30,30)' : 'rgb(240,240,240)'})
+            const tertiary = colors.reduce((acc, c) =>  {
+              if (acc === null
+                && c.color !== primary.color
+                && Color(primary).contrast(Color(c.color)) > 8) {
+                return c;
+              }
+              return acc;
+            }, null);
+            return this.setState({
+              color: colors[0].color,
+              secondary: secondary ? secondary.color : Color(primary).isLight() ? 'rgb(30,30,30)' : 'rgb(240,240,240)',
+              tertiary: tertiary ? tertiary.color : secondary.color,
+            })
           });
           this.oldImage = item.album.images[0].url;
       }
@@ -75,7 +88,7 @@ class Player extends Component {
               border: "1px solid " + this.state.color,
               boxShadow: "0 0 5px " + this.state.secondary,
             }}><i className={playClass}></i></button>
-            <div className="" style={{color: this.state.secondary}}>
+            <div className="" style={{color: this.state.tertiary}}>
               <small style={{
                 textShadow:"0 0 10px " + this.state.color + ", 0 0 5px " + this.state.color + ', 0 0 3px ' + this.state.color,
               }}><strong>{itemName}</strong><br />
