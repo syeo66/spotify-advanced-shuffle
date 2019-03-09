@@ -41,7 +41,9 @@ class Player extends Component {
             const secondary = colors.reduce((acc, c) =>  {
               if (acc === null
                 && c.color !== primary.color
-                && Color(primary).contrast(Color(c.color)) > 3) {
+                && Color(c.color).chroma() > 9
+                && Color(primary).contrast(Color(c.color)) > 4
+                ) {
                 return c;
               }
               return acc;
@@ -49,15 +51,22 @@ class Player extends Component {
             const tertiary = colors.reduce((acc, c) =>  {
               if (acc === null
                 && c.color !== primary.color
-                && Color(primary).contrast(Color(c.color)) > 8) {
+                && Color('#fff').contrast(Color(c.color)) > 1
+                && Color('#000').contrast(Color(c.color)) > 1
+                && Color(primary).contrast(Color(c.color)) > 10) {
                 return c;
               }
               return acc;
             }, null);
             return this.setState({
               color: colors[0].color,
-              secondary: secondary ? secondary.color : Color(primary).isLight() ? 'rgb(30,30,30)' : 'rgb(240,240,240)',
-              tertiary: tertiary ? tertiary.color : secondary.color,
+              secondary: secondary ? secondary.color : tertiary
+                ? tertiary.color
+                : (Color(primary).isLight() ? 'rgb(30,30,30)' : 'rgb(240,240,240)'),
+              tertiary: tertiary ? tertiary.color :
+                secondary ? (Color(primary).isLight()
+                  ? Color(secondary.color).darken(.3).hex() : Color(secondary.color).lighten(.3).hex())
+                  : Color(primary).isLight() ? 'rgb(30,30,30)' : 'rgb(240,240,240)',
             })
           });
           this.oldImage = item.album.images[0].url;
