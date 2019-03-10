@@ -134,7 +134,6 @@ class ShuffleButton extends Component {
       const addTracks = numbers => {
         db.tracks.toArray(library => {
           let minutes = 0;
-          console.log(numbers);
           const normaled = numbers.map(number => Math.floor(number * library.length));
           const slices = this.chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
           slices.forEach(chunk => {
