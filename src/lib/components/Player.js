@@ -35,13 +35,13 @@ class Player extends Component {
         && item.album.images[0].url !== this.oldImage
         ) {
           analyze(item.album.images[0].url, {
-            scale: 0.4,
+            scale: 0.6,
           }).then(colors => {
             const primary = colors[0].color;
             const secondary = colors.reduce((acc, c) =>  {
               if (acc === null
                 && c.color !== primary.color
-                && Color(c.color).chroma() > 9
+                && Color(c.color).chroma() > 20
                 && Color(primary).contrast(Color(c.color)) > 4
                 ) {
                 return c;
