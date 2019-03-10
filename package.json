@@ -4,10 +4,11 @@
   "description": "Advanced Shuffle for Spotify",
   "main": "index.js",
   "scripts": {
-    "dev": "lite-server",
+    "dev": "run-p watch run-dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "run-s clean-dist run-build",
     "watch": "run-s clean-dist run-watch",
+    "run-dev": "lite-server",
     "run-build": "webpack --progress -p",
     "run-watch": "webpack --progress --watch",
     "clean-dist": "rimraf ./src/js/*.js"
@@ -24,7 +25,6 @@
     "color": "^3.1.0",
     "dexie": "^2.0.4",
     "dotenv": "^6.2.0",
-    "firebase": "^5.8.5",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.7",
     "random": "^2.1.1",
@@ -54,7 +54,6 @@
     "rimraf": "^2.6.3",
     "style-loader": "^0.23.1",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3",
-    "webpack-merge": "^4.2.1"
+    "webpack-cli": "^3.2.3"
   }
 }
