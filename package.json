@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "lite-server",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --progress -p",
-    "watch": "webpack --progress --watch"
+    "build": "run-s clean-dist run-build",
+    "watch": "run-s clean-dist run-watch",
+    "run-build": "webpack --progress -p",
+    "run-watch": "webpack --progress --watch",
+    "clean-dist": "rimraf ./src/js/*.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +27,7 @@
     "firebase": "^5.8.5",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.7",
+    "random": "^2.1.1",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-redux": "^6.0.1",
@@ -43,10 +47,14 @@
     "babel-loader": "^8.0.4",
     "css-loader": "^1.0.0",
     "dotenv-webpack": "^1.7.0",
+    "html-webpack-plugin": "^3.2.0",
     "lite-server": "^2.4.0",
+    "npm-run-all": "^4.1.5",
     "react-router-dom": "^4.3.1",
+    "rimraf": "^2.6.3",
     "style-loader": "^0.23.1",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "webpack-merge": "^4.2.1"
   }
 }

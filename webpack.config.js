@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // webpack.config.js
 module.exports = () => {
@@ -11,14 +12,41 @@ module.exports = () => {
             fs: "empty"
         },
         plugins: [
-            new Dotenv({
-                path: path.resolve(__dirname, './.env'),
-            })
+          new webpack.HashedModuleIdsPlugin(),
+          new HtmlWebpackPlugin({
+            hash: true,
+            title: 'Spotify Advanced Shuffle',
+            template: './src/index.orig.html',
+          }),
+          new Dotenv({
+              path: path.resolve(__dirname, './.env'),
+          })
         ],
         output: {
-            filename: 'js/[name].bundle.js',
-            chunkFilename: 'js/[name].bundle.js',
-            path: path.resolve(__dirname, 'src')
+          filename: 'js/[name].[contenthash].js',
+          chunkFilename: 'js/[name].[contenthash].js',
+          path: path.resolve(__dirname, 'src'),
+        },
+        optimization: {
+          runtimeChunk: 'single',
+          splitChunks: {
+            chunks: 'all',
+            maxInitialRequests: Infinity,
+            minSize: 0,
+            cacheGroups: {
+              vendor: {
+                test: /[\\/]node_modules[\\/]/,
+                name(module) {
+                  // get the name. E.g. node_modules/packageName/not/this/part.js
+                  // or node_modules/packageName
+                  const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+
+                  // npm package names are URL-safe, but some servers don't like @ symbols
+                  return `npm.${packageName.replace('@', '')}`;
+                },
+              },
+            },
+          },
         },
         module: {
             rules: [

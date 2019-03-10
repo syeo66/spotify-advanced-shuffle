@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { retrievePlaylists } from '../actions';
 import db from '../database';
+import random from 'random';
 
 class ShuffleButton extends Component {
     constructor(props) {
@@ -126,36 +127,34 @@ class ShuffleButton extends Component {
     }
 
     fillRandomPlaylist(playlist) {
-        const trackCount = this.props.config.amountType == 'minutes'
-            ? Math.round(this.props.config.trackMinutes / 2)
-            : this.props.config.trackCount;
-        const count = Math.min(Math.round(trackCount * 1.1), 1024);
-        fetch('https://qrng.anu.edu.au/API/jsonI.php?length='+count+'&type=uint16')
-            .then(response => response.json())
-            .then(numbers => {
-                db.tracks.toArray(library => {
-                    let minutes = 0;
-                    const normaled = numbers.data.map(number => {
-                        return number % library.length;
-                    });
-                    const slices = this.chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
-                    slices.forEach(chunk => {
-                        if (this.props.config.amountType == 'minutes'
-                            && minutes >= this.props.config.trackMinutes) {
-                            return;
-                        }
-                        let tracks = chunk.map(number => {
-                            if (this.props.config.amountType == 'minutes'
-                                && minutes >= this.props.config.trackMinutes) {
-                                return;
-                            }
-                            minutes += library[number].duration_ms / 60000;
-                            return library[number].uri;
-                        }).filter(el => el != null);
-                        this.addRandomTracks(playlist, tracks);
-                    });
-                });
-            });
+      const trackCount = this.props.config.amountType == 'minutes'
+          ? Math.round(this.props.config.trackMinutes / 2)
+          : this.props.config.trackCount;
+      const count = Math.min(Math.round(trackCount * 1.1), 1024);
+      const addTracks = numbers => {
+        db.tracks.toArray(library => {
+          let minutes = 0;
+          console.log(numbers);
+          const normaled = numbers.map(number => Math.floor(number * library.length));
+          const slices = this.chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
+          slices.forEach(chunk => {
+            if (this.props.config.amountType == 'minutes'
+              && minutes >= this.props.config.trackMinutes) {
+              return;
+            }
+            let tracks = chunk.map(number => {
+              if (this.props.config.amountType == 'minutes'
+                && minutes >= this.props.config.trackMinutes) {
+                return;
+              }
+              minutes += library[number].duration_ms / 60000;
+              return library[number].uri;
+            }).filter(el => el != null);
+            this.addRandomTracks(playlist, tracks);
+          });
+        });
+      };
+      addTracks([...Array(count)].map(_ => random.float()));
     }
 
     chunkArray(myArray, chunk_size){
