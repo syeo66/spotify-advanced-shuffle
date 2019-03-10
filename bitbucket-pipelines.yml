@@ -18,4 +18,4 @@ pipelines:
                 - npm install
                 - echo "CLIENT_ID=$CLIENT_ID" > .env
                 - npm run build
-                - rsync -az --exclude .git --exclude .env --exclude node_modules $BITBUCKET_CLONE_DIR/src/ $PUBLISHING_TARGET
+                - rsync -az --exclude .git --exclude .env --exclude node_modules --delete $BITBUCKET_CLONE_DIR/src/ $PUBLISHING_TARGET
