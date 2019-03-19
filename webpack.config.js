@@ -60,7 +60,8 @@ module.exports = () => {
                             plugins: [
                                 "@babel/transform-runtime",
                                 "@babel/transform-async-to-generator",
-                                "@babel/plugin-proposal-class-properties"
+                                "@babel/plugin-proposal-class-properties",
+                                "@babel/plugin-syntax-dynamic-import"
                             ]
                         }
                     }

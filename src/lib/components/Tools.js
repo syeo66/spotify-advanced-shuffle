@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { lazy, Component, Suspense } from 'react';
 import { connect } from 'react-redux';
-import ShuffleButton from './ShuffleButton';
-import ConfigButton from './ConfigButton';
-import Configuration from './Configuration';
+
+const ShuffleButton = lazy(() => import('./ShuffleButton'));
+const ConfigButton = lazy(() => import('./ConfigButton'));
+const Configuration = lazy(() => import('./Configuration'));
 
 class Tools extends Component {
   render() {
@@ -13,10 +14,17 @@ class Tools extends Component {
     return (
       <div className="mb-3 shadow border p-3 rounded">
         <div className="d-flex justify-content-between">
-          <ShuffleButton />
-          <ConfigButton />
+          <Suspense fallback={(<div />)}>
+            <ShuffleButton />
+          </Suspense>
+
+          <Suspense fallback={(<div />)}>
+            <ConfigButton />
+          </Suspense>
         </div>
-        <Configuration />
+        <Suspense fallback={(<div />)}>
+          <Configuration />
+        </Suspense>
         {text}
       </div>
     );

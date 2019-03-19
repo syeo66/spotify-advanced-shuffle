@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { lazy, Component, Suspense } from 'react';
 import {
   addToLoadQueue,
   markDb,
@@ -7,14 +7,16 @@ import {
   retrieveUserData,
 } from '../actions';
 import { connect } from 'react-redux';
-import UserInfo from './UserInfo';
-import TrackList from './TrackList';
-import PlaylistList from './PlaylistList';
-import Tools from './Tools';
-import Progress from './Progress';
-import PlayerInfo from './PlayerInfo';
-import Player from './Player';
+
 import db from '../database';
+
+const Tools = lazy(() => import('./Tools'));
+const Player = lazy(() => import('./Player'));
+const PlayerInfo = lazy(() => import('./PlayerInfo'));
+const UserInfo = lazy(() => import('./UserInfo'));
+const PlaylistList = lazy(() => import('./PlaylistList'));
+const TrackList = lazy(() => import('./TrackList'));
+const Progress = lazy(() => import('./Progress'));
 
 class Overview extends Component {
   componentDidMount() {
@@ -55,19 +57,37 @@ class Overview extends Component {
       <div>
         <div className="row py-2">
           <div className="col">
-            <Progress />
+            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+              <Progress />
+            </Suspense>
           </div>
         </div>
         <div className="row py-1">
           <div className="col-md-4">
-            <Tools />
-            <Player />
-            <PlayerInfo />
-            <UserInfo />
-            <PlaylistList />
+            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+              <Tools />
+            </Suspense>
+
+            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+              <Player />
+            </Suspense>
+
+            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+              <PlayerInfo />
+            </Suspense>
+
+            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+              <UserInfo />
+            </Suspense>
+
+            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+              <PlaylistList />
+            </Suspense>
           </div>
           <div className="col-md-8">
-            <TrackList />
+            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+              <TrackList />
+            </Suspense>
           </div>
         </div>
       </div>

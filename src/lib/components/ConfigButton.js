@@ -1,28 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { toggleConfig } from '../actions';
 
-class ConfigButton extends Component {
-    componentDidMount() {
-        this.startConfiguration = this.startConfiguration.bind(this);
-    }
+const ConfigButton = props => {
+  const classe = props.showConfig ? "btn btn-light active" : "btn btn-light";
 
-    startConfiguration(event) {
-        this.props.toggleConfig();
-        event.currentTarget.blur();
-        event.preventDefault();
-    }
+  const startConfiguration = event => {
+    props.toggleConfig();
+    event.currentTarget.blur();
+    event.preventDefault();
+  }
 
-    render() {
-        const classe = this.props.showConfig ? "btn btn-light active" : "btn btn-light";
-
-        return (
-            <a href="#" className={classe} onClick={this.startConfiguration}>
-                <i className="fas fa-cog" />
-            </a>
-        );
-    }
-} 
+  return (
+    <a href="#" className={classe} onClick={startConfiguration}>
+      <i className="fas fa-cog" />
+    </a>
+  );
+}
 
 function mapStateToProps(state) {
     return state.data;
