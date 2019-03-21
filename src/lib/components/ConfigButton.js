@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { toggleConfig } from '../actions';
 
 const ConfigButton = props => {
-  const classe = props.showConfig ? "btn btn-light active" : "btn btn-light";
+  const classes = props.showConfig ? "btn btn-light active" : "btn btn-light";
 
   const startConfiguration = event => {
     props.toggleConfig();
@@ -12,14 +12,14 @@ const ConfigButton = props => {
   }
 
   return (
-    <a href="#" className={classe} onClick={startConfiguration}>
+    <a href="#" className={classes} onClick={startConfiguration}>
       <i className="fas fa-cog" />
     </a>
   );
 }
 
-function mapStateToProps(state) {
-    return state.data;
-}
+const mapStateToProps = ({ data }) => ({
+  showConfig: data.showConfig,
+});
 
-export default connect(mapStateToProps, { toggleConfig })(ConfigButton);
+export default connect(mapStateToProps, { toggleConfig })(memo(ConfigButton));
