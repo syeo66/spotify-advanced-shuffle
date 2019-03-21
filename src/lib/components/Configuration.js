@@ -3,14 +3,7 @@ import { connect } from 'react-redux';
 import { setConfig } from '../actions';
 
 class Configuration extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {defaultsLoaded: false};
-        this.setConfig = this.setConfig.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handlePlaylistNameChange = this.handlePlaylistNameChange.bind(this);
-        this.handlePurgeChange = this.handlePurgeChange.bind(this);
-    }
+    state = { defaultsLoaded: false };
 
     componentDidUpdate() {
         this.loadDefaults();
@@ -46,7 +39,7 @@ class Configuration extends Component {
         this.setState({defaultsLoaded: true});
     }
 
-    setConfig(key, value) {
+    setConfig = (key, value) => {
         this.props.setConfig(key, value);
         if (typeof(Storage) !== "undefined") {
             const userId = this.props.user.id;
@@ -54,11 +47,11 @@ class Configuration extends Component {
         }
     }
 
-    handlePurgeChange() {
+    handlePurgeChange = _ => {
         this.setConfig('purgeOnShuffle', !this.props.config.purgeOnShuffle);
     }
 
-    handleChange(event) {
+    handleChange = event => {
         const value = parseInt(event.target.value) || '';
         const key = this.props.config.amountType == 'minutes'
             ? 'trackMinutes' : 'trackCount';
@@ -67,7 +60,7 @@ class Configuration extends Component {
         this.setConfig(key, Math.max(Math.min(value, maxValue), 0));
     }
 
-    handlePlaylistNameChange(event) {
+    handlePlaylistNameChange = event => {
         const input = event.target.value.trim();
         const value = input || 'Advanced Shuffle';
         this.setConfig('randomListName', value);
@@ -120,8 +113,8 @@ class Configuration extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return state.data;
+const mapStateToProps = ({data}) => {
+    return data;
 }
 
 export default connect(mapStateToProps, { setConfig })(Configuration);

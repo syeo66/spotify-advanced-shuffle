@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-export default function(ComposedComponent) {
-    class Authentication extends Component {
+export default (ComposedComponent) => {
+    class Authentication extends PureComponent {
         static contextTypes = {
             router: PropTypes.object
         }
@@ -21,15 +21,15 @@ export default function(ComposedComponent) {
         }
 
         render() {
-            if (this.props.authenticated) {
-                return <ComposedComponent {...this.props} />;
-            }
-            return null;
+          if (this.props.authenticated) {
+            return <ComposedComponent {...this.props} />;
+          }
+          return null;
         }
     }
 
-    function mapStateToProps(state) {
-        return { authenticated: state.auth };
+    const mapStateToProps = ({auth}) => {
+        return { authenticated: auth };
     }
 
     return connect(mapStateToProps)(Authentication);

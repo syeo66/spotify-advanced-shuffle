@@ -32,6 +32,7 @@ const Tools = props => {
 function mapStateToProps({ data }) {
   return {
     isLoaded: data.loadQueue.reduce((acc, queue) => acc && queue.isLoaded, true),
+    showConfig: data.showConfig,
   }
 }
 

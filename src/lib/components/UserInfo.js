@@ -19,7 +19,7 @@ const UserInfo = props => {
   );
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = state => {
     return state.data.user ? {
         authenticated: state.auth,
         user: state.data.user
