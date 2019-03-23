@@ -1,36 +1,23 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 export default (ComposedComponent) => {
-    class Authentication extends PureComponent {
-        static contextTypes = {
-            router: PropTypes.object
-        }
+  const Authentication = props => {
+    useEffect(() => {
+      if (!props.authenticated) {
+        props.history.push('/');
+      }
+    }, [props.authenticated]);
 
-        componentWillMount() {
-            if (!this.props.authenticated) {
-                this.context.router.history.push('/');
-            }
-        }
-
-        componentDidUpdate() {
-            if (!this.props.authenticated) {
-                this.context.router.history.push('/');
-            }
-        }
-
-        render() {
-          if (this.props.authenticated) {
-            return <ComposedComponent {...this.props} />;
-          }
-          return null;
-        }
+    if (props.authenticated) {
+      return <ComposedComponent {...props} />;
     }
+    return null;
+  }
 
-    const mapStateToProps = ({auth}) => {
-        return { authenticated: auth };
-    }
+  const mapStateToProps = ({auth}) => {
+      return { authenticated: auth };
+  }
 
-    return connect(mapStateToProps)(Authentication);
+  return connect(mapStateToProps)(Authentication);
 }

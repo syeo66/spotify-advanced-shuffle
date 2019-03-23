@@ -95,15 +95,9 @@ class Overview extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return state.data.user ? {
-    user: state.data.user,
-    loadQueue: state.data.loadQueue ? state.data.loadQueue : [],
-    checkedPlaylists: state.data.checkedPlaylists ? state.data.checkedPlaylists : [],
-  } : {
-    user: {
-        display_name: 'Loading...'
-    }
+function mapStateToProps({data}) {
+  return {
+    loadQueue: data.loadQueue ? data.loadQueue : [],
   }
 }
 
