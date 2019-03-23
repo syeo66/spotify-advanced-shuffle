@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   addToLoadQueue,
@@ -8,96 +8,78 @@ import {
   togglePlaylist,
 } from '../actions';
 
+const PlaylistList = props => {
+  useEffect(() => {
+    props.retrievePlaylists(props.authenticated);
+    const polling = setInterval(_ => props.retrievePlaylists(props.authenticated), 4900);
+    return () => clearInterval(polling);
+  }, []);
 
-class PlaylistList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      defaultsLoaded: false,
-    };
-  }
-
-  componentDidMount() {
-    this.props.retrievePlaylists(this.props.authenticated);
-    this.polling = setInterval(_ => this.props.retrievePlaylists(this.props.authenticated), 4900);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.checkedPlaylists !== nextProps.checkedPlaylists) {
-      nextProps.checkedPlaylists.map((id, i) => {
-        const myUrl = 'https://api.spotify.com/v1/playlists/' + id + '/tracks';
-        const found = nextProps.loadQueue.filter(entry => entry.origUrl === myUrl);
-        if (found.length === 0) {
-          this.props.addToLoadQueue(myUrl);
-        }
-      });
-    }
-  }
-
-  componentWillUpdate() {
-    this.loadDefaults();
-  }
-
-  loadDefaults() {
-    if (this.state.defaultsLoaded || !this.props.user) {
+  useEffect(() => {
+    if (!props.userId) {
       return;
     }
     if (typeof(Storage) !== "undefined") {
-      const userId = this.props.user.id;
+      const userId = props.userId;
       const key = 'checkedPlaylists';
       const rawValue = window.localStorage.getItem(userId + '.' + key);
       const value = rawValue ? JSON.parse(rawValue) : [];
-      this.props.setCheckedPlaylists(value);
-      this.setState({defaultsLoaded: true});
+      props.setCheckedPlaylists(value);
     }
-  }
+  }, [props.userId]);
 
-  componentWillUnmount() {
-    clearInterval(this.polling);
-    this.polling = null;
-  }
+  useEffect(() => {
+    props.checkedPlaylists.map(id => {
+      addToQueue(id);
+    });
+  }, [props.checkedPlaylists]);
 
-  handleClick = (e) => {
-    this.props.togglePlaylist(e.target.value, this.props.user.id);
-  }
-
-  render() {
-    const playlists = this.props.playlists
-      .sort((a,b) => {return a.name.toUpperCase()<b.name.toUpperCase() ? -1 : 1})
-      .map(entry => {
-        return (
-          <li className="list-group-item d-flex justify-start align-items-center" key={entry.id}>
-            <input
-              type="checkbox"
-              checked={this.props.checkedPlaylists.indexOf(entry.id) !== -1
-                && !(entry.name === this.props.config.randomListName)}
-              value={entry.id}
-              onChange={this.handleClick}
-              disabled={entry.name === this.props.config.randomListName}
-              />
-            <span className="ml-3 text-left">{entry.name}</span>
-            <span className="badge badge-primary badge-pill ml-auto">{entry.tracks.total}</span>
-          </li>
-        );
-      });
-
-    return (
-      <ul className="list-group my-3 shadow rounded">
-        {playlists}
-      </ul>
-    );
+  const addToQueue = id => {
+    const myUrl = 'https://api.spotify.com/v1/playlists/' + id + '/tracks';
+    const found = props.loadQueue.filter(entry => entry.origUrl === myUrl);
+    if (found.length === 0) {
+      props.addToLoadQueue(myUrl);
+    }
   };
+
+  const handleClick = (e) => {
+    props.togglePlaylist(e.target.value, props.userId);
+  };
+
+  const playlists = props.playlists
+    .sort((a,b) => {return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1})
+    .map(entry => {
+      return (
+        <li className="list-group-item d-flex justify-start align-items-center" key={entry.id}>
+          <input
+            type="checkbox"
+            checked={props.checkedPlaylists.indexOf(entry.id) !== -1
+              && !(entry.name === props.configRandomListName)}
+            value={entry.id}
+            onChange={handleClick}
+            disabled={entry.name === props.configRandomListName}
+            />
+          <span className="ml-3 text-left">{entry.name}</span>
+          <span className="badge badge-primary badge-pill ml-auto">{entry.tracks.total}</span>
+        </li>
+      );
+    });
+
+  return (
+    <ul className="list-group my-3 shadow rounded">
+      {playlists}
+    </ul>
+  );
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({auth, data}) {
   return {
-    authenticated: state.auth,
-    playlists: state.data.playlists ? state.data.playlists : [],
-    playlistsSize: state.data.playlistsSize ? state.data.playlistsSize : 0,
-    user: state.data.user,
-    checkedPlaylists: state.data.checkedPlaylists,
-    config: state.data.config,
-    loadQueue: state.data.loadQueue,
+    authenticated: auth,
+    playlists: data.playlists ? data.playlists : [],
+    userId: data.user ? data.user.id : null,
+    checkedPlaylists: data.checkedPlaylists,
+    configRandomListName: data.config ? data.config.randomListName : null,
+    loadQueue: data.loadQueue,
   }
 }
 
