@@ -1,40 +1,32 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { signInWithSpotify, doLogin } from '../actions';
-import PropTypes from "prop-types";
 
-class Signin extends Component {
-    static contextTypes = {
-        router: PropTypes.object
+const Signin = props => {
+  useEffect(() => {
+    if (typeof(Storage) !== "undefined") {
+      const access_token = window.localStorage.getItem('access_token');
+      if (access_token) {
+        props.doLogin(access_token);
+      }
     }
+  }, []);
 
-    componentDidMount() {
-        if (typeof(Storage) !== "undefined") {
-            const access_token = window.localStorage.getItem('access_token');
-            if (access_token) {
-                this.props.doLogin(access_token);
-            }
-        }
+  useEffect(() => {
+    if (props.auth) {
+      props.history.push('/app');
     }
+  }, [props.auth]);
 
-    componentDidUpdate() {
-        if (this.props.auth) {
-            this.context.router.history.push('/app');
-            return;
-        }
-    }
-
-    render() {
-        return (
-            <div className="row justify-content-center py-5">
-                <div className="col-auto py-5 shadow border rounded">
-                    <a href="#" className="btn btn-success" onClick={this.props.signInWithSpotify}>
-                        <i className="fab fa-spotify" />&nbsp;Sign In With Spotify
-                    </a>
-                </div>
-            </div>
-        );
-    }
+  return (
+    <div className="row justify-content-center py-5">
+      <div className="col-auto py-5 shadow border rounded">
+        <a href="#" className="btn btn-success" onClick={props.signInWithSpotify}>
+          <i className="fab fa-spotify" />&nbsp;Sign In With Spotify
+        </a>
+      </div>
+    </div>
+  );
 }
 
 function mapStateToProps({ auth }) {
