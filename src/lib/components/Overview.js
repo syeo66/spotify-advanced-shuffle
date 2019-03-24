@@ -1,4 +1,4 @@
-import React, { lazy, Component, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import {
   addToLoadQueue,
   markDb,
