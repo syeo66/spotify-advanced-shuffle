@@ -1,4 +1,4 @@
-import React, { lazy, Component, Suspense } from 'react';
+import React, { lazy, Component, Suspense, useEffect } from 'react';
 import {
   addToLoadQueue,
   markDb,
@@ -7,6 +7,7 @@ import {
   retrieveUserData,
 } from '../actions';
 import { connect } from 'react-redux';
+import { usePrevProps } from '../hooks';
 
 import db from '../database';
 
@@ -18,81 +19,80 @@ const PlaylistList = lazy(() => import('./PlaylistList'));
 const TrackList = lazy(() => import('./TrackList'));
 const Progress = lazy(() => import('./Progress'));
 
-class Overview extends Component {
-  componentDidMount() {
-    if (db.isOpen) {
-      this.initDb();
-      return;
-    }
-    db.on('ready', this.initDb);
+const Overview = props => {
+  const prevProps = usePrevProps(props);
+
+  const initDb = () => {
+    props.markDb();
+    props.addToLoadQueue('https://api.spotify.com/v1/me/tracks?limit=50', true);
   }
 
-  componentDidUpdate(prevProps) {
-    const isAuthenticated = this.props.authenticated;
-    const isQueueChanged = prevProps.loadQueue !== this.props.loadQueue;
+  useEffect(() => {
+    if (db.isOpen) {
+      initDb();
+      return;
+    }
+    db.on('ready', initDb);
+  }, []);
 
-    if (isAuthenticated && isQueueChanged) {
-      for (let index in this.props.loadQueue) {
-        const queue = this.props.loadQueue[index];
+  useEffect(() => {
+    const isAuthenticated = props.authenticated;
+
+    if (isAuthenticated && prevProps) {
+      for (let index in props.loadQueue) {
+        const queue = props.loadQueue[index];
         if ((prevProps.loadQueue && queue === prevProps.loadQueue[index]) || queue.isLoaded) {
           continue;
         }
-        this.props.retrieveLibrary(prevProps.authenticated, queue);
+        props.retrieveLibrary(props.authenticated, queue);
       }
 
-      const isAllLoaded = this.props.loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true);
+      const isAllLoaded = prevProps && props.loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true);
       if (isAllLoaded) {
-        this.props.doPurgeDb();
+        props.doPurgeDb();
       }
     }
-  }
+  }, [props.authenticated, props.loadQueue, prevProps]);
 
-  initDb = () => {
-    this.props.markDb();
-    this.props.addToLoadQueue('https://api.spotify.com/v1/me/tracks?limit=50', true);
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="row py-2">
-          <div className="col">
-            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
-              <Progress />
-            </Suspense>
-          </div>
-        </div>
-        <div className="row py-1">
-          <div className="col-md-4">
-            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
-              <Tools />
-            </Suspense>
-
-            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
-              <Player />
-            </Suspense>
-
-            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
-              <PlayerInfo />
-            </Suspense>
-
-            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
-              <UserInfo />
-            </Suspense>
-
-            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
-              <PlaylistList />
-            </Suspense>
-          </div>
-          <div className="col-md-8">
-            <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
-              <TrackList />
-            </Suspense>
-          </div>
+  return (
+    <div>
+      <div className="row py-2">
+        <div className="col">
+          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+            <Progress />
+          </Suspense>
         </div>
       </div>
-    );
-  }
+      <div className="row py-1">
+        <div className="col-md-4">
+          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+            <Tools />
+          </Suspense>
+
+          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+            <Player />
+          </Suspense>
+
+          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+            <PlayerInfo />
+          </Suspense>
+
+          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+            <UserInfo />
+          </Suspense>
+
+          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+            <PlaylistList />
+          </Suspense>
+        </div>
+        <div className="col-md-8">
+          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+            <TrackList />
+          </Suspense>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function mapStateToProps({data}) {
