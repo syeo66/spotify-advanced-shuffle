@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "description": "Advanced Shuffle for Spotify",
   "main": "index.js",
+  "homepage": "https://shuffle.raven.ch",
+  "private": true,
   "scripts": {
     "dev": "run-p watch run-dev",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,11 +17,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/RedOchsenbein/putget.git"
+    "url": "https://github.com/syeo66/spotify-advanced-shuffle.git"
   },
   "author": "Red Ochsenbein <red@redochsenbein.ch>",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/RedOchsenbein/spotify-shuffle#readme",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "color": "^3.1.0",
