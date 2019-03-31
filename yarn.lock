@@ -2613,6 +2613,11 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
 
+greenlet@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/greenlet/-/greenlet-1.0.1.tgz#5d2708dc75bda084ee06d27ebb207671cbf202be"
+  integrity sha512-srK6gegTVzHkRpLK3fFqJ4tuEeuCut9WzmL8EjKsOOlyKRb1GIWlUg09c832pYKzUWkYa2QDSkyDs47+yfoDQA==
+
 has-ansi@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/has-ansi/-/has-ansi-2.0.0.tgz#34f5049ce1ecdf2b0649af3ef24e45ed35416d91"
