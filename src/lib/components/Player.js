@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { retrievePlayState } from '../actions';
 import analyze from 'rgbaster';
 import Color from 'color';
-import greenlet from 'greenlet';
 
 const Player = props => {
   const [primaryColor, setPrimaryColor] = useState("rgb(30,30,30)");
@@ -23,14 +22,9 @@ const Player = props => {
       && item.album
       && item.album.images[0]
       ) {
-        const webworkerAnalyze = greenlet(async (url) => {
-          const colors = await analyze(url, {
-            scale: 0.6,
-          });
-          return colors;
-        });
-
-        webworkerAnalyze(item.album.images[0].url).then(colors => {
+        analyze(item.album.images[0].url, {
+          scale: 0.6,
+        }).then(colors => {
           const primary = colors[0].color;
 
           const secondary = colors.reduce((acc, c) =>  {
