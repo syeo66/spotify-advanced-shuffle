@@ -8,33 +8,39 @@ const Configuration = lazy(() => import('./Configuration'));
 const Tools = props => {
   const isLoaded = props.isLoaded;
   const text = !isLoaded ? (
-    <div className="mt-2 text-muted"><i className="fas fa-sync fa-spin"></i> Synchronizing...</div>
-  ) : "";
+    <div className="mt-2 text-muted">
+      <i className="fas fa-sync fa-spin" /> Synchronizing...
+    </div>
+  ) : (
+    ''
+  );
   return (
     <div className="mb-3 shadow border p-3 rounded">
       <div className="d-flex justify-content-between">
-        <Suspense fallback={(<div />)}>
+        <Suspense fallback={<div />}>
           <ShuffleButton />
         </Suspense>
 
-        <Suspense fallback={(<div />)}>
+        <Suspense fallback={<div />}>
           <ConfigButton />
         </Suspense>
       </div>
-      <Suspense fallback={(<div />)}>
+      <Suspense fallback={<div />}>
         <Configuration />
       </Suspense>
       {text}
     </div>
   );
-}
+};
 
 function mapStateToProps({ data }) {
   return {
     isLoaded: data.loadQueue.reduce((acc, queue) => acc && queue.isLoaded, true),
-    showConfig: data.showConfig,
-  }
+    showConfig: data.showConfig
+  };
 }
 
-export default connect(mapStateToProps, {})(memo(Tools));
-
+export default connect(
+  mapStateToProps,
+  {}
+)(memo(Tools));

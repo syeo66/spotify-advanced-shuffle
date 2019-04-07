@@ -14,83 +14,89 @@ import {
   UPDATE_CONFIG,
   DB_COUNT,
   TOGGLE_PLAYLIST,
-  CHECKED_PLAYLISTS,
-} from "../actions/types";
+  CHECKED_PLAYLISTS
+} from '../actions/types';
 
 export default (state = {}, action) => {
   switch (action.type) {
     case FIRST_PAGE:
       return {
         ...state,
-        currentPage: 1,
+        currentPage: 1
       };
     case NEXT_PAGE:
       const librarySize = state.loadQueue.reduce((acc, queue) => acc + queue.size, 0);
       const currentPage = Math.min(Math.ceil(librarySize / state.itemsPerPage), state.currentPage + 1);
       return {
         ...state,
-        currentPage: currentPage,
+        currentPage: currentPage
       };
     case PREVIOUS_PAGE:
-      return {...state, currentPage: Math.max(1, state.currentPage - 1)};
+      return { ...state, currentPage: Math.max(1, state.currentPage - 1) };
     case APPEND_PLAYLISTS:
       const playlists = state.playlists.concat(action.payload.items);
       return {
         ...state,
         playlists: playlists,
-        playlistsSize: action.payload.total,
+        playlistsSize: action.payload.total
       };
     case FETCH_PLAYLISTS:
       return {
         ...state,
         playlists: action.payload.items,
-        playlistsSize: action.payload.total,
+        playlistsSize: action.payload.total
       };
     case CHECKED_PLAYLISTS:
-      return {...state, checkedPlaylists: action.payload};
+      return { ...state, checkedPlaylists: action.payload };
     case TOGGLE_PLAYLIST:
       const { id, userId } = action.payload;
       if (!state.checkedPlaylists) {
         window.localStorage.setItem(userId + '.checkedPlaylists', JSON.stringify([id]));
-        return {...state, checkedPlaylists: [id]};
+        return { ...state, checkedPlaylists: [id] };
       }
-      const checked = state.checkedPlaylists.indexOf(id) !== -1
-        ? state.checkedPlaylists.filter(value => {
-          return value !== id;
-        })
-        : [...state.checkedPlaylists, id];
+      const checked =
+        state.checkedPlaylists.indexOf(id) !== -1
+          ? state.checkedPlaylists.filter(value => {
+              return value !== id;
+            })
+          : [...state.checkedPlaylists, id];
 
       window.localStorage.setItem(userId + '.checkedPlaylists', JSON.stringify(checked));
 
       return {
         ...state,
-        checkedPlaylists: checked,
+        checkedPlaylists: checked
       };
     case ADD_TO_LOAD_QUEUE:
       return {
         ...state,
-        loadQueue: !!action.purge
-        ? [{
-          origUrl: action.payload,
-          url: action.payload,
-          isLoaded: false,
-          current: 0,
-          size: 0,
-          next: 0,
-        }]
-        : [...state.loadQueue, {
-          origUrl: action.payload,
-          url: action.payload,
-          isLoaded: false,
-          current: 0,
-          size: 0,
-          next: 0,
-        }],
+        loadQueue: action.purge
+          ? [
+              {
+                origUrl: action.payload,
+                url: action.payload,
+                isLoaded: false,
+                current: 0,
+                size: 0,
+                next: 0
+              }
+            ]
+          : [
+              ...state.loadQueue,
+              {
+                origUrl: action.payload,
+                url: action.payload,
+                isLoaded: false,
+                current: 0,
+                size: 0,
+                next: 0
+              }
+            ]
       };
     case LOAD_LIBRARY_PAGE:
       return {
         ...state,
-        library: action.payload,
+        library: action.payload
       };
     case FETCH_LIBRARY:
       const loadQueue = state.loadQueue.map((entry, i) => {
@@ -98,31 +104,31 @@ export default (state = {}, action) => {
           return {
             ...action.payload,
             url: action.payload.next,
-            isLoaded: !action.payload.next,
+            isLoaded: !action.payload.next
           };
         }
         return entry;
       });
       return {
         ...state,
-        loadQueue,
+        loadQueue
       };
     case DB_COUNT:
       return {
         ...state,
-        dbSize: action.payload.dbSize || 0,
+        dbSize: action.payload.dbSize || 0
       };
     case FETCH_USER:
-      return {...state, user: action.user};
+      return { ...state, user: action.user };
     case FETCH_PLAYER:
-      return {...state, devices: action.devices.devices};
+      return { ...state, devices: action.devices.devices };
     case FETCH_PLAY_STATE:
-      return {...state, playstate: action.playstate};
+      return { ...state, playstate: action.playstate };
     case TOGGLE_CONFIG:
-      return {...state, showConfig: !state.showConfig};
+      return { ...state, showConfig: !state.showConfig };
     case UPDATE_CONFIG:
-      return {...state, config:{...state.config, ...action.config}};
+      return { ...state, config: { ...state.config, ...action.config } };
     default:
       return state;
   }
-}
+};

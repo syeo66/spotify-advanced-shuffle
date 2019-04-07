@@ -9,17 +9,19 @@ const Progress = props => {
         if (queue.isLoaded) {
           return '';
         }
-        return <ProgressBar key={queue.origUrl} current={queue.current} target={queue.size} />
-        })
-      }
+        return <ProgressBar key={queue.origUrl} current={queue.current} target={queue.size} />;
+      })}
     </React.Fragment>
   );
-}
+};
 
 function mapStateToProps(state) {
   return {
-    loadQueue: state.data.loadQueue,
-  }
+    loadQueue: state.data.loadQueue
+  };
 }
 
-export default connect(mapStateToProps, { })(memo(Progress));
+export default connect(
+  mapStateToProps,
+  {}
+)(memo(Progress));

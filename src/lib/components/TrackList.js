@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import {
-  loadLibraryFromDb,
-  firstPage,
-  nextPage,
-  previousPage,
-} from '../actions';
+import { loadLibraryFromDb, firstPage, nextPage, previousPage } from '../actions';
 
 const TrackList = props => {
   useEffect(() => {
@@ -21,62 +16,86 @@ const TrackList = props => {
   const currentPage = props.currentPage;
   const maxPage = Math.ceil((props.dbSize || librarySize) / perPage);
   const listItemWindow = props.library ? props.library : [];
-  const listItems = listItemWindow.map(entry =>
-      <div className="row mt-1" key={entry.id}>
-          <div className="col-md-2 xol-sm-3 col-4 pr-0">
-              <img src={entry.image} className="img-thumbnail img-fluid" />
-          </div>
-          <div className="col pl-2">
-              <strong>{entry.name}</strong><br />
-              {entry.artist} - {entry.album}
-          </div>
+  const listItems = listItemWindow.map(entry => (
+    <div className="row mt-1" key={entry.id}>
+      <div className="col-md-2 xol-sm-3 col-4 pr-0">
+        <img src={entry.image} className="img-thumbnail img-fluid" />
       </div>
-  );
+      <div className="col pl-2">
+        <strong>{entry.name}</strong>
+        <br />
+        {entry.artist} - {entry.album}
+      </div>
+    </div>
+  ));
 
-  const previous = currentPage > 1 ? (
-      <li className="page-item"><a className="page-link" onClick={props.previousPage}><i className="fas fa-arrow-left" /></a></li>
-  ) : '';
-  const next = currentPage < maxPage ? (
-      <li className="page-item"><a className="page-link" onClick={props.nextPage}><i className="fas fa-arrow-right" /></a></li>
-  ) : '';
+  const previous =
+    currentPage > 1 ? (
+      <li className="page-item">
+        <a className="page-link" onClick={props.previousPage}>
+          <i className="fas fa-arrow-left" />
+        </a>
+      </li>
+    ) : (
+      ''
+    );
+  const next =
+    currentPage < maxPage ? (
+      <li className="page-item">
+        <a className="page-link" onClick={props.nextPage}>
+          <i className="fas fa-arrow-right" />
+        </a>
+      </li>
+    ) : (
+      ''
+    );
   const pagination = (
-      <nav aria-label="Page navigation example">
-          <ul className="pagination">
-              {previous}
-              <li className="page-item"><a className="page-link">{currentPage}/{maxPage}</a></li>
-              {next}
-          </ul>
-      </nav>
+    <nav aria-label="Page navigation example">
+      <ul className="pagination">
+        {previous}
+        <li className="page-item">
+          <a className="page-link">
+            {currentPage}/{maxPage}
+          </a>
+        </li>
+        {next}
+      </ul>
+    </nav>
   );
   const text = !props.library.length ? (
-      <div className="mt-2 text-muted"><i className="fas fa-sync fa-spin fa-3x"></i></div>
-  ) : "";
+    <div className="mt-2 text-muted">
+      <i className="fas fa-sync fa-spin fa-3x" />
+    </div>
+  ) : (
+    ''
+  );
 
   return (
-      <div>
-          {pagination}
-          {listItems}
-          {text}
-          <div className="mt-3">
-              {pagination}
-          </div>
-      </div>
+    <div>
+      {pagination}
+      {listItems}
+      {text}
+      <div className="mt-3">{pagination}</div>
+    </div>
   );
-}
+};
 
-function mapStateToProps({data}) {
+function mapStateToProps({ data }) {
   return {
     library: data.library ? data.library : [],
     currentPage: data.currentPage ? data.currentPage : 1,
     itemsPerPage: data.itemsPerPage ? data.itemsPerPage : 20,
     loadQueue: data.loadQueue ? data.loadQueue : [],
-    dbSize: data.dbSize ? data.dbSize : 0,
-  }
+    dbSize: data.dbSize ? data.dbSize : 0
+  };
 }
 
-export default connect(mapStateToProps, {
-  loadLibraryFromDb,
-  firstPage,
-  nextPage,
-  previousPage,
-})(TrackList);
+export default connect(
+  mapStateToProps,
+  {
+    loadLibraryFromDb,
+    firstPage,
+    nextPage,
+    previousPage
+  }
+)(TrackList);

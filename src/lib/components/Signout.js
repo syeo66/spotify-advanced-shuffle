@@ -4,18 +4,22 @@ import { signOut } from '../actions';
 
 const Signout = props => {
   if (!props.auth) {
-    return "";
+    return '';
   }
 
   return (
     <a href="#" className="btn btn-primary btn-sm" onClick={props.signOut}>
-      <i className="fas fa-sign-out-alt" />&nbsp;Signout
+      <i className="fas fa-sign-out-alt" />
+      &nbsp;Signout
     </a>
   );
-}
+};
 
 function mapStateToProps({ auth }) {
-    return { auth };
+  return { auth };
 }
 
-export default connect(mapStateToProps, { signOut })(memo(Signout));
+export default connect(
+  mapStateToProps,
+  { signOut }
+)(memo(Signout));

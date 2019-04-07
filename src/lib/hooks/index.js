@@ -1,5 +1,3 @@
 import { usePrevProps } from './usePrevProps';
 
-export {
-  usePrevProps,
-}
+export { usePrevProps };

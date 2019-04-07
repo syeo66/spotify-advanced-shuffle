@@ -9,4 +9,4 @@ export const usePrevProps = props => {
   });
 
   return returnProps;
-}
+};

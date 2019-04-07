@@ -1,13 +1,8 @@
 import React, { lazy, Suspense, useEffect } from 'react';
-import {
-  addToLoadQueue,
-  markDb,
-  doPurgeDb,
-  retrieveLibrary,
-  retrieveUserData,
-} from '../actions';
+import { addToLoadQueue, markDb, doPurgeDb, retrieveLibrary, retrieveUserData } from '../actions';
 import { connect } from 'react-redux';
 import { usePrevProps } from '../hooks';
+import PropTypes from 'prop-types';
 
 import db from '../database';
 
@@ -25,7 +20,7 @@ const Overview = props => {
   const initDb = () => {
     props.markDb();
     props.addToLoadQueue('https://api.spotify.com/v1/me/tracks?limit=50', true);
-  }
+  };
 
   useEffect(() => {
     if (db.isOpen) {
@@ -58,53 +53,66 @@ const Overview = props => {
     <div>
       <div className="row py-2">
         <div className="col">
-          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
             <Progress />
           </Suspense>
         </div>
       </div>
       <div className="row py-1">
         <div className="col-md-4">
-          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
             <Tools />
           </Suspense>
 
-          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
             <Player />
           </Suspense>
 
-          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
             <PlayerInfo />
           </Suspense>
 
-          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
             <UserInfo />
           </Suspense>
 
-          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
             <PlaylistList />
           </Suspense>
         </div>
         <div className="col-md-8">
-          <Suspense fallback={(<div className="mb-3 shadow border p-3 rounded" />)}>
+          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
             <TrackList />
           </Suspense>
         </div>
       </div>
     </div>
   );
-}
+};
 
-function mapStateToProps({data}) {
+Overview.propTypes = {
+  markDb: PropTypes.func.isRequired,
+  addToLoadQueue: PropTypes.func.isRequired,
+  doPurgeDb: PropTypes.func.isRequired,
+  retrieveLibrary: PropTypes.func.isRequired,
+  retrieveUserData: PropTypes.func.isRequired,
+  loadQueue: PropTypes.array.isRequired,
+  authenticated: PropTypes.string
+};
+
+function mapStateToProps({ data }) {
   return {
-    loadQueue: data.loadQueue ? data.loadQueue : [],
-  }
+    loadQueue: data.loadQueue ? data.loadQueue : []
+  };
 }
 
-export default connect(mapStateToProps, {
-  addToLoadQueue,
-  markDb,
-  doPurgeDb,
-  retrieveLibrary,
-  retrieveUserData,
-})(Overview);
+export default connect(
+  mapStateToProps,
+  {
+    addToLoadQueue,
+    markDb,
+    doPurgeDb,
+    retrieveLibrary,
+    retrieveUserData
+  }
+)(Overview);
