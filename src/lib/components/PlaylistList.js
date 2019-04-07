@@ -67,7 +67,7 @@ const PlaylistList = props => {
 PlaylistList.propTypes = {
   authenticated: PropTypes.string,
   playlists: PropTypes.array.isRequired,
-  userId: PropTypes.string.isRequired,
+  userId: PropTypes.string,
   checkedPlaylists: PropTypes.array,
   configRandomListName: PropTypes.string,
   loadQueue: PropTypes.array,

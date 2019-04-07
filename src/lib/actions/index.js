@@ -263,7 +263,7 @@ export const retrievePlayState = authenticated => dispatch => {
     })
   })
     .then(response => {
-      if (!response.ok) {
+      if (!response.ok || response.status !== 200) {
         if (response.status == 401) {
           doSignOut(dispatch);
         }

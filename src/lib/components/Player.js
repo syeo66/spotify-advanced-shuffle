@@ -152,14 +152,14 @@ const Player = props => {
 
 Player.propTypes = {
   authenticated: PropTypes.string,
-  playstate: PropTypes.array.isRequired,
+  playstate: PropTypes.object.isRequired,
   retrievePlayState: PropTypes.func.isRequired
 };
 
 function mapStateToProps({ auth, data }) {
   return {
     authenticated: auth,
-    playstate: data.playstate ? data.playstate : []
+    playstate: data.playstate ? data.playstate : {}
   };
 }
 

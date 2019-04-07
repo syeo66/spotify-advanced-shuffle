@@ -18,7 +18,7 @@ export default ComposedComponent => {
   };
 
   Authentication.propTypes = {
-    authenticated: PropTypes.string.isRequired,
+    authenticated: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
     history: ReactRouterPropTypes.history.isRequired
   };
 
