@@ -75,7 +75,7 @@ PlaylistList.propTypes = {
   setCheckedPlaylists: PropTypes.func.isRequired,
   retrievePlaylists: PropTypes.func.isRequired,
   setConfig: PropTypes.func.isRequired,
-  togglePlaylist: PropTypes.func.isRequired
+  togglePlaylist: PropTypes.func.isRequired,
 };
 
 function mapStateToProps({ auth, data }) {
@@ -85,7 +85,7 @@ function mapStateToProps({ auth, data }) {
     userId: data.user ? data.user.id : null,
     checkedPlaylists: data.checkedPlaylists,
     configRandomListName: data.config ? data.config.randomListName : null,
-    loadQueue: data.loadQueue
+    loadQueue: data.loadQueue,
   };
 }
 
@@ -96,6 +96,6 @@ export default connect(
     setCheckedPlaylists,
     retrievePlaylists,
     setConfig,
-    togglePlaylist
+    togglePlaylist,
   }
 )(PlaylistList);

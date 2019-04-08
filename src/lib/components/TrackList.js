@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { loadLibraryFromDb, firstPage, nextPage, previousPage } from '../actions';
+import PropTypes from 'prop-types';
 
 const TrackList = props => {
   useEffect(() => {
@@ -80,13 +81,25 @@ const TrackList = props => {
   );
 };
 
+TrackList.propTypes = {
+  firstPage: PropTypes.func.isRequired,
+  loadLibraryFromDb: PropTypes.func.isRequired,
+  previousPage: PropTypes.func.isRequired,
+  nextPage: PropTypes.func.isRequired,
+  loadQueue: PropTypes.array.isRequired,
+  dbSize: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  itemsPerPage: PropTypes.number.isRequired,
+  library: PropTypes.array.isRequired,
+};
+
 function mapStateToProps({ data }) {
   return {
     library: data.library ? data.library : [],
     currentPage: data.currentPage ? data.currentPage : 1,
     itemsPerPage: data.itemsPerPage ? data.itemsPerPage : 20,
     loadQueue: data.loadQueue ? data.loadQueue : [],
-    dbSize: data.dbSize ? data.dbSize : 0
+    dbSize: data.dbSize ? data.dbSize : 0,
   };
 }
 
@@ -96,6 +109,6 @@ export default connect(
     loadLibraryFromDb,
     firstPage,
     nextPage,
-    previousPage
+    previousPage,
   }
 )(TrackList);

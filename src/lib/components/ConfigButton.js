@@ -21,11 +21,11 @@ const ConfigButton = props => {
 
 ConfigButton.propTypes = {
   toggleConfig: PropTypes.func.isRequired,
-  showConfig: PropTypes.bool.isRequired
+  showConfig: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ data }) => ({
-  showConfig: data.showConfig
+  showConfig: data.showConfig,
 });
 
 export default connect(

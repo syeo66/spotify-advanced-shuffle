@@ -24,11 +24,13 @@ const initialState = {
       amountType: 'count', //  'count' / 'minutes'
       randomListName: 'Advanced Shuffle', // the playlists name to create shuffle
       purgeOnShuffle: true, // purge an existing list before shuffle
-      useCollections: false // use collections for shuffle?
-    }
-  }
+      useCollections: false, // use collections for shuffle?
+    },
+  },
 };
+
 const store = createStore(reducers, initialState, applyMiddleware(reduxThunk));
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

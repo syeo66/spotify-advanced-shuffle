@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { signOut } from '../actions';
+import PropTypes from 'prop-types';
 
 const Signout = props => {
   if (!props.auth) {
@@ -13,6 +14,11 @@ const Signout = props => {
       &nbsp;Signout
     </a>
   );
+};
+
+Signout.propTypes = {
+  auth: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  signOut: PropTypes.func.isRequired,
 };
 
 function mapStateToProps({ auth }) {

@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -42,6 +43,11 @@ const App = props => {
       </BrowserRouter>
     </div>
   );
+};
+
+App.propTypes = {
+  doLogin: PropTypes.func.isRequired,
+  fetchUser: PropTypes.func.isRequired,
 };
 
 export default connect(

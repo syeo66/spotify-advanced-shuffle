@@ -1,5 +1,6 @@
 import React, { lazy, memo, Suspense } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 const ShuffleButton = lazy(() => import('./ShuffleButton'));
 const ConfigButton = lazy(() => import('./ConfigButton'));
@@ -33,10 +34,14 @@ const Tools = props => {
   );
 };
 
+Tools.propTypes = {
+  isLoaded: PropTypes.bool.isRequired,
+};
+
 function mapStateToProps({ data }) {
   return {
     isLoaded: data.loadQueue.reduce((acc, queue) => acc && queue.isLoaded, true),
-    showConfig: data.showConfig
+    showConfig: data.showConfig,
   };
 }
 

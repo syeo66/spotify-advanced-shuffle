@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { retrievePlaylists } from '../actions';
 import db from '../database';
 import random from 'random';
+import PropTypes from 'prop-types';
 
 const ShuffleButton = props => {
   const [isShuffleLoading, setIsShuffleLoading] = useState(false);
@@ -22,18 +23,18 @@ const ShuffleButton = props => {
   };
 
   const createRandomPlaylist = authenticated => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const url = 'https://api.spotify.com/v1/me/playlists';
       fetch(url, {
         method: 'post',
         headers: new Headers({
-          Authorization: 'Bearer ' + authenticated
+          Authorization: 'Bearer ' + authenticated,
         }),
         body: JSON.stringify({
           name: props.config.randomListName,
           description: 'Spotify Advanced Shuffle Helper Playlist',
-          public: false
-        })
+          public: false,
+        }),
       })
         .then(response => response.json())
         .then(response => {
@@ -48,12 +49,12 @@ const ShuffleButton = props => {
     fetch(url, {
       method: 'put',
       headers: new Headers({
-        Authorization: 'Bearer ' + authenticated
+        Authorization: 'Bearer ' + authenticated,
       }),
       body: JSON.stringify({
-        context_uri: playlist.uri
-      })
-    }).then(response => setIsShuffleLoading(false));
+        context_uri: playlist.uri,
+      }),
+    }).then(() => setIsShuffleLoading(false));
   };
 
   const addRandomTracks = (playlist, trackUris) => {
@@ -63,15 +64,15 @@ const ShuffleButton = props => {
     fetch(url, {
       method: 'post',
       headers: new Headers({
-        Authorization: 'Bearer ' + authenticated
+        Authorization: 'Bearer ' + authenticated,
       }),
       body: JSON.stringify({
         uris: trackUris,
-        position: 0
-      })
+        position: 0,
+      }),
     })
       .then(response => response.json())
-      .then(response => {
+      .then(() => {
         startPlayback(playlist);
       });
   };
@@ -102,11 +103,11 @@ const ShuffleButton = props => {
         });
       });
     };
-    addTracks([...Array(count)].map(_ => random.float()));
+    addTracks([...Array(count)].map(() => random.float()));
   };
 
   const purgePlaylistTracks = (playlist, trackUris) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const authenticated = props.authenticated;
       const playlistId = playlist.id;
       const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
@@ -117,28 +118,28 @@ const ShuffleButton = props => {
       fetch(url, {
         method: 'delete',
         headers: new Headers({
-          Authorization: 'Bearer ' + authenticated
+          Authorization: 'Bearer ' + authenticated,
         }),
         body: JSON.stringify({
-          tracks: trackUris
-        })
+          tracks: trackUris,
+        }),
       })
         .then(response => response.json())
-        .then(response => {
+        .then(() => {
           resolve();
         });
     });
   };
 
   const purgeRandomPlaylist = playlist => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       if (!props.config.purgeOnShuffle) {
         resolve(playlist);
         return;
       }
       const authenticated = props.authenticated;
       const preparePurge = (url, uris = []) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
           if (!url) {
             resolve(uris);
             return;
@@ -146,8 +147,8 @@ const ShuffleButton = props => {
           fetch(url, {
             method: 'get',
             headers: new Headers({
-              Authorization: 'Bearer ' + authenticated
-            })
+              Authorization: 'Bearer ' + authenticated,
+            }),
           })
             .then(response => response.json())
             .then(async response => {
@@ -162,19 +163,19 @@ const ShuffleButton = props => {
       preparePurge(playlist.tracks.href).then(trackUris => {
         const chunks = chunkArray(trackUris, 100);
         const removeChunk = chunks => {
-          return new Promise((resolve, reject) => {
+          return new Promise(resolve => {
             const chunk = chunks.slice(0, 1)[0];
             const chunksLeft = chunks.slice(1, chunks.length);
             if (!chunks || chunks.length == 0) {
               resolve();
               return;
             }
-            purgePlaylistTracks(playlist, chunk).then(_ => {
-              removeChunk(chunksLeft).then(_ => resolve());
+            purgePlaylistTracks(playlist, chunk).then(() => {
+              removeChunk(chunksLeft).then(() => resolve());
             });
           });
         };
-        removeChunk(chunks).then(_ => resolve(playlist));
+        removeChunk(chunks).then(() => resolve(playlist));
       });
     });
   };
@@ -182,7 +183,7 @@ const ShuffleButton = props => {
   const startShuffle = event => {
     event.preventDefault();
     setIsShuffleLoading(true);
-    const existingPlaylist = props.existingPlaylist;
+    const { existingPlaylist } = props;
     if (!existingPlaylist) {
       createRandomPlaylist(props.authenticated).then(playlist => {
         fillRandomPlaylist(playlist);
@@ -202,6 +203,15 @@ const ShuffleButton = props => {
   );
 };
 
+ShuffleButton.propTypes = {
+  authenticated: PropTypes.string.isRequired,
+  config: PropTypes.object.isRequired,
+  dbSize: PropTypes.number.isRequired,
+  existingPlaylist: PropTypes.object,
+  isLoaded: PropTypes.bool.isRequired,
+  librarySize: PropTypes.number.isRequired,
+};
+
 function mapStateToProps({ data, auth }) {
   return {
     config: data.config,
@@ -213,7 +223,7 @@ function mapStateToProps({ data, auth }) {
       ? data.playlists.reduce((accumulator, currentValue) => {
           return accumulator || (currentValue.name == data.config.randomListName ? currentValue : null);
         }, null)
-      : []
+      : null,
   };
 }
 

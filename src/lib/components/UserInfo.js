@@ -1,6 +1,7 @@
 import React, { memo, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { retrieveUserData } from '../actions';
+import PropTypes from 'prop-types';
 
 const UserInfo = props => {
   useEffect(() => props.retrieveUserData(props.authenticated), []);
@@ -24,14 +25,20 @@ const UserInfo = props => {
   );
 };
 
-const mapStateToProps = state => {
-  return state.data.user
+UserInfo.propTypes = {
+  retrieveUserData: PropTypes.func.isRequired,
+  authenticated: PropTypes.string.isRequired,
+  user: PropTypes.object,
+};
+
+const mapStateToProps = ({ data, auth }) => {
+  return data.user
     ? {
-        authenticated: state.auth,
-        user: state.data.user
+        authenticated: auth,
+        user: data.user,
       }
     : {
-        authenticated: state.auth
+        authenticated: auth,
       };
 };
 

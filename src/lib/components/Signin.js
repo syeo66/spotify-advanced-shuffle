@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { signInWithSpotify, doLogin } from '../actions';
+import PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const Signin = props => {
   useEffect(() => {
@@ -28,6 +30,13 @@ const Signin = props => {
       </div>
     </div>
   );
+};
+
+Signin.propTypes = {
+  doLogin: PropTypes.func.isRequired,
+  signInWithSpotify: PropTypes.func.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  auth: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
 };
 
 function mapStateToProps({ auth }) {

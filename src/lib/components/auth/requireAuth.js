@@ -19,7 +19,7 @@ export default ComposedComponent => {
 
   Authentication.propTypes = {
     authenticated: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    history: ReactRouterPropTypes.history.isRequired,
   };
 
   const mapStateToProps = ({ auth }) => {

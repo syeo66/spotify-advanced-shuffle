@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import ProgressBar from './ProgressBar.js';
+import PropTypes from 'prop-types';
 
 const Progress = props => {
   return (
     <React.Fragment>
-      {props.loadQueue.map((queue, i) => {
+      {props.loadQueue.map(queue => {
         if (queue.isLoaded) {
           return '';
         }
@@ -15,9 +16,13 @@ const Progress = props => {
   );
 };
 
+Progress.propTypes = {
+  loadQueue: PropTypes.array.isRequired,
+};
+
 function mapStateToProps(state) {
   return {
-    loadQueue: state.data.loadQueue
+    loadQueue: state.data.loadQueue,
   };
 }
 
