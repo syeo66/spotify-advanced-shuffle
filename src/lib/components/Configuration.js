@@ -128,7 +128,7 @@ const Configuration = props => {
           value={props.config.randomListName}
         />
         <small id="playlistNameHelp" className="form-text text-muted">
-          The random playlist will be called &quote;{props.config.randomListName}&quote;
+          The random playlist will be called «{props.config.randomListName}»
         </small>
       </div>
     </div>
@@ -139,14 +139,14 @@ Configuration.propTypes = {
   setConfig: PropTypes.func.isRequired,
   user: PropTypes.object,
   config: PropTypes.object.isRequired,
-  showConfig: PropTypes.bool.isRequired
+  showConfig: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ data }) => {
   return {
     config: data.config,
     showConfig: data.showConfig,
-    user: data.user
+    user: data.user,
   };
 };
 
