@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { BrowserRouter, Route } from 'react-router-dom';
@@ -10,9 +10,14 @@ const Overview = lazy(() => import('./components/Overview'));
 import Signin from './components/Signin';
 import Signout from './components/Signout';
 import requireAuth from './components/auth/requireAuth';
+import db from './database';
 
 const App = props => {
+  const [isDatabaseReady, setIsDatabaseReady] = useState(false);
+
   useEffect(() => {
+    db.open().then(() => setIsDatabaseReady(true));
+
     const onMessage = message => {
       if (message.data.type && message.data.type == 'access_token') {
         props.doLogin(message.data.token);
@@ -33,14 +38,18 @@ const App = props => {
         </a>
         <Signout />
       </nav>
-      <BrowserRouter>
-        <div className="container-fluid">
-          <Route exact path="/" component={Signin} />
-          <Suspense fallback={<div />}>
-            <Route path="/app" component={requireAuth(Overview)} />
-          </Suspense>
-        </div>
-      </BrowserRouter>
+      {isDatabaseReady ? (
+        <BrowserRouter>
+          <div className="container-fluid">
+            <Route exact path="/" component={Signin} />
+            <Suspense fallback={<div />}>
+              <Route path="/app" component={requireAuth(Overview)} />
+            </Suspense>
+          </div>
+        </BrowserRouter>
+      ) : (
+        'Waiting for Database...'
+      )}
     </div>
   );
 };

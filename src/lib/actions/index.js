@@ -15,7 +15,7 @@ import {
   TOGGLE_PLAYLIST,
   FETCH_PLAY_STATE,
   TOGGLE_CONFIG,
-  UPDATE_CONFIG
+  UPDATE_CONFIG,
 } from './types';
 import db from '../database';
 
@@ -27,7 +27,7 @@ export const fetchUser = () => dispatch => {
         window.opener.postMessage(
           {
             type: 'access_token',
-            token: splitEntry[1]
+            token: splitEntry[1],
           },
           '*'
         );
@@ -43,7 +43,7 @@ export const doLogin = token => dispatch => {
   }
   dispatch({
     type: RETRIEVE_AUTH_TOKEN,
-    payload: token
+    payload: token,
   });
 };
 
@@ -74,7 +74,7 @@ const doSignOut = dispatch => {
   }
   dispatch({
     type: RETRIEVE_AUTH_TOKEN,
-    payload: null
+    payload: null,
   });
 };
 
@@ -82,8 +82,8 @@ export const retrieveUserData = authenticated => dispatch => {
   fetch('https://api.spotify.com/v1/me', {
     method: 'get',
     headers: new Headers({
-      Authorization: 'Bearer ' + authenticated
-    })
+      Authorization: 'Bearer ' + authenticated,
+    }),
   })
     .then(response => {
       if (!response.ok) {
@@ -97,7 +97,7 @@ export const retrieveUserData = authenticated => dispatch => {
     .then(response => {
       dispatch({
         type: FETCH_USER,
-        user: response
+        user: response,
       });
     });
 };
@@ -111,7 +111,7 @@ export const loadLibraryFromDb = (offset, limit) => dispatch => {
     .then(results => {
       dispatch({
         type: LOAD_LIBRARY_PAGE,
-        payload: results
+        payload: results,
       });
     });
 };
@@ -134,7 +134,7 @@ export const addToLoadQueue = (url, purge = false) => dispatch => {
   dispatch({
     type: ADD_TO_LOAD_QUEUE,
     payload: url,
-    purge: purge
+    purge: purge,
   });
 };
 
@@ -143,8 +143,8 @@ export const retrieveLibrary = (authenticated, queue) => dispatch => {
   fetch(url, {
     method: 'get',
     headers: new Headers({
-      Authorization: 'Bearer ' + authenticated
-    })
+      Authorization: 'Bearer ' + authenticated,
+    }),
   })
     .then(response => response.json())
     .then(response => {
@@ -159,7 +159,7 @@ export const retrieveLibrary = (authenticated, queue) => dispatch => {
           album: track.album.name,
           image: track.album.images[0].url,
           duration_ms: track.duration_ms,
-          isSynced: 1
+          isSynced: 1,
         };
         objects.push(itemObject);
       }
@@ -168,8 +168,8 @@ export const retrieveLibrary = (authenticated, queue) => dispatch => {
         dispatch({
           type: DB_COUNT,
           payload: {
-            dbSize: count
-          }
+            dbSize: count,
+          },
         });
       });
       dispatch({
@@ -178,27 +178,27 @@ export const retrieveLibrary = (authenticated, queue) => dispatch => {
           ...queue,
           current: response.items.length + response.offset,
           size: response.total,
-          next: response.next
-        }
+          next: response.next,
+        },
       });
     });
 };
 
 export const firstPage = () => dispatch => {
   dispatch({
-    type: FIRST_PAGE
+    type: FIRST_PAGE,
   });
 };
 
 export const previousPage = () => dispatch => {
   dispatch({
-    type: PREVIOUS_PAGE
+    type: PREVIOUS_PAGE,
   });
 };
 
 export const nextPage = () => dispatch => {
   dispatch({
-    type: NEXT_PAGE
+    type: NEXT_PAGE,
   });
 };
 
@@ -210,8 +210,8 @@ export const retrievePlaylists = (
   fetch(url, {
     method: 'get',
     headers: new Headers({
-      Authorization: 'Bearer ' + authenticated
-    })
+      Authorization: 'Bearer ' + authenticated,
+    }),
   })
     .then(response => response.json())
     .then(response => {
@@ -220,7 +220,7 @@ export const retrievePlaylists = (
       }
       dispatch({
         type: append ? APPEND_PLAYLISTS : FETCH_PLAYLISTS,
-        payload: response
+        payload: response,
       });
     });
 };
@@ -228,14 +228,14 @@ export const retrievePlaylists = (
 export const togglePlaylist = (id, userId) => dispatch => {
   dispatch({
     type: TOGGLE_PLAYLIST,
-    payload: { id, userId }
+    payload: { id, userId },
   });
 };
 
 export const setCheckedPlaylists = checked => dispatch => {
   dispatch({
     type: CHECKED_PLAYLISTS,
-    payload: checked
+    payload: checked,
   });
 };
 
@@ -243,14 +243,14 @@ export const retrievePlayerInfo = authenticated => dispatch => {
   fetch('https://api.spotify.com/v1/me/player/devices', {
     method: 'get',
     headers: new Headers({
-      Authorization: 'Bearer ' + authenticated
-    })
+      Authorization: 'Bearer ' + authenticated,
+    }),
   })
     .then(response => response.json())
     .then(response => {
       dispatch({
         type: FETCH_PLAYER,
-        devices: response
+        devices: response,
       });
     });
 };
@@ -259,8 +259,8 @@ export const retrievePlayState = authenticated => dispatch => {
   fetch('https://api.spotify.com/v1/me/player', {
     method: 'get',
     headers: new Headers({
-      Authorization: 'Bearer ' + authenticated
-    })
+      Authorization: 'Bearer ' + authenticated,
+    }),
   })
     .then(response => {
       if (!response.ok || response.status !== 200) {
@@ -274,14 +274,14 @@ export const retrievePlayState = authenticated => dispatch => {
     .then(response => {
       dispatch({
         type: FETCH_PLAY_STATE,
-        playstate: response
+        playstate: response,
       });
     });
 };
 
 export const toggleConfig = () => dispatch => {
   dispatch({
-    type: TOGGLE_CONFIG
+    type: TOGGLE_CONFIG,
   });
 };
 
@@ -289,7 +289,7 @@ export const setConfig = (key, value) => dispatch => {
   dispatch({
     type: UPDATE_CONFIG,
     config: {
-      [key]: value
-    }
+      [key]: value,
+    },
   });
 };
