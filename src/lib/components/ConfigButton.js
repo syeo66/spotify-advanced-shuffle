@@ -1,11 +1,10 @@
+import classNames from 'classnames';
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { toggleConfig } from '../actions';
 import PropTypes from 'prop-types';
 
 const ConfigButton = props => {
-  const classes = props.showConfig ? 'btn btn-light active' : 'btn btn-light';
-
   const startConfiguration = event => {
     props.toggleConfig();
     event.currentTarget.blur();
@@ -13,7 +12,13 @@ const ConfigButton = props => {
   };
 
   return (
-    <a href="#" className={classes} onClick={startConfiguration}>
+    <a
+      href="#"
+      className={classNames('btn btn-light', {
+        active: props.showConfig,
+      })}
+      onClick={startConfiguration}
+    >
       <i className="fas fa-cog" />
     </a>
   );

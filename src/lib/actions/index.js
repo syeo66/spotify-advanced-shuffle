@@ -116,8 +116,8 @@ export const loadLibraryFromDb = (offset, limit) => dispatch => {
     });
 };
 
-export const markDb = _ => dispatch => {
-  db.tracks.toCollection().modify(track => {
+export const markDb = () => dispatch => {
+  return db.tracks.toCollection().modify(track => {
     track.isSynced = 0;
   });
 };

@@ -18,11 +18,8 @@ const App = props => {
   useEffect(() => {
     db.open().then(() => setIsDatabaseReady(true));
 
-    const onMessage = message => {
-      if (message.data.type && message.data.type == 'access_token') {
-        props.doLogin(message.data.token);
-      }
-    };
+    const onMessage = message =>
+      message.data.type && message.data.type == 'access_token' ? props.doLogin(message.data.token) : null;
 
     window.addEventListener('message', onMessage);
     props.fetchUser();

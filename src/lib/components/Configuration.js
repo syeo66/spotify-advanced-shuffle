@@ -4,7 +4,7 @@ import { setConfig } from '../actions';
 import PropTypes from 'prop-types';
 
 const Configuration = props => {
-  const setConfig = (key, value) => {
+  const setConfig = key => value => {
     props.setConfig(key, value);
     if (typeof Storage !== 'undefined') {
       const userId = props.user.id;
@@ -31,7 +31,7 @@ const Configuration = props => {
         };
         const value = mapping(key);
         if (value !== null) {
-          setConfig(key, value);
+          setConfig(key)(value);
         }
       });
     }
@@ -41,17 +41,17 @@ const Configuration = props => {
     const value = parseInt(event.target.value) || '';
     const key = props.config.amountType == 'minutes' ? 'trackMinutes' : 'trackCount';
     const maxValue = props.config.amountType == 'minutes' ? 1500 : 500;
-    setConfig(key, Math.max(Math.min(value, maxValue), 0));
+    setConfig(key)(Math.max(Math.min(value, maxValue), 0));
   };
 
   const handlePurgeChange = () => {
-    setConfig('purgeOnShuffle', !props.config.purgeOnShuffle);
+    setConfig('purgeOnShuffle')(!props.config.purgeOnShuffle);
   };
 
   const handlePlaylistNameChange = event => {
     const input = event.target.value.trim();
     const value = input || 'Advanced Shuffle';
-    setConfig('randomListName', value);
+    setConfig('randomListName')(value);
   };
 
   const type = props.config.amountType == 'minutes' ? 'Minutes' : 'Trackcount';
@@ -65,6 +65,10 @@ const Configuration = props => {
   if (!props.showConfig) {
     return '';
   }
+
+  const setAmountTypeConfig = setConfig('amountType');
+  const setAmountTypeConfigCount = () => setAmountTypeConfig('count');
+  const setAmountTypeConfigMinutes = () => setAmountTypeConfig('minutes');
 
   return (
     <div className="pt-2 mt-2 border-top border-bottom">
@@ -80,10 +84,10 @@ const Configuration = props => {
             {type}
           </button>
           <div className="dropdown-menu">
-            <a className="dropdown-item" href="#" onClick={() => setConfig('amountType', 'count')}>
+            <a className="dropdown-item" href="#" onClick={setAmountTypeConfigCount}>
               Trackcount
             </a>
-            <a className="dropdown-item" href="#" onClick={() => setConfig('amountType', 'minutes')}>
+            <a className="dropdown-item" href="#" onClick={setAmountTypeConfigMinutes}>
               Minutes
             </a>
           </div>

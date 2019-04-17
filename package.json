@@ -23,6 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "classnames": "^2.2.6",
     "color": "^3.1.0",
     "dexie": "^2.0.4",
     "dotenv": "^6.2.0",
