@@ -13,19 +13,25 @@ const Player = props => {
   const playStateItemUrl = props.playstate.item ? props.playstate.item.album.images[0].url : null;
 
   useEffect(() => {
-    props.retrievePlayState(props.authenticated);
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    props.retrievePlayState(props.authenticated, signal);
     const polling = setInterval(
-      () => props.retrievePlayState(props.authenticated),
+      () => props.retrievePlayState(props.authenticated, signal),
       2000 + Math.floor(Math.random() * 1000)
     );
-    return () => clearInterval(polling);
+    return () => {
+      clearInterval(polling);
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {
     const item = props.playstate.item;
     if (item && item.album && item.album.images[0]) {
       analyze(item.album.images[0].url, {
-        scale: 0.6
+        scale: 0.6,
       }).then(colors => {
         const primary = colors[0].color;
 
@@ -95,7 +101,7 @@ const Player = props => {
           transition: 'background 5s linear',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: '50% ' + played + '%'
+          backgroundPosition: '50% ' + played + '%',
         }
       : {};
   const playClass = props.playstate.is_playing ? 'fas fa-pause' : 'fas fa-play';
@@ -112,7 +118,7 @@ const Player = props => {
             color: secondaryColor,
             backgroundColor: primaryColor,
             border: '1px solid ' + primaryColor,
-            boxShadow: '0 0 5px ' + secondaryColor
+            boxShadow: '0 0 5px ' + secondaryColor,
           }}
         >
           <i className={playClass} />
@@ -120,7 +126,7 @@ const Player = props => {
         <div className="" style={{ color: tertiaryColor }}>
           <small
             style={{
-              textShadow: '0 0 10px ' + primaryColor + ', 0 0 5px ' + primaryColor + ', 0 0 3px ' + primaryColor
+              textShadow: '0 0 10px ' + primaryColor + ', 0 0 5px ' + primaryColor + ', 0 0 3px ' + primaryColor,
             }}
           >
             <strong>{itemName}</strong>
@@ -134,7 +140,7 @@ const Player = props => {
         style={{
           border: '1px solid ' + primaryColor,
           boxShadow: '0 0 5px ' + secondaryColor,
-          backgroundColor: secondaryColor
+          backgroundColor: secondaryColor,
         }}
       >
         <div
@@ -153,13 +159,13 @@ const Player = props => {
 Player.propTypes = {
   authenticated: PropTypes.string,
   playstate: PropTypes.object.isRequired,
-  retrievePlayState: PropTypes.func.isRequired
+  retrievePlayState: PropTypes.func.isRequired,
 };
 
 function mapStateToProps({ auth, data }) {
   return {
     authenticated: auth,
-    playstate: data.playstate ? data.playstate : {}
+    playstate: data.playstate ? data.playstate : {},
   };
 }
 

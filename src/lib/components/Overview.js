@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 import { addToLoadQueue, markDb, doPurgeDb, retrieveLibrary, retrieveUserData } from '../actions';
 import { connect } from 'react-redux';
 import { usePrevProps } from '../hooks';
@@ -97,12 +97,12 @@ Overview.propTypes = {
   retrieveLibrary: PropTypes.func.isRequired,
   retrieveUserData: PropTypes.func.isRequired,
   loadQueue: PropTypes.array.isRequired,
-  authenticated: PropTypes.string
+  authenticated: PropTypes.string,
 };
 
 function mapStateToProps({ data }) {
   return {
-    loadQueue: data.loadQueue ? data.loadQueue : []
+    loadQueue: data.loadQueue ? data.loadQueue : [],
   };
 }
 
@@ -113,6 +113,6 @@ export default connect(
     markDb,
     doPurgeDb,
     retrieveLibrary,
-    retrieveUserData
+    retrieveUserData,
   }
 )(Overview);

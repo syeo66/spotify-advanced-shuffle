@@ -204,10 +204,12 @@ export const nextPage = () => dispatch => {
 
 export const retrievePlaylists = (
   authenticated,
+  abortSignal,
   url = 'https://api.spotify.com/v1/me/playlists?limit=50',
   append = false
 ) => dispatch => {
   fetch(url, {
+    signal: abortSignal,
     method: 'get',
     headers: new Headers({
       Authorization: 'Bearer ' + authenticated,
@@ -216,7 +218,7 @@ export const retrievePlaylists = (
     .then(response => response.json())
     .then(response => {
       if (response.next && response.total > response.offset + response.limit) {
-        retrievePlaylists(authenticated, response.next, true)(dispatch);
+        retrievePlaylists(authenticated, abortSignal, response.next, true)(dispatch);
       }
       dispatch({
         type: append ? APPEND_PLAYLISTS : FETCH_PLAYLISTS,
@@ -239,8 +241,9 @@ export const setCheckedPlaylists = checked => dispatch => {
   });
 };
 
-export const retrievePlayerInfo = authenticated => dispatch => {
+export const retrievePlayerInfo = (authenticated, abortSignal) => dispatch => {
   fetch('https://api.spotify.com/v1/me/player/devices', {
+    signal: abortSignal,
     method: 'get',
     headers: new Headers({
       Authorization: 'Bearer ' + authenticated,
@@ -255,8 +258,9 @@ export const retrievePlayerInfo = authenticated => dispatch => {
     });
 };
 
-export const retrievePlayState = authenticated => dispatch => {
+export const retrievePlayState = (authenticated, abortSignal) => dispatch => {
   fetch('https://api.spotify.com/v1/me/player', {
+    signal: abortSignal,
     method: 'get',
     headers: new Headers({
       Authorization: 'Bearer ' + authenticated,

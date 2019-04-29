@@ -5,9 +5,15 @@ import PropTypes from 'prop-types';
 
 const PlaylistList = props => {
   useEffect(() => {
-    props.retrievePlaylists(props.authenticated);
-    const polling = setInterval(() => props.retrievePlaylists(props.authenticated), 4900);
-    return () => clearInterval(polling);
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    props.retrievePlaylists(props.authenticated, signal);
+    const polling = setInterval(() => props.retrievePlaylists(props.authenticated, signal), 4900);
+    return () => {
+      clearInterval(polling);
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {

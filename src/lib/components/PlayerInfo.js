@@ -5,9 +5,15 @@ import PropTypes from 'prop-types';
 
 const PlayerInfo = props => {
   useEffect(() => {
-    props.retrievePlayerInfo(props.authenticated);
-    const polling = setInterval(() => props.retrievePlayerInfo(props.authenticated), 3000);
-    return () => clearInterval(polling);
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    props.retrievePlayerInfo(props.authenticated, signal);
+    const polling = setInterval(() => props.retrievePlayerInfo(props.authenticated, signal), 3000);
+    return () => {
+      clearInterval(polling);
+      controller.abort();
+    };
   }, []);
 
   if (!props.devices || !props.devices.length) {
@@ -34,11 +40,11 @@ const PlayerInfo = props => {
         fetch(url, {
           method: 'put',
           headers: new Headers({
-            Authorization: 'Bearer ' + authenticated
+            Authorization: 'Bearer ' + authenticated,
           }),
           body: JSON.stringify({
-            device_ids: [id]
-          })
+            device_ids: [id],
+          }),
         }).then(() => props.retrievePlayerInfo(props.authenticated));
       };
 
@@ -55,13 +61,13 @@ const PlayerInfo = props => {
 PlayerInfo.propTypes = {
   retrievePlayerInfo: PropTypes.func.isRequired,
   authenticated: PropTypes.string,
-  devices: PropTypes.array.isRequired
+  devices: PropTypes.array.isRequired,
 };
 
 function mapStateToProps({ auth, data }) {
   return {
     authenticated: auth,
-    devices: data.devices ? data.devices : []
+    devices: data.devices ? data.devices : [],
   };
 }
 
