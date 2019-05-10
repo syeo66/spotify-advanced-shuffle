@@ -151,6 +151,10 @@ export const retrieveLibrary = (authenticated, queue) => dispatch => {
       let objects = [];
       for (const item of response.items) {
         const track = item.track;
+        if (!track) {
+          continue;
+        }
+
         const itemObject = {
           id: track.id,
           uri: track.uri,
