@@ -11,8 +11,8 @@
     "build": "run-s clean-dist run-build",
     "watch": "run-s clean-dist run-watch",
     "run-dev": "lite-server",
-    "run-build": "webpack --progress -p",
-    "run-watch": "webpack --progress --watch",
+    "run-build": "webpack --progress --config webpack.prod.js",
+    "run-watch": "webpack --progress --watch --config webpack.dev.js",
     "clean-dist": "rimraf ./src/js/*.js"
   },
   "repository": {
@@ -26,7 +26,7 @@
     "classnames": "^2.2.6",
     "color": "^3.1.0",
     "dexie": "^2.0.4",
-    "dotenv": "^6.2.0",
+    "dotenv": "^8.2.0",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.7",
     "random": "^2.1.1",
@@ -49,15 +49,16 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.3.4",
     "babel-loader": "^8.0.4",
-    "css-loader": "^1.0.0",
-    "dotenv-webpack": "^1.7.0",
-    "html-webpack-plugin": "^3.2.0",
+    "css-loader": "^5.0.1",
+    "dotenv-webpack": "^6.0.0",
+    "html-webpack-plugin": "^4.5.0",
     "lite-server": "^2.4.0",
     "npm-run-all": "^4.1.5",
     "react-router-prop-types": "^1.0.4",
     "rimraf": "^3.0.2",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3"
+    "style-loader": "^2.0.0",
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-merge": "^5.4.0"
   }
 }
