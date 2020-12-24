@@ -22,6 +22,8 @@
   "author": "Red Ochsenbein <red@redochsenbein.ch>",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
+    "axios-retry-after": "^1.0.1",
     "bootstrap": "^4.3.1",
     "classnames": "^2.2.6",
     "color": "^3.1.0",

@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { retrievePlayerInfo } from '../actions';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
-const PlayerInfo = props => {
+const PlayerInfo = (props) => {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -28,7 +29,7 @@ const PlayerInfo = props => {
     .sort((a, b) => {
       return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
     })
-    .map(entry => {
+    .map((entry) => {
       const classe = 'list-group-item list-group-item-action';
       const activeClass = classe + (entry.is_active ? ' active' : '');
 
@@ -37,14 +38,15 @@ const PlayerInfo = props => {
         const authenticated = props.authenticated;
         const url = 'https://api.spotify.com/v1/me/player';
 
-        fetch(url, {
+        axios({
+          url,
           method: 'put',
-          headers: new Headers({
+          headers: {
             Authorization: 'Bearer ' + authenticated,
-          }),
-          body: JSON.stringify({
+          },
+          data: {
             device_ids: [id],
-          }),
+          },
         }).then(() => props.retrievePlayerInfo(props.authenticated));
       };
 
@@ -71,7 +73,4 @@ function mapStateToProps({ auth, data }) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { retrievePlayerInfo }
-)(PlayerInfo);
+export default connect(mapStateToProps, { retrievePlayerInfo })(PlayerInfo);

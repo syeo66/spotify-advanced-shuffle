@@ -18,6 +18,7 @@ import {
   UPDATE_CONFIG,
 } from './types';
 import db from '../database';
+import axios from 'axios';
 
 export const fetchUser = () => (dispatch) => {
   for (const entry of window.location.hash.substr(1).split('&')) {
@@ -79,27 +80,29 @@ const doSignOut = (dispatch) => {
 };
 
 export const retrieveUserData = (authenticated) => (dispatch) => {
-  fetch('https://api.spotify.com/v1/me', {
+  axios({
+    url: 'https://api.spotify.com/v1/me',
     method: 'get',
-    headers: new Headers({
+    headers: {
       Authorization: 'Bearer ' + authenticated,
-    }),
+    },
   })
     .then((response) => {
-      if (!response.ok) {
-        if (response.status == 401) {
+      if (response.status !== 200) {
+        if (response.status === 401) {
           doSignOut(dispatch);
         }
         return;
       }
-      return response.json();
+
+      return response.data;
     })
-    .then((response) => {
+    .then((response) =>
       dispatch({
         type: FETCH_USER,
         user: response,
-      });
-    });
+      })
+    );
 };
 
 export const loadLibraryFromDb = (offset, limit) => (dispatch) => {
@@ -140,13 +143,14 @@ export const addToLoadQueue = (url, purge = false) => (dispatch) => {
 
 export const retrieveLibrary = (authenticated, queue) => (dispatch) => {
   const { url } = queue;
-  fetch(url, {
+  axios({
+    url,
     method: 'get',
-    headers: new Headers({
+    headers: {
       Authorization: 'Bearer ' + authenticated,
-    }),
+    },
   })
-    .then((response) => response.json())
+    .then((response) => response.data)
     .then((response) => {
       let objects = [];
       for (const item of response.items) {
@@ -186,7 +190,11 @@ export const retrieveLibrary = (authenticated, queue) => (dispatch) => {
         },
       });
     })
-    .catch(() => setTimeout(() => retrieveLibrary(authenticated, queue)(dispatch), 1000));
+    .catch((response) => {
+      setTimeout(() => {
+        retrieveLibrary(authenticated, queue)(dispatch);
+      }, 1000);
+    });
 };
 
 export const firstPage = () => (dispatch) => {

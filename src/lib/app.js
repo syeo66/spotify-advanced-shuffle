@@ -11,14 +11,18 @@ import Signin from './components/Signin';
 import Signout from './components/Signout';
 import requireAuth from './components/auth/requireAuth';
 import db from './database';
+import axios from 'axios';
+import retry from 'axios-retry-after';
 
-const App = props => {
+axios.interceptors.response.use(null, retry(axios));
+
+const App = (props) => {
   const [isDatabaseReady, setIsDatabaseReady] = useState(false);
 
   useEffect(() => {
     db.open().then(() => setIsDatabaseReady(true));
 
-    const onMessage = message =>
+    const onMessage = (message) =>
       message.data.type && message.data.type == 'access_token' ? props.doLogin(message.data.token) : null;
 
     window.addEventListener('message', onMessage);
@@ -56,7 +60,4 @@ App.propTypes = {
   fetchUser: PropTypes.func.isRequired,
 };
 
-export default connect(
-  null,
-  { fetchUser, doLogin }
-)(App);
+export default connect(null, { fetchUser, doLogin })(App);
