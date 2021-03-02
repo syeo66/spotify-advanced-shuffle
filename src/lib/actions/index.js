@@ -143,6 +143,7 @@ export const addToLoadQueue = (url, purge = false) => (dispatch) => {
 
 export const retrieveLibrary = (authenticated, queue) => (dispatch) => {
   const { url } = queue;
+
   axios({
     url,
     method: 'get',
@@ -165,7 +166,7 @@ export const retrieveLibrary = (authenticated, queue) => (dispatch) => {
           name: track.name,
           artist: track.artists[0].name,
           album: track.album.name,
-          image: track.album.images[0].url,
+          image: track.album.images[0]?.url || 'https://picsum.photos/200',
           duration_ms: track.duration_ms,
           isSynced: 1,
         };
