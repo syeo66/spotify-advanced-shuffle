@@ -39,7 +39,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "rgbaster": "^2.1.1",
-    "rxjs": "^6.4.0"
+    "rxjs": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
