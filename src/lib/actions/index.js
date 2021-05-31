@@ -2,7 +2,6 @@ import {
   DB_COUNT,
   FETCH_LIBRARY,
   FETCH_PLAYER,
-  FETCH_USER,
   FIRST_PAGE,
   LOAD_LIBRARY_PAGE,
   NEXT_PAGE,
@@ -79,30 +78,21 @@ const doSignOut = (dispatch) => {
   });
 };
 
-export const retrieveUserData = (authenticated) => (dispatch) => {
-  axios({
+export const retrieveUserData = (authenticated) => async () => {
+  const response = await axios({
     url: 'https://api.spotify.com/v1/me',
     method: 'get',
     headers: {
       Authorization: 'Bearer ' + authenticated,
     },
-  })
-    .then((response) => {
-      if (response.status !== 200) {
-        if (response.status === 401) {
-          doSignOut(dispatch);
-        }
-        return;
-      }
-
-      return response.data;
-    })
-    .then((response) =>
-      dispatch({
-        type: FETCH_USER,
-        user: response,
-      })
-    );
+  });
+  if (response.status !== 200) {
+    if (response.status === 401) {
+      doSignOut(() => {});
+    }
+    return;
+  }
+  return response.data;
 };
 
 export const loadLibraryFromDb = (offset, limit) => (dispatch) => {
@@ -133,13 +123,15 @@ export const doPurgeDb = (_) => (dispatch) => {
     .then((count) => console.log('Purged ' + count + ' entries.'));
 };
 
-export const addToLoadQueue = (url, purge = false) => (dispatch) => {
-  dispatch({
-    type: ADD_TO_LOAD_QUEUE,
-    payload: url,
-    purge: purge,
-  });
-};
+export const addToLoadQueue =
+  (url, purge = false) =>
+  (dispatch) => {
+    dispatch({
+      type: ADD_TO_LOAD_QUEUE,
+      payload: url,
+      purge: purge,
+    });
+  };
 
 export const retrieveLibrary = (authenticated, queue) => (dispatch) => {
   const { url } = queue;
@@ -216,33 +208,30 @@ export const nextPage = () => (dispatch) => {
   });
 };
 
-export const retrievePlaylists = (
-  authenticated,
-  abortSignal,
-  url = 'https://api.spotify.com/v1/me/playlists?limit=50',
-  append = false
-) => (dispatch) => {
-  fetch(url, {
-    signal: abortSignal,
-    method: 'get',
-    headers: new Headers({
-      Authorization: 'Bearer ' + authenticated,
-    }),
-  })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.next && response.total > response.offset + response.limit) {
-        setTimeout(() => retrievePlaylists(authenticated, abortSignal, response.next, true)(dispatch), 1000);
-      }
-      dispatch({
-        type: append ? APPEND_PLAYLISTS : FETCH_PLAYLISTS,
-        payload: response,
-      });
+export const retrievePlaylists =
+  (authenticated, abortSignal, url = 'https://api.spotify.com/v1/me/playlists?limit=50', append = false) =>
+  (dispatch) => {
+    fetch(url, {
+      signal: abortSignal,
+      method: 'get',
+      headers: new Headers({
+        Authorization: 'Bearer ' + authenticated,
+      }),
     })
-    .catch(() => {
-      setTimeout(() => retrievePlaylists(authenticated, abortSignal, url, append)(dispatch), 1000);
-    });
-};
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.next && response.total > response.offset + response.limit) {
+          setTimeout(() => retrievePlaylists(authenticated, abortSignal, response.next, true)(dispatch), 1000);
+        }
+        dispatch({
+          type: append ? APPEND_PLAYLISTS : FETCH_PLAYLISTS,
+          payload: response,
+        });
+      })
+      .catch(() => {
+        setTimeout(() => retrievePlaylists(authenticated, abortSignal, url, append)(dispatch), 1000);
+      });
+  };
 
 export const togglePlaylist = (id, userId) => (dispatch) => {
   dispatch({
