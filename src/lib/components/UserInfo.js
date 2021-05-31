@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import { retrieveUserData } from '../actions';
 
 const UserInfo = (props) => {
-  const { data, isLoading } = useQuery('userinfo', retrieveUserData(props.authenticated));
+  const { data, isLoading } = useQuery('userinfo', props.retrieveUserData(props.authenticated));
 
   return (
     <div className="my-3 border shadow rounded p-3">
@@ -37,4 +37,4 @@ const mapStateToProps = ({ auth }) => {
   };
 };
 
-export default connect(mapStateToProps, {})(memo(UserInfo));
+export default connect(mapStateToProps, { retrieveUserData })(memo(UserInfo));

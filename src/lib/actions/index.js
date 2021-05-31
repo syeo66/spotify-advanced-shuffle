@@ -15,6 +15,7 @@ import {
   FETCH_PLAY_STATE,
   TOGGLE_CONFIG,
   UPDATE_CONFIG,
+  FETCH_USER,
 } from './types';
 import db from '../database';
 import axios from 'axios';
@@ -78,7 +79,7 @@ const doSignOut = (dispatch) => {
   });
 };
 
-export const retrieveUserData = (authenticated) => async () => {
+export const retrieveUserData = (authenticated) => (dispatch) => async () => {
   const response = await axios({
     url: 'https://api.spotify.com/v1/me',
     method: 'get',
@@ -86,12 +87,15 @@ export const retrieveUserData = (authenticated) => async () => {
       Authorization: 'Bearer ' + authenticated,
     },
   });
+
   if (response.status !== 200) {
     if (response.status === 401) {
-      doSignOut(() => {});
+      doSignOut(dispatch);
     }
-    return;
+    throw Error("User data couldn't be loaded");
   }
+
+  dispatch({ type: FETCH_USER, user: response.data });
   return response.data;
 };
 
