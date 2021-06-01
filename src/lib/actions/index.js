@@ -251,21 +251,23 @@ export const setCheckedPlaylists = (checked) => (dispatch) => {
   });
 };
 
-export const retrievePlayerInfo = (authenticated, abortSignal) => (dispatch) => {
-  fetch('https://api.spotify.com/v1/me/player/devices', {
-    signal: abortSignal,
+export const retrievePlayerInfo = (authenticated) => async () => {
+  const response = await axios({
+    url: 'https://api.spotify.com/v1/me/player/devices',
     method: 'get',
-    headers: new Headers({
+    headers: {
       Authorization: 'Bearer ' + authenticated,
-    }),
-  })
-    .then((response) => response.json())
-    .then((response) => {
-      dispatch({
-        type: FETCH_PLAYER,
-        devices: response,
-      });
-    });
+    },
+  });
+
+  if (response.status !== 200) {
+    if (response.status === 401) {
+      doSignOut(dispatch);
+    }
+    throw Error("Player info couldn't be loaded");
+  }
+
+  return response.data;
 };
 
 export const retrievePlayState = (authenticated, abortSignal) => (dispatch) => {

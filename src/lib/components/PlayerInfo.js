@@ -1,23 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { retrievePlayerInfo } from '../actions';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { useQuery } from 'react-query';
+
+import { retrievePlayerInfo } from '../actions';
 
 const PlayerInfo = (props) => {
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+  const { data, isLoading, isError } = useQuery('playerinfo', retrievePlayerInfo(props.authenticated), {
+    refetchInterval: 3000,
+  });
 
-    props.retrievePlayerInfo(props.authenticated, signal);
-    const polling = setInterval(() => props.retrievePlayerInfo(props.authenticated, signal), 3000);
-    return () => {
-      clearInterval(polling);
-      controller.abort();
-    };
-  }, []);
+  if (isLoading) {
+    return <div className="my-3 border shadow rounded p-3">Loading...</div>;
+  }
 
-  if (!props.devices || !props.devices.length) {
+  if (!data?.devices?.length || isError) {
     return (
       <div className="alert alert-danger my-3 shadow" role="alert">
         Sorry, could not find any devices! Please make sure Spotify is running.
@@ -25,7 +23,7 @@ const PlayerInfo = (props) => {
     );
   }
 
-  const devices = props.devices
+  const devices = data.devices
     .sort((a, b) => {
       return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
     })
@@ -38,6 +36,7 @@ const PlayerInfo = (props) => {
         const authenticated = props.authenticated;
         const url = 'https://api.spotify.com/v1/me/player';
 
+        // TODO: use mutations
         axios({
           url,
           method: 'put',
@@ -61,16 +60,13 @@ const PlayerInfo = (props) => {
 };
 
 PlayerInfo.propTypes = {
-  retrievePlayerInfo: PropTypes.func.isRequired,
   authenticated: PropTypes.string,
-  devices: PropTypes.array.isRequired,
 };
 
-function mapStateToProps({ auth, data }) {
+function mapStateToProps({ auth }) {
   return {
     authenticated: auth,
-    devices: data.devices ? data.devices : [],
   };
 }
 
-export default connect(mapStateToProps, { retrievePlayerInfo })(PlayerInfo);
+export default connect(mapStateToProps, {})(PlayerInfo);
