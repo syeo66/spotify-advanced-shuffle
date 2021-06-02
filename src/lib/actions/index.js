@@ -254,7 +254,6 @@ export const setCheckedPlaylists = (checked) => (dispatch) => {
 export const choosePlayer = (authenticated) => (id) => {
   const url = 'https://api.spotify.com/v1/me/player';
 
-  // TODO: use mutations
   return axios({
     url,
     method: 'put',
