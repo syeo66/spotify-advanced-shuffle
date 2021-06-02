@@ -1,14 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { retrievePlayerInfo } from '../actions';
+import { choosePlayer, retrievePlayerInfo } from '../actions';
 
 const PlayerInfo = (props) => {
+  const queryClient = useQueryClient();
+
   const { data, isLoading, isError } = useQuery('playerinfo', retrievePlayerInfo(props.authenticated), {
-    refetchInterval: 3000,
+    refetchInterval: 5000,
+  });
+
+  const selectPlayer = useMutation(choosePlayer(props.authenticated), {
+    onMutate: async (id) => {
+      await queryClient.cancelQueries('playerinfo');
+      const prev = queryClient.getQueryData('playerinfo');
+      queryClient.setQueryData('playerinfo', (old) => {
+        return { ...old, devices: old.devices?.map((e) => ({ ...e, is_active: e.id === id })) };
+      });
+      return { prev };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('playerinfo');
+    },
   });
 
   if (isLoading) {
@@ -31,26 +46,8 @@ const PlayerInfo = (props) => {
       const classe = 'list-group-item list-group-item-action';
       const activeClass = classe + (entry.is_active ? ' active' : '');
 
-      const choosePlayer = () => {
-        const id = entry.id;
-        const authenticated = props.authenticated;
-        const url = 'https://api.spotify.com/v1/me/player';
-
-        // TODO: use mutations
-        axios({
-          url,
-          method: 'put',
-          headers: {
-            Authorization: 'Bearer ' + authenticated,
-          },
-          data: {
-            device_ids: [id],
-          },
-        }).then(() => props.retrievePlayerInfo(props.authenticated));
-      };
-
       return (
-        <a className={activeClass} href="#" onClick={choosePlayer} key={entry.id}>
+        <a className={activeClass} href="#" onClick={() => selectPlayer.mutate(entry.id)} key={entry.id}>
           {entry.name}
         </a>
       );
