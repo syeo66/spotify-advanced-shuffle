@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { addToLoadQueue, setCheckedPlaylists, retrievePlaylists, setConfig, togglePlaylist } from '../actions';
 import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 
-const PlaylistList = props => {
+import { addToLoadQueue, setCheckedPlaylists, retrievePlaylists, setConfig, togglePlaylist } from '../actions';
+
+const PlaylistList = (props) => {
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    props.retrievePlaylists(props.authenticated, signal);
-    const polling = setInterval(() => props.retrievePlaylists(props.authenticated, signal), 4900);
+    props.retrievePlaylists(props.authenticated);
+    const polling = setInterval(() => props.retrievePlaylists(props.authenticated), 4900);
     return () => {
       clearInterval(polling);
-      controller.abort();
     };
   }, []);
 
@@ -30,20 +27,20 @@ const PlaylistList = props => {
   }, [props.userId]);
 
   useEffect(() => {
-    props.checkedPlaylists.map(id => {
+    props.checkedPlaylists.map((id) => {
       addToQueue(id);
     });
   }, [props.checkedPlaylists]);
 
-  const addToQueue = id => {
+  const addToQueue = (id) => {
     const myUrl = 'https://api.spotify.com/v1/playlists/' + id + '/tracks';
-    const found = props.loadQueue.filter(entry => entry.origUrl === myUrl);
+    const found = props.loadQueue.filter((entry) => entry.origUrl === myUrl);
     if (found.length === 0) {
       props.addToLoadQueue(myUrl);
     }
   };
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     props.togglePlaylist(e.target.value, props.userId);
   };
 
@@ -51,7 +48,7 @@ const PlaylistList = props => {
     .sort((a, b) => {
       return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
     })
-    .map(entry => {
+    .map((entry) => {
       return (
         <li className="list-group-item d-flex justify-start align-items-center" key={entry.id}>
           <input
@@ -95,13 +92,10 @@ function mapStateToProps({ auth, data }) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    addToLoadQueue,
-    setCheckedPlaylists,
-    retrievePlaylists,
-    setConfig,
-    togglePlaylist,
-  }
-)(PlaylistList);
+export default connect(mapStateToProps, {
+  addToLoadQueue,
+  setCheckedPlaylists,
+  retrievePlaylists,
+  setConfig,
+  togglePlaylist,
+})(PlaylistList);

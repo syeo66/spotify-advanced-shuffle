@@ -1,7 +1,8 @@
+import axios from 'axios';
+
 import {
   DB_COUNT,
   FETCH_LIBRARY,
-  FETCH_PLAYER,
   FIRST_PAGE,
   LOAD_LIBRARY_PAGE,
   NEXT_PAGE,
@@ -12,13 +13,12 @@ import {
   CHECKED_PLAYLISTS,
   FETCH_PLAYLISTS,
   TOGGLE_PLAYLIST,
-  FETCH_PLAY_STATE,
   TOGGLE_CONFIG,
   UPDATE_CONFIG,
   FETCH_USER,
 } from './types';
+
 import db from '../database';
-import axios from 'axios';
 
 export const fetchUser = () => (dispatch) => {
   for (const entry of window.location.hash.substr(1).split('&')) {
@@ -213,10 +213,9 @@ export const nextPage = () => (dispatch) => {
 };
 
 export const retrievePlaylists =
-  (authenticated, abortSignal, url = 'https://api.spotify.com/v1/me/playlists?limit=50', append = false) =>
+  (authenticated, url = 'https://api.spotify.com/v1/me/playlists?limit=50', append = false) =>
   (dispatch) => {
     fetch(url, {
-      signal: abortSignal,
       method: 'get',
       headers: new Headers({
         Authorization: 'Bearer ' + authenticated,
@@ -277,7 +276,7 @@ export const retrievePlayerInfo = (authenticated) => async () => {
 
   if (response.status !== 200) {
     if (response.status === 401) {
-      doSignOut(dispatch);
+      doSignOut();
     }
     throw Error("Player info couldn't be loaded");
   }
@@ -285,29 +284,22 @@ export const retrievePlayerInfo = (authenticated) => async () => {
   return response.data;
 };
 
-export const retrievePlayState = (authenticated, abortSignal) => (dispatch) => {
-  fetch('https://api.spotify.com/v1/me/player', {
-    signal: abortSignal,
+export const retrievePlayState = (authenticated) => async () => {
+  const response = await axios({
+    url: 'https://api.spotify.com/v1/me/player',
     method: 'get',
-    headers: new Headers({
+    headers: {
       Authorization: 'Bearer ' + authenticated,
-    }),
-  })
-    .then((response) => {
-      if (!response.ok || response.status !== 200) {
-        if (response.status == 401) {
-          doSignOut(dispatch);
-        }
-        return;
-      }
-      return response.json();
-    })
-    .then((response) => {
-      dispatch({
-        type: FETCH_PLAY_STATE,
-        playstate: response,
-      });
-    });
+    },
+  });
+
+  if (response.status !== 200) {
+    if (response.status == 401) {
+      doSignOut();
+    }
+    throw Error("Player state couldn't be loaded");
+  }
+  return response.data;
 };
 
 export const toggleConfig = () => (dispatch) => {

@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { loadLibraryFromDb, firstPage, nextPage, previousPage } from '../actions';
 import PropTypes from 'prop-types';
 
-const TrackList = props => {
+import { loadLibraryFromDb, firstPage, nextPage, previousPage } from '../actions';
+
+const TrackList = (props) => {
   useEffect(() => {
     props.firstPage();
   }, []);
@@ -17,7 +18,7 @@ const TrackList = props => {
   const currentPage = props.currentPage;
   const maxPage = Math.ceil((props.dbSize || librarySize) / perPage);
   const listItemWindow = props.library ? props.library : [];
-  const listItems = listItemWindow.map(entry => (
+  const listItems = listItemWindow.map((entry) => (
     <div className="row mt-1" key={entry.id}>
       <div className="col-md-2 xol-sm-3 col-4 pr-0">
         <img src={entry.image} className="img-thumbnail img-fluid" />
@@ -103,12 +104,9 @@ function mapStateToProps({ data }) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    loadLibraryFromDb,
-    firstPage,
-    nextPage,
-    previousPage,
-  }
-)(TrackList);
+export default connect(mapStateToProps, {
+  loadLibraryFromDb,
+  firstPage,
+  nextPage,
+  previousPage,
+})(TrackList);

@@ -1,38 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { retrievePlayState } from '../actions';
 import analyze from 'rgbaster';
 import Color from 'color';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
-const Player = props => {
+import { retrievePlayState } from '../actions';
+
+const Player = (props) => {
   const [primaryColor, setPrimaryColor] = useState('rgb(30,30,30)');
   const [secondaryColor, setSecondaryColor] = useState('rgb(200,200,200)');
   const [tertiaryColor, setTertiaryColor] = useState('rgb(190,190,190)');
 
-  const playStateItemUrl = props.playstate.item ? props.playstate.item.album.images[0].url : null;
+  const { data, isError, isLoading } = useQuery('playstate', retrievePlayState(props.authenticated), {
+    refetchInterval: 2000,
+  });
+
+  const playStateItemUrl = data?.item ? data?.item.album.images[0].url : null;
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    props.retrievePlayState(props.authenticated, signal);
-    const polling = setInterval(
-      () => props.retrievePlayState(props.authenticated, signal),
-      2000 + Math.floor(Math.random() * 1000)
-    );
-    return () => {
-      clearInterval(polling);
-      controller.abort();
-    };
-  }, []);
-
-  useEffect(() => {
-    const item = props.playstate.item;
+    if (!data?.item) {
+      return;
+    }
+    const item = data.item;
     if (item && item.album && item.album.images[0]) {
       analyze(item.album.images[0].url, {
         scale: 0.6,
-      }).then(colors => {
+      }).then((colors) => {
         const primary = colors[0].color;
 
         const secondary = colors.reduce((acc, c) => {
@@ -75,12 +69,8 @@ const Player = props => {
             ? tertiary.color
             : secondary
             ? Color(primary).isLight()
-              ? Color(secondary.color)
-                  .darken(0.3)
-                  .hex()
-              : Color(secondary.color)
-                  .lighten(0.3)
-                  .hex()
+              ? Color(secondary.color).darken(0.3).hex()
+              : Color(secondary.color).lighten(0.3).hex()
             : Color(primary).isLight()
             ? 'rgb(30,30,30)'
             : 'rgb(240,240,240)'
@@ -89,8 +79,16 @@ const Player = props => {
     }
   }, [playStateItemUrl]);
 
-  const item = props.playstate.item;
-  const played = item && item.duration_ms ? Math.round((100 * props.playstate.progress_ms) / item.duration_ms) : 0;
+  if (isError) {
+    return <div className="my-3 border shadow rounded p-3">Could not load player data.</div>;
+  }
+
+  if (isLoading) {
+    return <div className="my-3 border shadow rounded p-3">Loading...</div>;
+  }
+
+  const item = data?.item;
+  const played = item && item.duration_ms ? Math.round((100 * data.progress_ms) / item.duration_ms) : 0;
   const image =
     item && item.album.images[0]
       ? {
@@ -104,7 +102,7 @@ const Player = props => {
           backgroundPosition: '50% ' + played + '%',
         }
       : {};
-  const playClass = props.playstate.is_playing ? 'fas fa-pause' : 'fas fa-play';
+  const playClass = data.is_playing ? 'fas fa-pause' : 'fas fa-play';
   const itemName = item && item.name ? item.name : '';
   const artistName = item && item.artists[0].name ? item.artists[0].name : '';
   const albumName = item && item.album.name ? item.album.name : '';
@@ -158,18 +156,12 @@ const Player = props => {
 
 Player.propTypes = {
   authenticated: PropTypes.string,
-  playstate: PropTypes.object.isRequired,
-  retrievePlayState: PropTypes.func.isRequired,
 };
 
 function mapStateToProps({ auth, data }) {
   return {
     authenticated: auth,
-    playstate: data.playstate ? data.playstate : {},
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { retrievePlayState }
-)(Player);
+export default connect(mapStateToProps, {})(Player);
