@@ -6,8 +6,8 @@ import { addToLoadQueue, setCheckedPlaylists, retrievePlaylists, setConfig, togg
 
 const PlaylistList = (props) => {
   useEffect(() => {
-    props.retrievePlaylists(props.authenticated);
-    const polling = setInterval(() => props.retrievePlaylists(props.authenticated), 4900);
+    props.retrievePlaylists();
+    const polling = setInterval(() => props.retrievePlaylists(), 4900);
     return () => {
       clearInterval(polling);
     };
@@ -68,7 +68,6 @@ const PlaylistList = (props) => {
 };
 
 PlaylistList.propTypes = {
-  authenticated: PropTypes.string,
   playlists: PropTypes.array.isRequired,
   userId: PropTypes.string,
   checkedPlaylists: PropTypes.array,
@@ -81,9 +80,8 @@ PlaylistList.propTypes = {
   togglePlaylist: PropTypes.func.isRequired,
 };
 
-function mapStateToProps({ auth, data }) {
+function mapStateToProps({ data }) {
   return {
-    authenticated: auth,
     playlists: data.playlists ? data.playlists : [],
     userId: data.user ? data.user.id : null,
     checkedPlaylists: data.checkedPlaylists,

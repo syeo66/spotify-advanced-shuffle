@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { connect } from 'react-redux';
-import { retrievePlaylists } from '../actions';
+import { getToken, retrievePlaylists } from '../actions';
 import db from '../database';
 import random from 'random';
 import PropTypes from 'prop-types';
@@ -23,7 +23,8 @@ const ShuffleButton = (props) => {
     return results;
   };
 
-  const createRandomPlaylist = (authenticated) => {
+  const createRandomPlaylist = () => {
+    const authenticated = getToken();
     return new Promise((resolve) => {
       const url = 'https://api.spotify.com/v1/me/playlists';
       axios({
@@ -46,7 +47,7 @@ const ShuffleButton = (props) => {
   };
 
   const startPlayback = (playlist) => {
-    const authenticated = props.authenticated;
+    const authenticated = getToken();
     const url = 'https://api.spotify.com/v1/me/player/play';
     axios({
       url,
@@ -61,7 +62,7 @@ const ShuffleButton = (props) => {
   };
 
   const addRandomTracks = (playlist, trackUris) => {
-    const authenticated = props.authenticated;
+    const authenticated = getToken();
     const playlistId = playlist.id;
     const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
     axios({
@@ -112,7 +113,7 @@ const ShuffleButton = (props) => {
 
   const purgePlaylistTracks = (playlist, trackUris) => {
     return new Promise((resolve) => {
-      const authenticated = props.authenticated;
+      const authenticated = getToken();
       const playlistId = playlist.id;
       const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
       if (!trackUris || trackUris.length == 0) {
@@ -142,7 +143,7 @@ const ShuffleButton = (props) => {
         resolve(playlist);
         return;
       }
-      const authenticated = props.authenticated;
+      const authenticated = getToken();
       const preparePurge = (url, uris = []) => {
         return new Promise((resolve) => {
           if (!url) {
@@ -191,7 +192,7 @@ const ShuffleButton = (props) => {
     setIsShuffleLoading(true);
     const { existingPlaylist } = props;
     if (!existingPlaylist) {
-      createRandomPlaylist(props.authenticated).then((playlist) => {
+      createRandomPlaylist().then((playlist) => {
         fillRandomPlaylist(playlist);
       });
       return;
@@ -210,7 +211,6 @@ const ShuffleButton = (props) => {
 };
 
 ShuffleButton.propTypes = {
-  authenticated: PropTypes.string.isRequired,
   config: PropTypes.object.isRequired,
   dbSize: PropTypes.number.isRequired,
   existingPlaylist: PropTypes.object,
@@ -218,13 +218,12 @@ ShuffleButton.propTypes = {
   librarySize: PropTypes.number.isRequired,
 };
 
-function mapStateToProps({ data, auth }) {
+function mapStateToProps({ data }) {
   return {
     config: data.config,
     isLoaded: data.loadQueue.reduce((acc, queue) => acc && queue.isLoaded, true),
     librarySize: data.loadQueue.reduce((acc, queue) => acc + queue.size, 0),
     dbSize: data.dbSize,
-    authenticated: auth,
     existingPlaylist: data.playlists
       ? data.playlists.reduce((accumulator, currentValue) => {
           return accumulator || (currentValue.name == data.config.randomListName ? currentValue : null);

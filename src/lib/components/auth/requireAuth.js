@@ -1,30 +1,27 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 
-export default ComposedComponent => {
-  const Authentication = props => {
+import { getToken } from '../../actions';
+
+export default (ComposedComponent) => {
+  const Authentication = (props) => {
+    const authenticated = getToken();
+
     useEffect(() => {
-      if (!props.authenticated) {
+      if (!authenticated) {
         props.history.push('/');
       }
-    }, [props.authenticated]);
+    }, [authenticated]);
 
-    if (props.authenticated) {
-      return <ComposedComponent {...props} />;
+    if (authenticated) {
+      return <ComposedComponent {...{ ...props, authenticated }} />;
     }
     return null;
   };
 
   Authentication.propTypes = {
-    authenticated: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
     history: ReactRouterPropTypes.history.isRequired,
   };
 
-  const mapStateToProps = ({ auth }) => {
-    return { authenticated: auth };
-  };
-
-  return connect(mapStateToProps)(Authentication);
+  return Authentication;
 };
