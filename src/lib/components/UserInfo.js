@@ -1,12 +1,11 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 
 import { retrieveUserData } from '../actions';
 
 const UserInfo = (props) => {
-  const { data, isLoading, isError } = useQuery('userinfo', props.retrieveUserData(props.authenticated));
+  const { data, isLoading, isError } = useQuery('userinfo', props.retrieveUserData);
 
   if (isError) {
     return <div className="my-3 border shadow rounded p-3">Could not load user data.</div>;
@@ -31,14 +30,8 @@ const UserInfo = (props) => {
   );
 };
 
-UserInfo.propTypes = {
-  authenticated: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = ({ auth }) => {
-  return {
-    authenticated: auth,
-  };
+const mapStateToProps = ({}) => {
+  return {};
 };
 
 export default connect(mapStateToProps, { retrieveUserData })(memo(UserInfo));

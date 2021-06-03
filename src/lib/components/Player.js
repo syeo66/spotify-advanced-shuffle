@@ -1,19 +1,17 @@
 import analyze from 'rgbaster';
 import Color from 'color';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { retrievePlayState } from '../actions';
 
-const Player = (props) => {
+const Player = () => {
   const [primaryColor, setPrimaryColor] = useState('rgb(30,30,30)');
   const [secondaryColor, setSecondaryColor] = useState('rgb(200,200,200)');
   const [tertiaryColor, setTertiaryColor] = useState('rgb(190,190,190)');
 
-  const { data, isError, isLoading } = useQuery('playstate', retrievePlayState(props.authenticated), {
-    refetchInterval: 2000,
+  const { data, isError, isLoading } = useQuery('playstate', retrievePlayState, {
+    refetchInterval: 2000 + Math.random() * 1000,
   });
 
   const playStateItemUrl = data?.item ? data?.item.album.images[0].url : null;
@@ -154,14 +152,4 @@ const Player = (props) => {
   );
 };
 
-Player.propTypes = {
-  authenticated: PropTypes.string,
-};
-
-function mapStateToProps({ auth, data }) {
-  return {
-    authenticated: auth,
-  };
-}
-
-export default connect(mapStateToProps, {})(Player);
+export default memo(Player);

@@ -20,6 +20,8 @@ import {
 
 import db from '../database';
 
+export const getToken = () => window.localStorage.getItem('access_token');
+
 export const fetchUser = () => (dispatch) => {
   for (const entry of window.location.hash.substr(1).split('&')) {
     const splitEntry = entry.split('=');
@@ -64,22 +66,13 @@ export const signInWithSpotify = (e) => (dispatch) => {
   window.open(url, 'spotify', 'width=400, height=500');
 };
 
-export const signOut = (e) => (dispatch) => {
-  e.preventDefault();
-  doSignOut(dispatch);
+export const signOut = () => {
+  window.localStorage.removeItem('access_token');
+  document.location = '/';
 };
 
-const doSignOut = (dispatch) => {
-  if (typeof Storage !== 'undefined') {
-    window.localStorage.removeItem('access_token');
-  }
-  dispatch({
-    type: RETRIEVE_AUTH_TOKEN,
-    payload: null,
-  });
-};
-
-export const retrieveUserData = (authenticated) => (dispatch) => async () => {
+export const retrieveUserData = () => async (dispatch) => {
+  const authenticated = getToken();
   const response = await axios({
     url: 'https://api.spotify.com/v1/me',
     method: 'get',
@@ -90,7 +83,7 @@ export const retrieveUserData = (authenticated) => (dispatch) => async () => {
 
   if (response.status !== 200) {
     if (response.status === 401) {
-      doSignOut(dispatch);
+      signOut(dispatch);
     }
     throw Error("User data couldn't be loaded");
   }
@@ -137,7 +130,8 @@ export const addToLoadQueue =
     });
   };
 
-export const retrieveLibrary = (authenticated, queue) => (dispatch) => {
+export const retrieveLibrary = (_, queue) => (dispatch) => {
+  const authenticated = getToken();
   const { url } = queue;
 
   axios({
@@ -213,8 +207,9 @@ export const nextPage = () => (dispatch) => {
 };
 
 export const retrievePlaylists =
-  (authenticated, url = 'https://api.spotify.com/v1/me/playlists?limit=50', append = false) =>
+  (_, url = 'https://api.spotify.com/v1/me/playlists?limit=50', append = false) =>
   (dispatch) => {
+    const authenticated = getToken();
     fetch(url, {
       method: 'get',
       headers: new Headers({
@@ -250,7 +245,8 @@ export const setCheckedPlaylists = (checked) => (dispatch) => {
   });
 };
 
-export const choosePlayer = (authenticated) => (id) => {
+export const choosePlayer = (id) => {
+  const authenticated = getToken();
   const url = 'https://api.spotify.com/v1/me/player';
 
   return axios({
@@ -265,7 +261,8 @@ export const choosePlayer = (authenticated) => (id) => {
   });
 };
 
-export const retrievePlayerInfo = (authenticated) => async () => {
+export const retrievePlayerInfo = async () => {
+  const authenticated = getToken();
   const response = await axios({
     url: 'https://api.spotify.com/v1/me/player/devices',
     method: 'get',
@@ -276,7 +273,7 @@ export const retrievePlayerInfo = (authenticated) => async () => {
 
   if (response.status !== 200) {
     if (response.status === 401) {
-      doSignOut();
+      signOut();
     }
     throw Error("Player info couldn't be loaded");
   }
@@ -284,7 +281,8 @@ export const retrievePlayerInfo = (authenticated) => async () => {
   return response.data;
 };
 
-export const retrievePlayState = (authenticated) => async () => {
+export const retrievePlayState = async () => {
+  const authenticated = getToken();
   const response = await axios({
     url: 'https://api.spotify.com/v1/me/player',
     method: 'get',
@@ -295,7 +293,7 @@ export const retrievePlayState = (authenticated) => async () => {
 
   if (response.status !== 200) {
     if (response.status == 401) {
-      doSignOut();
+      signOut();
     }
     throw Error("Player state couldn't be loaded");
   }

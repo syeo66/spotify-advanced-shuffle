@@ -1,18 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { memo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { choosePlayer, retrievePlayerInfo } from '../actions';
 
-const PlayerInfo = (props) => {
+const PlayerInfo = () => {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError } = useQuery('playerinfo', retrievePlayerInfo(props.authenticated), {
-    refetchInterval: 5000,
+  const { data, isLoading, isError } = useQuery('playerinfo', retrievePlayerInfo, {
+    refetchInterval: 5000 + Math.random() * 1000,
   });
 
-  const selectPlayer = useMutation(choosePlayer(props.authenticated), {
+  const selectPlayer = useMutation(choosePlayer, {
     onMutate: async (id) => {
       await queryClient.cancelQueries('playerinfo');
       const prev = queryClient.getQueryData('playerinfo');
@@ -56,14 +54,10 @@ const PlayerInfo = (props) => {
   return <div className="list-group my-3 shadow rounded">{devices}</div>;
 };
 
-PlayerInfo.propTypes = {
-  authenticated: PropTypes.string,
-};
-
 function mapStateToProps({ auth }) {
   return {
     authenticated: auth,
   };
 }
 
-export default connect(mapStateToProps, {})(PlayerInfo);
+export default memo(PlayerInfo);
