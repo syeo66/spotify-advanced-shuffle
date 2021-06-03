@@ -1,29 +1,36 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
+import React, { lazy, Suspense, useEffect, useState } from 'react';
+import axios from 'axios';
+import retry from 'axios-retry-after';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchUser, doLogin } from './actions';
-
-const Overview = lazy(() => import('./components/Overview'));
+import { useMutation, useQueryClient } from 'react-query';
 
 import Signin from './components/Signin';
 import Signout from './components/Signout';
-import requireAuth from './components/auth/requireAuth';
 import db from './database';
-import axios from 'axios';
-import retry from 'axios-retry-after';
+import requireAuth from './components/auth/requireAuth';
+import { fetchUser, doLogin } from './actions';
+
+const Overview = lazy(() => import('./components/Overview'));
 
 axios.interceptors.response.use(null, retry(axios));
 
 const App = (props) => {
   const [isDatabaseReady, setIsDatabaseReady] = useState(false);
 
+  const queryClient = useQueryClient();
+  const login = useMutation(doLogin, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('token');
+    },
+  });
+
   useEffect(() => {
     db.open().then(() => setIsDatabaseReady(true));
 
     const onMessage = (message) =>
-      message.data.type && message.data.type == 'access_token' ? props.doLogin(message.data.token) : null;
+      message.data.type && message.data.type == 'access_token' ? login.mutate(message.data.token) : null;
 
     window.addEventListener('message', onMessage);
     props.fetchUser();
@@ -56,8 +63,7 @@ const App = (props) => {
 };
 
 App.propTypes = {
-  doLogin: PropTypes.func.isRequired,
   fetchUser: PropTypes.func.isRequired,
 };
 
-export default connect(null, { fetchUser, doLogin })(App);
+export default connect(null, { fetchUser })(App);

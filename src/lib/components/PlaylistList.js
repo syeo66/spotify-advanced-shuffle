@@ -1,10 +1,20 @@
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { memo, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { useQuery } from 'react-query';
 
-import { addToLoadQueue, setCheckedPlaylists, retrievePlaylists, setConfig, togglePlaylist } from '../actions';
+import {
+  addToLoadQueue,
+  setCheckedPlaylists,
+  retrievePlaylists,
+  setConfig,
+  togglePlaylist,
+  retrieveUserData,
+} from '../actions';
 
 const PlaylistList = (props) => {
+  const { data: user, isLoading, isError } = useQuery('userinfo', retrieveUserData);
+
   useEffect(() => {
     props.retrievePlaylists();
     const polling = setInterval(() => props.retrievePlaylists(), 4900);
@@ -14,17 +24,18 @@ const PlaylistList = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!props.userId) {
+    if (!user?.id || isLoading || isError) {
       return;
     }
+
     if (typeof Storage !== 'undefined') {
-      const userId = props.userId;
+      const userId = user.id;
       const key = 'checkedPlaylists';
-      const rawValue = window.localStorage.getItem(userId + '.' + key);
+      const rawValue = window.localStorage.getItem(`${userId}.${key}`);
       const value = rawValue ? JSON.parse(rawValue) : [];
       props.setCheckedPlaylists(value);
     }
-  }, [props.userId]);
+  }, [user, isLoading, isError]);
 
   useEffect(() => {
     props.checkedPlaylists.map((id) => {
@@ -41,7 +52,7 @@ const PlaylistList = (props) => {
   };
 
   const handleClick = (e) => {
-    props.togglePlaylist(e.target.value, props.userId);
+    props.togglePlaylist(e.target.value, user.id);
   };
 
   const playlists = props.playlists
@@ -69,7 +80,6 @@ const PlaylistList = (props) => {
 
 PlaylistList.propTypes = {
   playlists: PropTypes.array.isRequired,
-  userId: PropTypes.string,
   checkedPlaylists: PropTypes.array,
   configRandomListName: PropTypes.string,
   loadQueue: PropTypes.array,
@@ -83,7 +93,6 @@ PlaylistList.propTypes = {
 function mapStateToProps({ data }) {
   return {
     playlists: data.playlists ? data.playlists : [],
-    userId: data.user ? data.user.id : null,
     checkedPlaylists: data.checkedPlaylists,
     configRandomListName: data.config ? data.config.randomListName : null,
     loadQueue: data.loadQueue,
@@ -96,4 +105,4 @@ export default connect(mapStateToProps, {
   retrievePlaylists,
   setConfig,
   togglePlaylist,
-})(PlaylistList);
+})(memo(PlaylistList));

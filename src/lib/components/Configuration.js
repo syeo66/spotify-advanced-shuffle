@@ -1,27 +1,30 @@
+import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { setConfig } from '../actions';
-import PropTypes from 'prop-types';
+import { useQuery } from 'react-query';
 
-const Configuration = props => {
-  const setConfig = key => value => {
+import { retrieveUserData, setConfig } from '../actions';
+
+const Configuration = (props) => {
+  const { data: user, isLoading, isError } = useQuery('userinfo', retrieveUserData);
+
+  const setConfig = (key) => (value) => {
     props.setConfig(key, value);
     if (typeof Storage !== 'undefined') {
-      const userId = props.user.id;
+      const userId = user.id;
       window.localStorage.setItem(userId + '.' + key, value);
     }
   };
 
-  // TODO: This should be loaded further up the chain
   useEffect(() => {
-    if (!props.user) {
+    if (!user || isLoading || isError) {
       return;
     }
 
     if (typeof Storage !== 'undefined') {
-      const userId = props.user.id;
-      ['amountType', 'randomListName', 'trackCount', 'trackMinutes', 'purgeOnShuffle'].forEach(key => {
-        const mapping = key => {
+      const userId = user.id;
+      ['amountType', 'randomListName', 'trackCount', 'trackMinutes', 'purgeOnShuffle'].forEach((key) => {
+        const mapping = (key) => {
           switch (key) {
             case 'purgeOnShuffle':
               return window.localStorage.getItem(userId + '.' + key) == 'true';
@@ -35,9 +38,9 @@ const Configuration = props => {
         }
       });
     }
-  }, [props.user]);
+  }, [user, isLoading, isError]);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const value = parseInt(event.target.value) || '';
     const key = props.config.amountType == 'minutes' ? 'trackMinutes' : 'trackCount';
     const maxValue = props.config.amountType == 'minutes' ? 1500 : 500;
@@ -48,7 +51,7 @@ const Configuration = props => {
     setConfig('purgeOnShuffle')(!props.config.purgeOnShuffle);
   };
 
-  const handlePlaylistNameChange = event => {
+  const handlePlaylistNameChange = (event) => {
     const input = event.target.value.trim();
     const value = input || 'Advanced Shuffle';
     setConfig('randomListName')(value);
@@ -69,6 +72,10 @@ const Configuration = props => {
   const setAmountTypeConfig = setConfig('amountType');
   const setAmountTypeConfigCount = () => setAmountTypeConfig('count');
   const setAmountTypeConfigMinutes = () => setAmountTypeConfig('minutes');
+
+  if (isLoading) {
+    return <div className="my-3 border shadow rounded p-3">Loading...</div>;
+  }
 
   return (
     <div className="pt-2 mt-2 border-top border-bottom">
@@ -154,7 +161,4 @@ const mapStateToProps = ({ data }) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  { setConfig }
-)(memo(Configuration));
+export default connect(mapStateToProps, { setConfig })(memo(Configuration));

@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { retrieveUserData } from '../actions';
 
 const UserInfo = (props) => {
-  const { data, isLoading, isError } = useQuery('userinfo', props.retrieveUserData);
+  const { data, isLoading, isError } = useQuery('userinfo', retrieveUserData);
 
   if (isError) {
     return <div className="my-3 border shadow rounded p-3">Could not load user data.</div>;

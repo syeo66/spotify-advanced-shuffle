@@ -40,14 +40,10 @@ export const fetchUser = () => (dispatch) => {
   }
 };
 
-export const doLogin = (token) => (dispatch) => {
+export const doLogin = (token) => {
   if (typeof Storage !== 'undefined') {
     window.localStorage.setItem('access_token', token);
   }
-  dispatch({
-    type: RETRIEVE_AUTH_TOKEN,
-    payload: token,
-  });
 };
 
 export const signInWithSpotify = (e) => {
@@ -70,7 +66,7 @@ export const signOut = () => {
   window.localStorage.removeItem('access_token');
 };
 
-export const retrieveUserData = () => async (dispatch) => {
+export const retrieveUserData = async () => {
   const authenticated = getToken();
   const response = await axios({
     url: 'https://api.spotify.com/v1/me',
@@ -87,7 +83,6 @@ export const retrieveUserData = () => async (dispatch) => {
     throw Error("User data couldn't be loaded");
   }
 
-  dispatch({ type: FETCH_USER, user: response.data });
   return response.data;
 };
 
