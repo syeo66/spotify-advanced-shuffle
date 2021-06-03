@@ -1,29 +1,22 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { signInWithSpotify, doLogin } from '../actions';
-import PropTypes from 'prop-types';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { useQuery } from 'react-query';
 
-const Signin = props => {
-  useEffect(() => {
-    if (typeof Storage !== 'undefined') {
-      const access_token = window.localStorage.getItem('access_token');
-      if (access_token) {
-        props.doLogin(access_token);
-      }
-    }
-  }, []);
+import { signInWithSpotify, getToken } from '../actions';
+
+const Signin = ({ history }) => {
+  const { data: auth } = useQuery('token', getToken());
 
   useEffect(() => {
-    if (props.auth) {
-      props.history.push('/app');
+    if (auth) {
+      history.push('/app');
     }
-  }, [props.auth]);
+  }, [auth]);
 
   return (
     <div className="row justify-content-center py-5">
       <div className="col-auto py-5 shadow border rounded">
-        <a href="#" className="btn btn-success" onClick={props.signInWithSpotify}>
+        <a href="#" className="btn btn-success" onClick={signInWithSpotify}>
           <i className="fab fa-spotify" />
           &nbsp;Sign In With Spotify
         </a>
@@ -33,17 +26,7 @@ const Signin = props => {
 };
 
 Signin.propTypes = {
-  doLogin: PropTypes.func.isRequired,
-  signInWithSpotify: PropTypes.func.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
-  auth: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
 };
 
-function mapStateToProps({ auth }) {
-  return { auth };
-}
-
-export default connect(
-  mapStateToProps,
-  { signInWithSpotify, doLogin }
-)(Signin);
+export default Signin;

@@ -1,30 +1,22 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { signOut, getToken } from '../actions';
 
 const Signout = () => {
-  const [auth, setAuth] = useState(getToken());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const token = getToken();
-      if (token !== auth) {
-        setAuth(token);
-      }
-    }, 5000);
-    return () => learInterval(interval);
-  }, []);
-
-  const handleSignout = useCallback(() => {
-    setAuth(null);
-    signOut();
-  }, []);
+  const queryClient = useQueryClient();
+  const { data: auth } = useQuery('token', getToken);
+  const logoff = useMutation(signOut, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('token');
+    },
+  });
 
   if (!auth) {
     return '';
   }
 
   return (
-    <a href="#" className="btn btn-primary btn-sm" onClick={handleSignout}>
+    <a href="#" className="btn btn-primary btn-sm" onClick={logoff.mutate}>
       <i className="fas fa-sign-out-alt" />
       &nbsp;Signout
     </a>

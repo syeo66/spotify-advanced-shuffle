@@ -50,7 +50,7 @@ export const doLogin = (token) => (dispatch) => {
   });
 };
 
-export const signInWithSpotify = (e) => (dispatch) => {
+export const signInWithSpotify = (e) => {
   e.preventDefault();
   const appUrl = encodeURIComponent(window.location.href.split('#')[0]);
   const scopes =
@@ -68,7 +68,6 @@ export const signInWithSpotify = (e) => (dispatch) => {
 
 export const signOut = () => {
   window.localStorage.removeItem('access_token');
-  document.location = '/';
 };
 
 export const retrieveUserData = () => async (dispatch) => {
