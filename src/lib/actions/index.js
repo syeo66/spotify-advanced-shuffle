@@ -263,22 +263,23 @@ export const choosePlayer = (id) => {
 
 export const retrievePlayerInfo = async () => {
   const authenticated = getToken();
-  const response = await axios({
-    url: 'https://api.spotify.com/v1/me/player/devices',
-    method: 'get',
-    headers: {
-      Authorization: 'Bearer ' + authenticated,
-    },
-  });
+  try {
+    const response = await axios({
+      url: 'https://api.spotify.com/v1/me/player/devices',
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + authenticated,
+      },
+    });
 
-  if (response.status !== 200) {
-    if (response.status === 401) {
+    return response.data;
+  } catch (e) {
+    if (e.response && e.response.status === 401) {
       signOut();
+    } else {
+      throw e;
     }
-    throw Error("Player info couldn't be loaded");
   }
-
-  return response.data;
 };
 
 export const retrievePlayState = async () => {
