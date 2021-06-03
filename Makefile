@@ -4,7 +4,9 @@ help:
 	@echo "make clean     Clean the build artifacts."
 	@echo "make test      Run tests."
 
-build : src/js
+build: node_modules src
+	yarn build
+	touch src/js
 
 start: node_modules
 	yarn dev
@@ -19,9 +21,6 @@ test: node_modules
 	yarn test
 
 ######################################################################
-
-src/js : node_modules src
-	yarn build
 
 node_modules : yarn.lock package.json
 	yarn
