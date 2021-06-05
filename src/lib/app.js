@@ -10,7 +10,7 @@ import Signin from './components/Signin';
 import Signout from './components/Signout';
 import db from './database';
 import requireAuth from './components/auth/requireAuth';
-import { fetchUser, doLogin } from './actions';
+import { fetchUser, doLogin, getToken } from './actions';
 
 const Overview = lazy(() => import('./components/Overview'));
 
@@ -22,15 +22,16 @@ const App = (props) => {
   const queryClient = useQueryClient();
   const login = useMutation(doLogin, {
     onSuccess: () => {
-      queryClient.invalidateQueries('token');
+      queryClient.setQueryData('token', () => getToken());
     },
   });
 
   useEffect(() => {
     db.open().then(() => setIsDatabaseReady(true));
 
-    const onMessage = (message) =>
+    const onMessage = (message) => {
       message.data.type && message.data.type == 'access_token' ? login.mutate(message.data.token) : null;
+    };
 
     window.addEventListener('message', onMessage);
     props.fetchUser();

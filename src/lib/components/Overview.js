@@ -1,10 +1,11 @@
-import React, { lazy, Suspense, useEffect, useMemo } from 'react';
-import { addToLoadQueue, markDb, doPurgeDb, retrieveLibrary, retrieveUserData } from '../actions';
+import { addToLoadQueue, markDb, doPurgeDb, retrieveLibrary, retrieveUserData, getToken } from '../actions';
 import { connect } from 'react-redux';
-import { usePrevProps } from '../hooks';
 import PropTypes from 'prop-types';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { useQuery } from 'react-query';
 
 import db from '../database';
+import { usePrevProps } from '../hooks';
 
 const Tools = lazy(() => import('./Tools'));
 const Player = lazy(() => import('./Player'));
@@ -14,8 +15,9 @@ const PlaylistList = lazy(() => import('./PlaylistList'));
 const TrackList = lazy(() => import('./TrackList'));
 const Progress = lazy(() => import('./Progress'));
 
-const Overview = props => {
+const Overview = (props) => {
   const prevProps = usePrevProps(props);
+  const authenticated = useQuery('token', getToken);
 
   const initDb = () => {
     props.markDb();
@@ -31,7 +33,7 @@ const Overview = props => {
   }, []);
 
   useEffect(() => {
-    const isAuthenticated = props.authenticated;
+    const isAuthenticated = authenticated;
 
     if (isAuthenticated && prevProps) {
       for (let index in props.loadQueue) {
@@ -47,7 +49,7 @@ const Overview = props => {
         props.doPurgeDb();
       }
     }
-  }, [props.authenticated, props.loadQueue, prevProps]);
+  }, [authenticated, props.loadQueue, prevProps]);
 
   return (
     <div>
@@ -106,13 +108,10 @@ function mapStateToProps({ data }) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    addToLoadQueue,
-    markDb,
-    doPurgeDb,
-    retrieveLibrary,
-    retrieveUserData,
-  }
-)(Overview);
+export default connect(mapStateToProps, {
+  addToLoadQueue,
+  markDb,
+  doPurgeDb,
+  retrieveLibrary,
+  retrieveUserData,
+})(Overview);

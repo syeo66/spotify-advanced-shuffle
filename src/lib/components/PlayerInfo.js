@@ -1,12 +1,12 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { choosePlayer, retrievePlayerInfo } from '../actions';
+import { choosePlayer, retrievePlayerInfo, signOut } from '../actions';
 
 const PlayerInfo = () => {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError } = useQuery('playerinfo', retrievePlayerInfo, {
+  const { data, isLoading, isError, error } = useQuery('playerinfo', retrievePlayerInfo, {
     refetchInterval: 5000 + Math.random() * 1000,
   });
 
@@ -23,6 +23,13 @@ const PlayerInfo = () => {
       queryClient.invalidateQueries('playerinfo');
     },
   });
+
+  useEffect(() => {
+    if (isError && error?.response?.status === 401) {
+      signOut();
+      queryClient.setQueryData('token', () => null);
+    }
+  }, [error, isError, queryClient]);
 
   if (isLoading) {
     return <div className="my-3 border shadow rounded p-3">Loading...</div>;

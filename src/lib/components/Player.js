@@ -1,16 +1,18 @@
 import analyze from 'rgbaster';
 import Color from 'color';
 import React, { memo, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
-import { retrievePlayState } from '../actions';
+import { retrievePlayState, signOut } from '../actions';
 
 const Player = () => {
   const [primaryColor, setPrimaryColor] = useState('rgb(30,30,30)');
   const [secondaryColor, setSecondaryColor] = useState('rgb(200,200,200)');
   const [tertiaryColor, setTertiaryColor] = useState('rgb(190,190,190)');
 
-  const { data, isError, isLoading } = useQuery('playstate', retrievePlayState, {
+  const queryClient = useQueryClient();
+
+  const { data, isError, isLoading, error } = useQuery('playstate', retrievePlayState, {
     refetchInterval: 2000 + Math.random() * 1000,
   });
 
@@ -76,6 +78,13 @@ const Player = () => {
       });
     }
   }, [playStateItemUrl]);
+
+  useEffect(() => {
+    if (isError && error?.response?.status === 401) {
+      signOut();
+      queryClient.setQueryData('token', () => null);
+    }
+  }, [error, isError, queryClient]);
 
   if (isError) {
     return <div className="my-3 border shadow rounded p-3">Could not load player data.</div>;

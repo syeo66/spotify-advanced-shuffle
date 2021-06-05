@@ -7,7 +7,6 @@ import {
   LOAD_LIBRARY_PAGE,
   NEXT_PAGE,
   PREVIOUS_PAGE,
-  RETRIEVE_AUTH_TOKEN,
   ADD_TO_LOAD_QUEUE,
   APPEND_PLAYLISTS,
   CHECKED_PLAYLISTS,
@@ -15,7 +14,6 @@ import {
   TOGGLE_PLAYLIST,
   TOGGLE_CONFIG,
   UPDATE_CONFIG,
-  FETCH_USER,
 } from './types';
 
 import db from '../database';
@@ -176,6 +174,9 @@ export const retrieveLibrary = (_, queue) => (dispatch) => {
       });
     })
     .catch((response) => {
+      if (response?.response?.status === 401) {
+        return;
+      }
       setTimeout(() => {
         retrieveLibrary(authenticated, queue)(dispatch);
       }, 1000);
@@ -257,23 +258,15 @@ export const choosePlayer = (id) => {
 
 export const retrievePlayerInfo = async () => {
   const authenticated = getToken();
-  try {
-    const response = await axios({
-      url: 'https://api.spotify.com/v1/me/player/devices',
-      method: 'get',
-      headers: {
-        Authorization: 'Bearer ' + authenticated,
-      },
-    });
+  const response = await axios({
+    url: 'https://api.spotify.com/v1/me/player/devices',
+    method: 'get',
+    headers: {
+      Authorization: 'Bearer ' + authenticated,
+    },
+  });
 
-    return response.data;
-  } catch (e) {
-    if (e.response && e.response.status === 401) {
-      signOut();
-    } else {
-      throw e;
-    }
-  }
+  return response.data;
 };
 
 export const retrievePlayState = async () => {
