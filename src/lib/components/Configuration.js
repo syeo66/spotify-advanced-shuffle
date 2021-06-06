@@ -1,12 +1,14 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { memo, useEffect } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
+import Fallback from './Fallback';
 import { retrieveUserData, setConfig } from '../actions';
 
 const Configuration = (props) => {
   const { data: user, isLoading, isError } = useQuery('userinfo', retrieveUserData);
+  const { active } = props;
 
   const setConfig = (key) => (value) => {
     props.setConfig(key, value);
@@ -65,16 +67,16 @@ const Configuration = (props) => {
     ? 'An existing playlist will be purged before adding new tracks.'
     : 'The tracks will be prepended if there is an existing playlist.';
 
-  if (!props.showConfig) {
+  const setAmountTypeConfig = setConfig('amountType');
+  const setAmountTypeConfigCount = useCallback(() => setAmountTypeConfig('count'), [setAmountTypeConfig]);
+  const setAmountTypeConfigMinutes = useCallback(() => setAmountTypeConfig('minutes'), [setAmountTypeConfig]);
+
+  if (!active) {
     return '';
   }
 
-  const setAmountTypeConfig = setConfig('amountType');
-  const setAmountTypeConfigCount = () => setAmountTypeConfig('count');
-  const setAmountTypeConfigMinutes = () => setAmountTypeConfig('minutes');
-
   if (isLoading) {
-    return <div className="my-3 border shadow rounded p-3">Loading...</div>;
+    return <Fallback />;
   }
 
   return (
@@ -148,16 +150,13 @@ const Configuration = (props) => {
 
 Configuration.propTypes = {
   setConfig: PropTypes.func.isRequired,
-  user: PropTypes.object,
   config: PropTypes.object.isRequired,
-  showConfig: PropTypes.bool.isRequired,
+  active: PropTypes.bool,
 };
 
 const mapStateToProps = ({ data }) => {
   return {
     config: data.config,
-    showConfig: data.showConfig,
-    user: data.user,
   };
 };
 

@@ -1,4 +1,4 @@
-import React, { lazy, memo, Suspense } from 'react';
+import React, { lazy, memo, Suspense, useCallback, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,11 @@ const ConfigButton = lazy(() => import('./ConfigButton'));
 const Configuration = lazy(() => import('./Configuration'));
 
 const Tools = (props) => {
+  const [showConfig, setShowConfig] = useState(false);
+
   const isLoaded = props.isLoaded;
+
+  const toggleConfig = useCallback(() => setShowConfig((c) => !c), []);
 
   const text = !isLoaded ? (
     <div className="mt-2 text-muted">
@@ -26,11 +30,11 @@ const Tools = (props) => {
         </Suspense>
 
         <Suspense fallback={<Fallback />}>
-          <ConfigButton />
+          <ConfigButton active={showConfig} onClick={toggleConfig} />
         </Suspense>
       </div>
       <Suspense fallback={<Fallback />}>
-        <Configuration />
+        <Configuration active={showConfig} />
       </Suspense>
       {text}
     </div>
