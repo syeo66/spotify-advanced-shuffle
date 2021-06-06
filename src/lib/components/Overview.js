@@ -1,28 +1,29 @@
 import { addToLoadQueue, markDb, doPurgeDb, retrieveLibrary, retrieveUserData, getToken } from '../actions';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useCallback } from 'react';
 import { useQuery } from 'react-query';
 
 import db from '../database';
 import { usePrevProps } from '../hooks';
+import Fallback from './Fallback';
 
-const Tools = lazy(() => import('./Tools'));
-const Player = lazy(() => import('./Player'));
 const PlayerInfo = lazy(() => import('./PlayerInfo'));
-const UserInfo = lazy(() => import('./UserInfo'));
+const Player = lazy(() => import('./Player'));
 const PlaylistList = lazy(() => import('./PlaylistList'));
-const TrackList = lazy(() => import('./TrackList'));
 const Progress = lazy(() => import('./Progress'));
+const Tools = lazy(() => import('./Tools'));
+const TrackList = lazy(() => import('./TrackList'));
+const UserInfo = lazy(() => import('./UserInfo'));
 
 const Overview = (props) => {
   const prevProps = usePrevProps(props);
   const authenticated = useQuery('token', getToken);
 
-  const initDb = () => {
+  const initDb = useCallback(() => {
     props.markDb();
     props.addToLoadQueue('https://api.spotify.com/v1/me/tracks?limit=50', true);
-  };
+  }, [props.markDb, props.addToLoadQueue]);
 
   useEffect(() => {
     if (db.isOpen) {
@@ -30,7 +31,7 @@ const Overview = (props) => {
       return;
     }
     db.on('ready', initDb);
-  }, []);
+  }, [initDb]);
 
   useEffect(() => {
     const isAuthenticated = authenticated;
@@ -55,35 +56,35 @@ const Overview = (props) => {
     <div>
       <div className="row py-2">
         <div className="col">
-          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
+          <Suspense fallback={<Fallback />}>
             <Progress />
           </Suspense>
         </div>
       </div>
       <div className="row py-1">
         <div className="col-md-4">
-          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
+          <Suspense fallback={<Fallback />}>
             <Tools />
           </Suspense>
 
-          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
+          <Suspense fallback={<Fallback />}>
             <Player />
           </Suspense>
 
-          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
+          <Suspense fallback={<Fallback />}>
             <PlayerInfo />
           </Suspense>
 
-          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
+          <Suspense fallback={<Fallback />}>
             <UserInfo />
           </Suspense>
 
-          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
+          <Suspense fallback={<Fallback />}>
             <PlaylistList />
           </Suspense>
         </div>
         <div className="col-md-8">
-          <Suspense fallback={<div className="mb-3 shadow border p-3 rounded" />}>
+          <Suspense fallback={<Fallback />}>
             <TrackList />
           </Suspense>
         </div>

@@ -1,11 +1,12 @@
 import classNames from 'classnames';
-import React, { memo } from 'react';
 import { connect } from 'react-redux';
-import { toggleConfig } from '../actions';
 import PropTypes from 'prop-types';
+import React, { memo } from 'react';
 
-const ConfigButton = props => {
-  const startConfiguration = event => {
+import { toggleConfig } from '../actions';
+
+const ConfigButton = (props) => {
+  const startConfiguration = (event) => {
     props.toggleConfig();
     event.currentTarget.blur();
     event.preventDefault();
@@ -33,7 +34,4 @@ const mapStateToProps = ({ data }) => ({
   showConfig: data.showConfig,
 });
 
-export default connect(
-  mapStateToProps,
-  { toggleConfig }
-)(memo(ConfigButton));
+export default connect(mapStateToProps, { toggleConfig })(memo(ConfigButton));

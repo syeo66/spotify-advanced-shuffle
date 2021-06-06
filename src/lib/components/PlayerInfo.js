@@ -61,10 +61,4 @@ const PlayerInfo = () => {
   return <div className="list-group my-3 shadow rounded">{devices}</div>;
 };
 
-function mapStateToProps({ auth }) {
-  return {
-    authenticated: auth,
-  };
-}
-
 export default memo(PlayerInfo);

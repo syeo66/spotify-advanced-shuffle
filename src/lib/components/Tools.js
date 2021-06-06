@@ -2,12 +2,15 @@ import React, { lazy, memo, Suspense } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import Fallback from './Fallback';
+
 const ShuffleButton = lazy(() => import('./ShuffleButton'));
 const ConfigButton = lazy(() => import('./ConfigButton'));
 const Configuration = lazy(() => import('./Configuration'));
 
-const Tools = props => {
+const Tools = (props) => {
   const isLoaded = props.isLoaded;
+
   const text = !isLoaded ? (
     <div className="mt-2 text-muted">
       <i className="fas fa-sync fa-spin" /> Synchronizing...
@@ -18,15 +21,15 @@ const Tools = props => {
   return (
     <div className="mb-3 shadow border p-3 rounded">
       <div className="d-flex justify-content-between">
-        <Suspense fallback={<div />}>
+        <Suspense fallback={<Fallback />}>
           <ShuffleButton />
         </Suspense>
 
-        <Suspense fallback={<div />}>
+        <Suspense fallback={<Fallback />}>
           <ConfigButton />
         </Suspense>
       </div>
-      <Suspense fallback={<div />}>
+      <Suspense fallback={<Fallback />}>
         <Configuration />
       </Suspense>
       {text}
@@ -45,7 +48,4 @@ function mapStateToProps({ data }) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {}
-)(memo(Tools));
+export default connect(mapStateToProps, {})(memo(Tools));

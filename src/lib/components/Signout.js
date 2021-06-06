@@ -1,10 +1,11 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { signOut, getToken } from '../actions';
 
 const Signout = () => {
   const queryClient = useQueryClient();
   const { data: auth } = useQuery('token', getToken);
+
   const logoff = useMutation(signOut, {
     onSuccess: () => {
       queryClient.invalidateQueries('token');

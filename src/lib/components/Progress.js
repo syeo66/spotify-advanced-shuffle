@@ -1,18 +1,19 @@
-import React, { memo } from 'react';
 import { connect } from 'react-redux';
-import ProgressBar from './ProgressBar.js';
 import PropTypes from 'prop-types';
+import React, { memo } from 'react';
 
-const Progress = props => {
+import ProgressBar from './ProgressBar.js';
+
+const Progress = (props) => {
   return (
-    <React.Fragment>
-      {props.loadQueue.map(queue => {
+    <>
+      {props.loadQueue.map((queue) => {
         if (queue.isLoaded) {
           return '';
         }
         return <ProgressBar key={queue.origUrl} current={queue.current} target={queue.size} />;
       })}
-    </React.Fragment>
+    </>
   );
 };
 
@@ -26,7 +27,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {}
-)(memo(Progress));
+export default connect(mapStateToProps, {})(memo(Progress));

@@ -1,6 +1,6 @@
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { useQuery } from 'react-query';
 
 import { retrieveUserData, setConfig } from '../actions';

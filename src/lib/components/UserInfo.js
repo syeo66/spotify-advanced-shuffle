@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
-import { connect } from 'react-redux';
 import { useQuery } from 'react-query';
 
+import Loading from './Loading';
 import { retrieveUserData } from '../actions';
 
-const UserInfo = (props) => {
+const UserInfo = () => {
   const { data, isLoading, isError } = useQuery('userinfo', retrieveUserData);
 
   if (isError) {
@@ -24,14 +24,10 @@ const UserInfo = (props) => {
           </div>
         </div>
       ) : (
-        <>Loading...</>
+        <Loading />
       )}
     </div>
   );
 };
 
-const mapStateToProps = ({}) => {
-  return {};
-};
-
-export default connect(mapStateToProps, { retrieveUserData })(memo(UserInfo));
+export default memo(UserInfo);
