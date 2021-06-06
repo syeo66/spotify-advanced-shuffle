@@ -5,8 +5,8 @@ import React, { lazy, Suspense, useEffect, useCallback } from 'react';
 import { useQuery } from 'react-query';
 
 import db from '../database';
-import { usePrevProps } from '../hooks';
 import Fallback from './Fallback';
+import { usePrevProps } from '../hooks';
 
 const PlayerInfo = lazy(() => import('./PlayerInfo'));
 const Player = lazy(() => import('./Player'));
@@ -20,10 +20,13 @@ const Overview = (props) => {
   const prevProps = usePrevProps(props);
   const authenticated = useQuery('token', getToken);
 
+  const { markDb, addToLoadQueue, loadQueue, retrieveLibrary, doPurgeDb } = props;
+  const { loadQueue: prevLoadQueue } = prevProps || { loadQueue: null };
+
   const initDb = useCallback(() => {
-    props.markDb();
-    props.addToLoadQueue('https://api.spotify.com/v1/me/tracks?limit=50', true);
-  }, [props.markDb, props.addToLoadQueue]);
+    markDb();
+    addToLoadQueue('https://api.spotify.com/v1/me/tracks?limit=50', true);
+  }, [markDb, addToLoadQueue]);
 
   useEffect(() => {
     if (db.isOpen) {
@@ -36,21 +39,21 @@ const Overview = (props) => {
   useEffect(() => {
     const isAuthenticated = authenticated;
 
-    if (isAuthenticated && prevProps) {
-      for (let index in props.loadQueue) {
-        const queue = props.loadQueue[index];
-        if ((prevProps.loadQueue && queue === prevProps.loadQueue[index]) || queue.isLoaded) {
+    if (isAuthenticated && prevLoadQueue) {
+      for (let index in loadQueue) {
+        const queue = loadQueue[index];
+        if ((prevLoadQueue && queue === prevLoadQueue[index]) || queue.isLoaded) {
           continue;
         }
-        props.retrieveLibrary(props.authenticated, queue);
+        retrieveLibrary(authenticated, queue);
       }
 
-      const isAllLoaded = prevProps && props.loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true);
+      const isAllLoaded = prevLoadQueue && loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true);
       if (isAllLoaded) {
-        props.doPurgeDb();
+        doPurgeDb();
       }
     }
-  }, [authenticated, props.loadQueue, prevProps]);
+  }, [authenticated, doPurgeDb, loadQueue, prevLoadQueue, retrieveLibrary]);
 
   return (
     <div>

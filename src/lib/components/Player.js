@@ -77,7 +77,7 @@ const Player = () => {
         );
       });
     }
-  }, [playStateItemUrl]);
+  }, [data?.item, playStateItemUrl]);
 
   useEffect(() => {
     if (isError && error?.response?.status === 401) {

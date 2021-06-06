@@ -11,7 +11,7 @@ const Signin = ({ history }) => {
     if (auth) {
       history.push('/app');
     }
-  }, [auth]);
+  }, [auth, history]);
 
   return (
     <div className="row justify-content-center py-5">

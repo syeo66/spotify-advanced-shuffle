@@ -1,10 +1,11 @@
-import React, { memo, useState } from 'react';
-import { connect } from 'react-redux';
-import { getToken, retrievePlaylists } from '../actions';
-import db from '../database';
-import random from 'random';
-import PropTypes from 'prop-types';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import random from 'random';
+import React, { memo, useState } from 'react';
+
+import db from '../database';
+import { getToken, retrievePlaylists } from '../actions';
 
 const ShuffleButton = (props) => {
   const [isShuffleLoading, setIsShuffleLoading] = useState(false);

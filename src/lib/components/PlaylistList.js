@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { memo, useEffect } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
 import {
@@ -15,13 +15,15 @@ import {
 const PlaylistList = (props) => {
   const { data: user, isLoading, isError } = useQuery('userinfo', retrieveUserData);
 
+  const { retrievePlaylists, setCheckedPlaylists, checkedPlaylists, loadQueue, addToLoadQueue, togglePlaylist } = props;
+
   useEffect(() => {
-    props.retrievePlaylists();
-    const polling = setInterval(() => props.retrievePlaylists(), 4900);
+    retrievePlaylists();
+    const polling = setInterval(() => retrievePlaylists(), 4000 + Math.random() * 1000);
     return () => {
       clearInterval(polling);
     };
-  }, []);
+  }, [retrievePlaylists]);
 
   useEffect(() => {
     if (!user?.id || isLoading || isError) {
@@ -33,27 +35,28 @@ const PlaylistList = (props) => {
       const key = 'checkedPlaylists';
       const rawValue = window.localStorage.getItem(`${userId}.${key}`);
       const value = rawValue ? JSON.parse(rawValue) : [];
-      props.setCheckedPlaylists(value);
+      setCheckedPlaylists(value);
     }
-  }, [user, isLoading, isError]);
+  }, [isError, isLoading, setCheckedPlaylists, user?.id]);
+
+  const addToQueue = useCallback(
+    (id) => {
+      const myUrl = 'https://api.spotify.com/v1/playlists/' + id + '/tracks';
+      const found = loadQueue.filter((entry) => entry.origUrl === myUrl);
+      if (found.length === 0) {
+        addToLoadQueue(myUrl);
+      }
+    },
+    [addToLoadQueue, loadQueue]
+  );
 
   useEffect(() => {
-    props.checkedPlaylists.map((id) => {
+    checkedPlaylists.map((id) => {
       addToQueue(id);
     });
-  }, [props.checkedPlaylists]);
+  }, [addToQueue, checkedPlaylists]);
 
-  const addToQueue = (id) => {
-    const myUrl = 'https://api.spotify.com/v1/playlists/' + id + '/tracks';
-    const found = props.loadQueue.filter((entry) => entry.origUrl === myUrl);
-    if (found.length === 0) {
-      props.addToLoadQueue(myUrl);
-    }
-  };
-
-  const handleClick = (e) => {
-    props.togglePlaylist(e.target.value, user.id);
-  };
+  const handleClick = useCallback((e) => togglePlaylist(e.target.value, user?.id), [togglePlaylist, user?.id]);
 
   const playlists = props.playlists
     .sort((a, b) => {

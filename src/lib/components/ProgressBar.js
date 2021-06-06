@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 
-const ProgressBar = props => {
+const ProgressBar = (props) => {
   const progressPercent = (100 * props.current) / props.target + '%';
   const barStyle = { width: progressPercent };
 

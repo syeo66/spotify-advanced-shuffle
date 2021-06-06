@@ -5,17 +5,18 @@ import PropTypes from 'prop-types';
 import { loadLibraryFromDb, firstPage, nextPage, previousPage } from '../actions';
 
 const TrackList = (props) => {
-  useEffect(() => {
-    props.firstPage();
-  }, []);
+  const { firstPage, currentPage, itemsPerPage, loadLibraryFromDb } = props;
 
   useEffect(() => {
-    props.loadLibraryFromDb(props.currentPage * props.itemsPerPage, props.itemsPerPage);
-  }, [props.dbSize, props.currentPage, props.itemsPerPage]);
+    firstPage();
+  }, [firstPage]);
+
+  useEffect(() => {
+    loadLibraryFromDb(currentPage * itemsPerPage, itemsPerPage);
+  }, [currentPage, itemsPerPage, loadLibraryFromDb]);
 
   const librarySize = props.loadQueue.reduce((acc, queue) => acc + queue.size, 0);
   const perPage = props.itemsPerPage;
-  const currentPage = props.currentPage;
   const maxPage = Math.ceil((props.dbSize || librarySize) / perPage);
   const listItemWindow = props.library ? props.library : [];
   const listItems = listItemWindow.map((entry) => (

@@ -1,16 +1,16 @@
-import PropTypes from 'prop-types';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
 import axios from 'axios';
-import retry from 'axios-retry-after';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
+import retry from 'axios-retry-after';
 import { useMutation, useQueryClient } from 'react-query';
 
+import db from './database';
+import { fetchUser, doLogin, getToken } from './actions';
+import requireAuth from './components/auth/requireAuth';
 import Signin from './components/Signin';
 import Signout from './components/Signout';
-import db from './database';
-import requireAuth from './components/auth/requireAuth';
-import { fetchUser, doLogin, getToken } from './actions';
 
 const Overview = lazy(() => import('./components/Overview'));
 
@@ -18,6 +18,8 @@ axios.interceptors.response.use(null, retry(axios));
 
 const App = (props) => {
   const [isDatabaseReady, setIsDatabaseReady] = useState(false);
+
+  const { fetchUser } = props;
 
   const queryClient = useQueryClient();
   const login = useMutation(doLogin, {
@@ -34,10 +36,10 @@ const App = (props) => {
     };
 
     window.addEventListener('message', onMessage);
-    props.fetchUser();
+    fetchUser();
 
     return () => window.removeEventListener('message', onMessage);
-  }, []);
+  }, [fetchUser, login]);
 
   return (
     <div>

@@ -20,7 +20,7 @@ import db from '../database';
 
 export const getToken = () => window.localStorage.getItem('access_token');
 
-export const fetchUser = () => (dispatch) => {
+export const fetchUser = () => () => {
   for (const entry of window.location.hash.substr(1).split('&')) {
     const splitEntry = entry.split('=');
     if (splitEntry[0] == 'access_token') {
@@ -74,13 +74,6 @@ export const retrieveUserData = async () => {
     },
   });
 
-  if (response.status !== 200) {
-    if (response.status === 401) {
-      signOut(dispatch);
-    }
-    throw Error("User data couldn't be loaded");
-  }
-
   return response.data;
 };
 
@@ -98,13 +91,13 @@ export const loadLibraryFromDb = (offset, limit) => (dispatch) => {
     });
 };
 
-export const markDb = () => (dispatch) => {
+export const markDb = () => () => {
   return db.tracks.toCollection().modify((track) => {
     track.isSynced = 0;
   });
 };
 
-export const doPurgeDb = (_) => (dispatch) => {
+export const doPurgeDb = () => () => {
   db.tracks
     .where('isSynced')
     .equals(0)
@@ -214,15 +207,18 @@ export const retrievePlaylists =
       .then((response) => response.json())
       .then((response) => {
         if (response.next && response.total > response.offset + response.limit) {
-          setTimeout(() => retrievePlaylists(authenticated, abortSignal, response.next, true)(dispatch), 1000);
+          setTimeout(() => retrievePlaylists(authenticated, response.next, true)(dispatch), 1000);
         }
         dispatch({
           type: append ? APPEND_PLAYLISTS : FETCH_PLAYLISTS,
           payload: response,
         });
       })
-      .catch(() => {
-        setTimeout(() => retrievePlaylists(authenticated, abortSignal, url, append)(dispatch), 1000);
+      .catch((response) => {
+        if (response?.response?.status === 401) {
+          return;
+        }
+        setTimeout(() => retrievePlaylists(authenticated, url, append)(dispatch), 1000);
       });
   };
 

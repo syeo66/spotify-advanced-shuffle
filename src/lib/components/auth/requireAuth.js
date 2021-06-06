@@ -1,22 +1,23 @@
 import React, { memo, useEffect } from 'react';
-import { useQuery } from 'react-query';
-import { useLocation } from 'react-router-dom';
 import ReactRouterPropTypes from 'react-router-prop-types';
+import { useQuery } from 'react-query';
 
 import { getToken } from '../../actions';
 
 export default (ComposedComponent) => {
   const Authentication = (props) => {
+    const { history } = props;
     const { data: authenticated, isLoading } = useQuery('token', getToken);
 
     useEffect(() => {
       if (isLoading) {
         return;
       }
+
       if (!authenticated) {
-        props.history.push('/');
+        history.push('/');
       }
-    }, [authenticated, isLoading]);
+    }, [authenticated, history, isLoading]);
 
     if (authenticated) {
       return <ComposedComponent {...{ ...props, authenticated }} />;
