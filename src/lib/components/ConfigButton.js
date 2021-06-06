@@ -1,10 +1,19 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 
 const ConfigButton = ({ active, onClick }) => {
+  const handleClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.currentTarget.blur();
+      onClick();
+    },
+    [onClick]
+  );
+
   return (
-    <a href="#" className={classNames('btn btn-light', { active })} onClick={onClick}>
+    <a href="#" className={classNames('btn btn-light', { active })} onClick={handleClick}>
       <i className="fas fa-cog" />
     </a>
   );
