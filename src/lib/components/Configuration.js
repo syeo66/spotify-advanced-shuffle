@@ -1,75 +1,94 @@
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { memo, useCallback, useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import Fallback from './Fallback';
-import { retrieveUserData, setConfig } from '../actions';
+import { retrieveUserData, setConfigForUser, getConfigsForUser } from '../actions';
 
-const Configuration = (props) => {
+const Configuration = ({ active }) => {
+  const queryClient = useQueryClient();
   const { data: user, isLoading, isError } = useQuery('userinfo', retrieveUserData);
-  const { active } = props;
+  const { data: config, isLoading: isConfigLoading } = useQuery(['config', user?.id], getConfigsForUser(user?.id));
 
-  const setConfig = (key) => (value) => {
-    props.setConfig(key, value);
-    if (typeof Storage !== 'undefined') {
-      const userId = user.id;
-      window.localStorage.setItem(userId + '.' + key, value);
-    }
-  };
+  const setConfig = setConfigForUser(user?.id);
+  const configMutation = useMutation(({ key, value }) => setConfig(key)(value), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('config');
+    },
+  });
 
   useEffect(() => {
-    if (!user || isLoading || isError) {
+    if (!user || !config || isLoading || isError) {
       return;
     }
 
-    if (typeof Storage !== 'undefined') {
-      const userId = user.id;
-      ['amountType', 'randomListName', 'trackCount', 'trackMinutes', 'purgeOnShuffle'].forEach((key) => {
-        const mapping = (key) => {
-          switch (key) {
-            case 'purgeOnShuffle':
-              return window.localStorage.getItem(userId + '.' + key) == 'true';
-            default:
-              return window.localStorage.getItem(userId + '.' + key);
-          }
-        };
-        const value = mapping(key);
-        if (value !== null) {
-          setConfig(key)(value);
-        }
-      });
+    // set defaults
+    if (!config.randomListName) {
+      setConfig('randomListName')('Advanced Playlist');
     }
-  }, [user, isLoading, isError]);
 
-  const handleChange = (event) => {
-    const value = parseInt(event.target.value) || '';
-    const key = props.config.amountType == 'minutes' ? 'trackMinutes' : 'trackCount';
-    const maxValue = props.config.amountType == 'minutes' ? 1500 : 500;
-    setConfig(key)(Math.max(Math.min(value, maxValue), 0));
-  };
+    if (config.purgeOnShuffle === undefined) {
+      setConfig('purgeOnShuffle')('true');
+    }
 
-  const handlePurgeChange = () => {
-    setConfig('purgeOnShuffle')(!props.config.purgeOnShuffle);
-  };
+    if (!config.amountType) {
+      setConfig('amountType')('minutes');
+    }
 
-  const handlePlaylistNameChange = (event) => {
-    const input = event.target.value.trim();
-    const value = input || 'Advanced Shuffle';
-    setConfig('randomListName')(value);
-  };
+    if (!config.trackMinutes) {
+      setConfig('trackMinutes')(120);
+    }
 
-  const type = props.config.amountType == 'minutes' ? 'Minutes' : 'Trackcount';
-  const value = props.config.amountType == 'minutes' ? props.config.trackMinutes : props.config.trackCount;
-  const sentence = props.config.amountType == 'minutes' ? 'hours of music.' : 'random tracks.';
-  const sentenceValue = props.config.amountType == 'minutes' ? Math.round((value / 60) * 100) / 100 : value;
-  const purgeSentence = props.config.purgeOnShuffle
-    ? 'An existing playlist will be purged before adding new tracks.'
-    : 'The tracks will be prepended if there is an existing playlist.';
+    if (!config.trackCount) {
+      setConfig('trackCount')(30);
+    }
+  }, [config, isError, isLoading, setConfig, user]);
 
-  const setAmountTypeConfig = setConfig('amountType');
+  const handleChange = useCallback(
+    (event) => {
+      const value = parseInt(event.target.value) || '';
+      const key = config.amountType === 'minutes' ? 'trackMinutes' : 'trackCount';
+      const maxValue = config.amountType === 'minutes' ? 1500 : 500;
+      configMutation.mutate({ key, value: Math.max(Math.min(value, maxValue), 0) });
+    },
+    [config?.amountType, configMutation]
+  );
+
+  const handlePurgeChange = useCallback(() => {
+    configMutation.mutate({ key: 'purgeOnShuffle', value: !config.purgeOnShuffle ? 'true' : 'false' });
+  }, [config?.purgeOnShuffle, configMutation]);
+
+  const handlePlaylistNameChange = useCallback(
+    (event) => {
+      const input = event.target.value.trim();
+      const value = input || 'Advanced Shuffle';
+      configMutation.mutate({ key: 'randomListName', value });
+    },
+    [configMutation]
+  );
+
+  const setAmountTypeConfig = useCallback(
+    (value) => configMutation.mutate({ key: 'amountType', value }),
+    [configMutation]
+  );
   const setAmountTypeConfigCount = useCallback(() => setAmountTypeConfig('count'), [setAmountTypeConfig]);
   const setAmountTypeConfigMinutes = useCallback(() => setAmountTypeConfig('minutes'), [setAmountTypeConfig]);
+
+  if (!active) {
+    return '';
+  }
+
+  if (isLoading || isConfigLoading || !config) {
+    return <Fallback />;
+  }
+
+  const type = config.amountType === 'minutes' ? 'Minutes' : 'Trackcount';
+  const value = config.amountType === 'minutes' ? config.trackMinutes : config.trackCount;
+  const sentence = config.amountType === 'minutes' ? 'hours of music.' : 'random tracks.';
+  const sentenceValue = config.amountType === 'minutes' ? Math.round((value / 60) * 100) / 100 : value;
+  const purgeSentence = config.purgeOnShuffle
+    ? 'An existing playlist will be purged before adding new tracks.'
+    : 'The tracks will be prepended if there is an existing playlist.';
 
   if (!active) {
     return '';
@@ -119,7 +138,7 @@ const Configuration = (props) => {
           className="custom-control-input"
           id="purgeOnShuffle"
           onChange={handlePurgeChange}
-          checked={props.config.purgeOnShuffle}
+          checked={config.purgeOnShuffle}
         />
         <label className="custom-control-label" htmlFor="purgeOnShuffle">
           Purge playlist
@@ -138,10 +157,10 @@ const Configuration = (props) => {
           aria-describedby="playlistNameHelp"
           placeholder="Playlist name"
           onChange={handlePlaylistNameChange}
-          value={props.config.randomListName}
+          value={config?.randomListName}
         />
         <small id="playlistNameHelp" className="form-text text-muted">
-          The random playlist will be called «{props.config.randomListName}»
+          The random playlist will be called «{config?.randomListName}»
         </small>
       </div>
     </div>
@@ -149,15 +168,7 @@ const Configuration = (props) => {
 };
 
 Configuration.propTypes = {
-  setConfig: PropTypes.func.isRequired,
-  config: PropTypes.object.isRequired,
   active: PropTypes.bool,
 };
 
-const mapStateToProps = ({ data }) => {
-  return {
-    config: data.config,
-  };
-};
-
-export default connect(mapStateToProps, { setConfig })(memo(Configuration));
+export default memo(Configuration);

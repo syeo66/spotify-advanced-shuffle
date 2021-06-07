@@ -5,13 +5,19 @@ import random from 'random';
 import React, { memo, useState } from 'react';
 
 import db from '../database';
-import { getToken, retrievePlaylists } from '../actions';
+import { getConfigsForUser, getToken, retrievePlaylists, retrieveUserData } from '../actions';
+import { useQuery } from 'react-query';
 
 const ShuffleButton = (props) => {
   const [isShuffleLoading, setIsShuffleLoading] = useState(false);
+  const { data: user, isLoading } = useQuery('userinfo', retrieveUserData);
+  const { data: config, isLoading: isConfigLoading } = useQuery(['config', user?.id], getConfigsForUser(user?.id));
 
   const enabled =
-    !isShuffleLoading && ((props.librarySize && props.dbSize >= props.librarySize * 0.9) || props.isLoaded);
+    !isShuffleLoading &&
+    !isLoading &&
+    !isConfigLoading &&
+    ((props.librarySize && props.dbSize >= props.librarySize * 0.9) || props.isLoaded);
   const icon = isShuffleLoading ? 'fas fa-compact-disc fa-spin' : 'fas fa-random';
 
   const chunkArray = (myArray, chunk_size) => {
@@ -35,7 +41,7 @@ const ShuffleButton = (props) => {
           Authorization: 'Bearer ' + authenticated,
         },
         data: {
-          name: props.config.randomListName,
+          name: config.randomListName,
           description: 'Spotify Advanced Shuffle Helper Playlist',
           public: false,
         },
@@ -84,8 +90,7 @@ const ShuffleButton = (props) => {
   };
 
   const fillRandomPlaylist = (playlist) => {
-    const trackCount =
-      props.config.amountType == 'minutes' ? Math.round(props.config.trackMinutes / 2) : props.config.trackCount;
+    const trackCount = config.amountType == 'minutes' ? Math.round(config.trackMinutes / 2) : config.trackCount;
     const count = Math.min(Math.round(trackCount * 1.1), 1024);
     const addTracks = (numbers) => {
       db.tracks.toArray((library) => {
@@ -93,12 +98,12 @@ const ShuffleButton = (props) => {
         const normaled = numbers.map((number) => Math.floor(number * library.length));
         const slices = chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
         slices.forEach((chunk) => {
-          if (props.config.amountType == 'minutes' && minutes >= props.config.trackMinutes) {
+          if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
             return;
           }
           let tracks = chunk
             .map((number) => {
-              if (props.config.amountType == 'minutes' && minutes >= props.config.trackMinutes) {
+              if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
                 return;
               }
               minutes += library[number].duration_ms / 60000;
@@ -140,7 +145,7 @@ const ShuffleButton = (props) => {
 
   const purgeRandomPlaylist = (playlist) => {
     return new Promise((resolve) => {
-      if (!props.config.purgeOnShuffle) {
+      if (!config.purgeOnShuffle) {
         resolve(playlist);
         return;
       }
@@ -212,7 +217,6 @@ const ShuffleButton = (props) => {
 };
 
 ShuffleButton.propTypes = {
-  config: PropTypes.object.isRequired,
   dbSize: PropTypes.number.isRequired,
   existingPlaylist: PropTypes.object,
   isLoaded: PropTypes.bool.isRequired,
@@ -221,7 +225,6 @@ ShuffleButton.propTypes = {
 
 function mapStateToProps({ data }) {
   return {
-    config: data.config,
     isLoaded: data.loadQueue.reduce((acc, queue) => acc && queue.isLoaded, true),
     librarySize: data.loadQueue.reduce((acc, queue) => acc + queue.size, 0),
     dbSize: data.dbSize,

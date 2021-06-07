@@ -3,14 +3,7 @@ import PropTypes from 'prop-types';
 import React, { memo, useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
-import {
-  addToLoadQueue,
-  setCheckedPlaylists,
-  retrievePlaylists,
-  setConfig,
-  togglePlaylist,
-  retrieveUserData,
-} from '../actions';
+import { addToLoadQueue, setCheckedPlaylists, retrievePlaylists, togglePlaylist, retrieveUserData } from '../actions';
 
 const PlaylistList = (props) => {
   const { data: user, isLoading, isError } = useQuery('userinfo', retrieveUserData);
@@ -89,7 +82,6 @@ PlaylistList.propTypes = {
   addToLoadQueue: PropTypes.func.isRequired,
   setCheckedPlaylists: PropTypes.func.isRequired,
   retrievePlaylists: PropTypes.func.isRequired,
-  setConfig: PropTypes.func.isRequired,
   togglePlaylist: PropTypes.func.isRequired,
 };
 
@@ -106,6 +98,5 @@ export default connect(mapStateToProps, {
   addToLoadQueue,
   setCheckedPlaylists,
   retrievePlaylists,
-  setConfig,
   togglePlaylist,
 })(memo(PlaylistList));

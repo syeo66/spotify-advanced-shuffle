@@ -12,8 +12,6 @@ import {
   CHECKED_PLAYLISTS,
   FETCH_PLAYLISTS,
   TOGGLE_PLAYLIST,
-  TOGGLE_CONFIG,
-  UPDATE_CONFIG,
 } from './types';
 
 import db from '../database';
@@ -284,17 +282,35 @@ export const retrievePlayState = async () => {
   return response.data;
 };
 
-export const toggleConfig = () => (dispatch) => {
-  dispatch({
-    type: TOGGLE_CONFIG,
-  });
+export const setConfigForUser = (userId) => (key) => (value) => {
+  const store = `${userId}.${key}`;
+  window.localStorage.setItem(store, value);
 };
 
-export const setConfig = (key, value) => (dispatch) => {
-  dispatch({
-    type: UPDATE_CONFIG,
-    config: {
-      [key]: value,
-    },
-  });
+export const getConfigForUser =
+  (userId) =>
+  (key, defaultValue = null) => {
+    const store = `${userId}.${key}`;
+    const value = window.localStorage.getItem(store);
+
+    switch (key) {
+      case 'purgeOnShuffle':
+        return value === 'true' ? true : value === 'false' ? false : undefined;
+    }
+
+    return window.localStorage.getItem(store) || defaultValue;
+  };
+
+export const getConfigsForUser = (userId) => {
+  const getConfig = getConfigForUser(userId);
+
+  return () => {
+    return {
+      randomListName: getConfig('randomListName'),
+      purgeOnShuffle: getConfig('purgeOnShuffle'),
+      amountType: getConfig('amountType'),
+      trackMinutes: getConfig('trackMinutes'),
+      trackCount: getConfig('trackCount'),
+    };
+  };
 };
