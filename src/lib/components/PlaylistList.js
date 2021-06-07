@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import React, { memo, useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
-import { addToLoadQueue, setCheckedPlaylists, retrievePlaylists, togglePlaylist, retrieveUserData } from '../actions';
+import {
+  addToLoadQueue,
+  setCheckedPlaylists,
+  retrievePlaylists,
+  togglePlaylist,
+  retrieveUserData,
+  getConfigForUser,
+} from '../actions';
 
 const PlaylistList = (props) => {
   const { data: user, isLoading, isError } = useQuery('userinfo', retrieveUserData);
@@ -60,10 +67,12 @@ const PlaylistList = (props) => {
         <li className="list-group-item d-flex justify-start align-items-center" key={entry.id}>
           <input
             type="checkbox"
-            checked={props.checkedPlaylists.indexOf(entry.id) !== -1 && !(entry.name === props.configRandomListName)}
+            checked={
+              props.checkedPlaylists.includes(entry.id) && !(entry.name === getConfigForUser(user.id)('randomListName'))
+            }
             value={entry.id}
             onChange={handleClick}
-            disabled={entry.name === props.configRandomListName}
+            disabled={entry.name === getConfigForUser(user.id)('randomListName')}
           />
           <span className="ml-3 text-left">{entry.name}</span>
           <span className="badge badge-primary badge-pill ml-auto">{entry.tracks.total}</span>
@@ -77,7 +86,6 @@ const PlaylistList = (props) => {
 PlaylistList.propTypes = {
   playlists: PropTypes.array.isRequired,
   checkedPlaylists: PropTypes.array,
-  configRandomListName: PropTypes.string,
   loadQueue: PropTypes.array,
   addToLoadQueue: PropTypes.func.isRequired,
   setCheckedPlaylists: PropTypes.func.isRequired,
@@ -89,7 +97,6 @@ function mapStateToProps({ data }) {
   return {
     playlists: data.playlists ? data.playlists : [],
     checkedPlaylists: data.checkedPlaylists,
-    configRandomListName: data.config ? data.config.randomListName : null,
     loadQueue: data.loadQueue,
   };
 }

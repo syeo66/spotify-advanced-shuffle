@@ -24,7 +24,7 @@ const Configuration = ({ active }) => {
 
     // set defaults
     if (!config.randomListName) {
-      setConfig('randomListName')('Advanced Playlist');
+      setConfig('randomListName')('Advanced Shuffle');
     }
 
     if (config.purgeOnShuffle === undefined) {
