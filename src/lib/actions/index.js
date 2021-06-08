@@ -12,6 +12,7 @@ import {
   CHECKED_PLAYLISTS,
   FETCH_PLAYLISTS,
   TOGGLE_PLAYLIST,
+  PURGE_LOAD_QUEUE,
 } from './types';
 
 import db from '../database';
@@ -64,6 +65,9 @@ export const signOut = () => {
 
 export const retrieveUserData = async () => {
   const authenticated = getToken();
+  if (!authenticated) {
+    return null;
+  }
   const response = await axios({
     url: 'https://api.spotify.com/v1/me',
     method: 'get',
@@ -113,8 +117,15 @@ export const addToLoadQueue =
     });
   };
 
+export const purgeLoadQueue = () => (dispatch) => {
+  dispatch({ type: PURGE_LOAD_QUEUE });
+};
+
 export const retrieveLibrary = (_, queue) => (dispatch) => {
   const authenticated = getToken();
+  if (!authenticated) {
+    return null;
+  }
   const { url } = queue;
 
   axios({
@@ -163,14 +174,6 @@ export const retrieveLibrary = (_, queue) => (dispatch) => {
           next: response.next,
         },
       });
-    })
-    .catch((response) => {
-      if (response?.response?.status === 401) {
-        return;
-      }
-      setTimeout(() => {
-        retrieveLibrary(authenticated, queue)(dispatch);
-      }, 1000);
     });
 };
 
@@ -196,6 +199,9 @@ export const retrievePlaylists =
   (_, url = 'https://api.spotify.com/v1/me/playlists?limit=50', append = false) =>
   (dispatch) => {
     const authenticated = getToken();
+    if (!authenticated) {
+      return null;
+    }
     fetch(url, {
       method: 'get',
       headers: new Headers({
@@ -236,6 +242,9 @@ export const setCheckedPlaylists = (checked) => (dispatch) => {
 
 export const choosePlayer = (id) => {
   const authenticated = getToken();
+  if (!authenticated) {
+    return null;
+  }
   const url = 'https://api.spotify.com/v1/me/player';
 
   return axios({
@@ -252,6 +261,9 @@ export const choosePlayer = (id) => {
 
 export const retrievePlayerInfo = async () => {
   const authenticated = getToken();
+  if (!authenticated) {
+    return null;
+  }
   const response = await axios({
     url: 'https://api.spotify.com/v1/me/player/devices',
     method: 'get',
@@ -265,6 +277,9 @@ export const retrievePlayerInfo = async () => {
 
 export const retrievePlayState = async () => {
   const authenticated = getToken();
+  if (!authenticated) {
+    return null;
+  }
   const response = await axios({
     url: 'https://api.spotify.com/v1/me/player',
     method: 'get',

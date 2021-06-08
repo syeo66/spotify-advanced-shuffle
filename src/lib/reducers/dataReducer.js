@@ -15,6 +15,7 @@ import {
   DB_COUNT,
   TOGGLE_PLAYLIST,
   CHECKED_PLAYLISTS,
+  PURGE_LOAD_QUEUE,
 } from '../actions/types';
 
 export default (state = {}, action) => {
@@ -24,6 +25,7 @@ export default (state = {}, action) => {
         ...state,
         currentPage: 1,
       };
+
     case NEXT_PAGE: {
       const librarySize = state.loadQueue.reduce((acc, queue) => acc + queue.size, 0);
       const currentPage = Math.min(Math.ceil(librarySize / state.itemsPerPage), state.currentPage + 1);
@@ -32,8 +34,10 @@ export default (state = {}, action) => {
         currentPage: currentPage,
       };
     }
+
     case PREVIOUS_PAGE:
       return { ...state, currentPage: Math.max(1, state.currentPage - 1) };
+
     case APPEND_PLAYLISTS: {
       const playlists = state.playlists.concat(action.payload.items);
       return {
@@ -42,14 +46,17 @@ export default (state = {}, action) => {
         playlistsSize: action.payload.total,
       };
     }
+
     case FETCH_PLAYLISTS:
       return {
         ...state,
         playlists: action.payload.items,
         playlistsSize: action.payload.total,
       };
+
     case CHECKED_PLAYLISTS:
       return { ...state, checkedPlaylists: action.payload };
+
     case TOGGLE_PLAYLIST: {
       const { id, userId } = action.payload;
       if (!state.checkedPlaylists) {
@@ -58,7 +65,7 @@ export default (state = {}, action) => {
       }
       const checked =
         state.checkedPlaylists.indexOf(id) !== -1
-          ? state.checkedPlaylists.filter(value => {
+          ? state.checkedPlaylists.filter((value) => {
               return value !== id;
             })
           : [...state.checkedPlaylists, id];
@@ -70,6 +77,14 @@ export default (state = {}, action) => {
         checkedPlaylists: checked,
       };
     }
+
+    case PURGE_LOAD_QUEUE:
+      return {
+        ...state,
+        loadQueue: [],
+        library: [],
+      };
+
     case ADD_TO_LOAD_QUEUE:
       return {
         ...state,
@@ -96,13 +111,15 @@ export default (state = {}, action) => {
               },
             ],
       };
+
     case LOAD_LIBRARY_PAGE:
       return {
         ...state,
         library: action.payload,
       };
+
     case FETCH_LIBRARY: {
-      const loadQueue = state.loadQueue.map(entry => {
+      const loadQueue = state.loadQueue.map((entry) => {
         if (entry.origUrl === action.payload.origUrl) {
           return {
             ...action.payload,
@@ -117,21 +134,28 @@ export default (state = {}, action) => {
         loadQueue,
       };
     }
+
     case DB_COUNT:
       return {
         ...state,
         dbSize: action.payload.dbSize || 0,
       };
+
     case FETCH_USER:
       return { ...state, user: action.user };
+
     case FETCH_PLAYER:
       return { ...state, devices: action.devices.devices };
+
     case FETCH_PLAY_STATE:
       return { ...state, playstate: action.playstate };
+
     case TOGGLE_CONFIG:
       return { ...state, showConfig: !state.showConfig };
+
     case UPDATE_CONFIG:
       return { ...state, config: { ...state.config, ...action.config } };
+
     default:
       return state;
   }

@@ -42,7 +42,7 @@ const Overview = (props) => {
     if (isAuthenticated && prevLoadQueue) {
       for (let index in loadQueue) {
         const queue = loadQueue[index];
-        if ((prevLoadQueue && queue === prevLoadQueue[index]) || queue.isLoaded) {
+        if ((prevLoadQueue && queue?.url === prevLoadQueue[index]?.url) || queue.isLoaded) {
           continue;
         }
         retrieveLibrary(authenticated, queue);

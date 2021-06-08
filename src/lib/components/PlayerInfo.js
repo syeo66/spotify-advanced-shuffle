@@ -1,9 +1,11 @@
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { choosePlayer, retrievePlayerInfo, signOut } from '../actions';
+import { choosePlayer, retrievePlayerInfo, signOut, purgeLoadQueue, getToken } from '../actions';
 
-const PlayerInfo = () => {
+const PlayerInfo = ({ purgeLoadQueue }) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery('playerinfo', retrievePlayerInfo, {
@@ -25,11 +27,14 @@ const PlayerInfo = () => {
   });
 
   useEffect(() => {
-    if (isError && error?.response?.status === 401) {
+    const token = getToken();
+    if (token && isError && error?.response?.status === 401) {
+      purgeLoadQueue();
       signOut();
+      queryClient.setQueryData('playerinfo', null);
       queryClient.setQueryData('token', () => null);
     }
-  }, [error, isError, queryClient]);
+  }, [error?.response?.status, isError, purgeLoadQueue, queryClient]);
 
   if (isLoading) {
     return <div className="my-3 border shadow rounded p-3">Loading...</div>;
@@ -61,4 +66,8 @@ const PlayerInfo = () => {
   return <div className="list-group my-3 shadow rounded">{devices}</div>;
 };
 
-export default memo(PlayerInfo);
+PlayerInfo.propTypes = {
+  purgeLoadQueue: PropTypes.func.isRequired,
+};
+
+export default connect(() => ({}), { purgeLoadQueue })(memo(PlayerInfo));
