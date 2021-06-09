@@ -16,7 +16,7 @@ const UserInfo = () => {
       {!isLoading && data ? (
         <div className="row">
           <div className="col-3 m-0 pr-0">
-            <img className="img-thumbnail" src={data.images[0].url} />
+            {data?.images?.[0]?.url && <img className="img-thumbnail" src={data.images[0].url} />}
           </div>
           <div className="col pt-0 pb-0 pl-2 mt-n1">
             <small>{data.display_name}</small>
