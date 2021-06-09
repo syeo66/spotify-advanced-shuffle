@@ -10,7 +10,6 @@ import {
   ADD_TO_LOAD_QUEUE,
   APPEND_PLAYLISTS,
   CHECKED_PLAYLISTS,
-  FETCH_PLAYLISTS,
   TOGGLE_PLAYLIST,
   PURGE_LOAD_QUEUE,
 } from './types';
@@ -196,33 +195,28 @@ export const nextPage = () => (dispatch) => {
 };
 
 export const retrievePlaylists =
-  (_, url = 'https://api.spotify.com/v1/me/playlists?limit=50', append = false) =>
+  (_, url = 'https://api.spotify.com/v1/me/playlists?limit=50') =>
   (dispatch) => {
     const authenticated = getToken();
     if (!authenticated) {
       return null;
     }
-    fetch(url, {
+    axios({
+      url,
       method: 'get',
-      headers: new Headers({
+      headers: {
         Authorization: 'Bearer ' + authenticated,
-      }),
+      },
     })
-      .then((response) => response.json())
+      .then((response) => response.data)
       .then((response) => {
         if (response.next && response.total > response.offset + response.limit) {
-          setTimeout(() => retrievePlaylists(authenticated, response.next, true)(dispatch), 1000);
+          retrievePlaylists(authenticated, response.next)(dispatch);
         }
         dispatch({
-          type: append ? APPEND_PLAYLISTS : FETCH_PLAYLISTS,
+          type: APPEND_PLAYLISTS,
           payload: response,
         });
-      })
-      .catch((response) => {
-        if (response?.response?.status === 401) {
-          return;
-        }
-        setTimeout(() => retrievePlaylists(authenticated, url, append)(dispatch), 1000);
       });
   };
 

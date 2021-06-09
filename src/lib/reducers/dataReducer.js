@@ -39,7 +39,10 @@ export default (state = {}, action) => {
       return { ...state, currentPage: Math.max(1, state.currentPage - 1) };
 
     case APPEND_PLAYLISTS: {
-      const playlists = state.playlists.concat(action.payload.items);
+      const playlists = [
+        ...(state.playlists || []),
+        ...action.payload.items.filter((i) => !state.playlists?.find((p) => i.id === p.id)),
+      ];
       return {
         ...state,
         playlists: playlists,

@@ -14,68 +14,66 @@ const Player = () => {
     refetchInterval: 2000 + Math.random() * 1000,
   });
 
-  const playStateItemUrl = data?.item ? data?.item.album.images[0].url : null;
+  const playStateItemUrl = data?.item ? data?.item?.album?.images?.[0]?.url : null;
 
   useEffect(() => {
-    if (!data?.item) {
+    if (!playStateItemUrl) {
       return;
     }
-    const item = data.item;
-    if (item && item.album && item.album.images[0]) {
-      analyze(item.album.images[0].url, {
-        scale: 0.6,
-      }).then((colors) => {
-        const primary = colors[0].color;
 
-        const secondary = colors.reduce((acc, c) => {
-          if (
-            acc === null &&
-            c.color !== primary.color &&
-            Color(c.color).chroma() > 20 &&
-            Color(primary).contrast(Color(c.color)) > 4
-          ) {
-            return c;
-          }
-          return acc;
-        }, null);
+    analyze(playStateItemUrl, {
+      scale: 0.6,
+    }).then((colors) => {
+      const primary = colors[0].color;
 
-        const tertiary = colors.reduce((acc, c) => {
-          if (
-            acc === null &&
-            c.color !== primary.color &&
-            Color('#fff').contrast(Color(c.color)) > 1 &&
-            Color('#000').contrast(Color(c.color)) > 1 &&
-            Color(primary).contrast(Color(c.color)) > 10
-          ) {
-            return c;
-          }
-          return acc;
-        }, null);
+      const secondary = colors.reduce((acc, c) => {
+        if (
+          acc === null &&
+          c.color !== primary.color &&
+          Color(c.color).chroma() > 20 &&
+          Color(primary).contrast(Color(c.color)) > 4
+        ) {
+          return c;
+        }
+        return acc;
+      }, null);
 
-        setPrimaryColor(colors[0].color);
-        setSecondaryColor(
-          secondary
-            ? secondary.color
-            : tertiary
-            ? tertiary.color
-            : Color(primary).isLight()
-            ? 'rgb(30,30,30)'
-            : 'rgb(240,240,240)'
-        );
-        setTertiaryColor(
-          tertiary
-            ? tertiary.color
-            : secondary
-            ? Color(primary).isLight()
-              ? Color(secondary.color).darken(0.3).hex()
-              : Color(secondary.color).lighten(0.3).hex()
-            : Color(primary).isLight()
-            ? 'rgb(30,30,30)'
-            : 'rgb(240,240,240)'
-        );
-      });
-    }
-  }, [data?.item, playStateItemUrl]);
+      const tertiary = colors.reduce((acc, c) => {
+        if (
+          acc === null &&
+          c.color !== primary.color &&
+          Color('#fff').contrast(Color(c.color)) > 1 &&
+          Color('#000').contrast(Color(c.color)) > 1 &&
+          Color(primary).contrast(Color(c.color)) > 10
+        ) {
+          return c;
+        }
+        return acc;
+      }, null);
+
+      setPrimaryColor(colors[0].color);
+      setSecondaryColor(
+        secondary
+          ? secondary.color
+          : tertiary
+          ? tertiary.color
+          : Color(primary).isLight()
+          ? 'rgb(30,30,30)'
+          : 'rgb(240,240,240)'
+      );
+      setTertiaryColor(
+        tertiary
+          ? tertiary.color
+          : secondary
+          ? Color(primary).isLight()
+            ? Color(secondary.color).darken(0.3).hex()
+            : Color(secondary.color).lighten(0.3).hex()
+          : Color(primary).isLight()
+          ? 'rgb(30,30,30)'
+          : 'rgb(240,240,240)'
+      );
+    });
+  }, [playStateItemUrl]);
 
   if (isError) {
     return <div className="my-3 border shadow rounded p-3">Could not load player data.</div>;

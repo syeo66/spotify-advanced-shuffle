@@ -1,9 +1,8 @@
-import axios from 'axios';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
-import retry from 'axios-retry-after';
+import * as rax from 'retry-axios';
 import { useMutation, useQueryClient } from 'react-query';
 
 import db from './database';
@@ -14,7 +13,8 @@ import Signout from './components/Signout';
 
 const Overview = lazy(() => import('./components/Overview'));
 
-axios.interceptors.response.use(null, retry(axios));
+// axios.interceptors.response.use(null, retry(axios));
+rax.attach();
 
 const App = (props) => {
   const [isDatabaseReady, setIsDatabaseReady] = useState(false);

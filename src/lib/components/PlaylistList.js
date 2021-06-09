@@ -19,7 +19,7 @@ const PlaylistList = (props) => {
 
   useEffect(() => {
     retrievePlaylists();
-    const polling = setInterval(() => retrievePlaylists(), 4000 + Math.random() * 1000);
+    const polling = setInterval(() => retrievePlaylists(), 10000 + Math.random() * 1000);
     return () => {
       clearInterval(polling);
     };
