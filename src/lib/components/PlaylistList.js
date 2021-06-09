@@ -18,12 +18,16 @@ const PlaylistList = (props) => {
   const { retrievePlaylists, setCheckedPlaylists, checkedPlaylists, loadQueue, addToLoadQueue, togglePlaylist } = props;
 
   useEffect(() => {
+    if (!user?.id) {
+      return;
+    }
+
     retrievePlaylists();
     const polling = setInterval(() => retrievePlaylists(), 10000 + Math.random() * 1000);
     return () => {
       clearInterval(polling);
     };
-  }, [retrievePlaylists]);
+  }, [retrievePlaylists, user?.id]);
 
   useEffect(() => {
     if (!user?.id || isLoading || isError) {
