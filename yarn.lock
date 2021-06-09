@@ -1337,11 +1337,6 @@ async@1.5.2:
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
   integrity sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=
 
-axios-retry-after@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/axios-retry-after/-/axios-retry-after-1.0.3.tgz#41b4d231487d0f892622ab8f0d5e605146738df8"
-  integrity sha512-GO/u5AWvSSWgggHgnXK+hgRa2xsw+/OVFfjllIfVeGmpDELhVqAjg5oI8CsImGGrCeo0jiE5xDUFeDUHRt+8yQ==
-
 axios@0.21.1, axios@^0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"

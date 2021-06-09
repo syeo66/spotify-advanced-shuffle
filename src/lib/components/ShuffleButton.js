@@ -91,11 +91,11 @@ const ShuffleButton = (props) => {
 
   const fillRandomPlaylist = (playlist) => {
     const trackCount = config.amountType == 'minutes' ? Math.round(config.trackMinutes / 2) : config.trackCount;
-    const count = Math.min(Math.round(trackCount * 1.1), 1024);
+    const count = Math.min(Math.round(trackCount * 1.5), 1024);
     const addTracks = (numbers) => {
       db.tracks.toArray((library) => {
         let minutes = 0;
-        const normaled = numbers.map((number) => Math.floor(number * library.length));
+        const normaled = numbers.map(() => random.int(0, library.length - 1));
         const slices = chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
         slices.forEach((chunk) => {
           if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
