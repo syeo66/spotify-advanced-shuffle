@@ -40,8 +40,8 @@ export default (state = {}, action) => {
 
     case APPEND_PLAYLISTS: {
       const playlists = [
-        ...(state.playlists || []),
-        ...action.payload.items.filter((i) => !state.playlists?.find((p) => i.id === p.id)),
+        ...(state.playlists?.filter((i) => !action.payload.items?.find((p) => i.id === p.id)) || []),
+        ...action.payload.items,
       ];
       return {
         ...state,
