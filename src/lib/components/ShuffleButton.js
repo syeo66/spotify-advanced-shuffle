@@ -2,7 +2,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import random from 'random';
-import React, { memo, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 
 import db from '../database';
 import { getConfigsForUser, getToken, retrievePlaylists, retrieveUserData } from '../actions';
@@ -30,7 +30,7 @@ const ShuffleButton = (props) => {
     return results;
   };
 
-  const createRandomPlaylist = () => {
+  const createRandomPlaylist = useCallback(() => {
     const authenticated = getToken();
     return new Promise((resolve) => {
       const url = 'https://api.spotify.com/v1/me/playlists';
@@ -51,7 +51,7 @@ const ShuffleButton = (props) => {
           resolve(response);
         });
     });
-  };
+  }, [config?.randomListName]);
 
   const startPlayback = (playlist) => {
     const authenticated = getToken();
@@ -68,11 +68,11 @@ const ShuffleButton = (props) => {
     }).then(() => setIsShuffleLoading(false));
   };
 
-  const addRandomTracks = (playlist, trackUris) => {
+  const addRandomTracks = useCallback(async (playlist, trackUris) => {
     const authenticated = getToken();
     const playlistId = playlist.id;
     const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
-    axios({
+    return axios({
       url,
       method: 'post',
       headers: {
@@ -82,131 +82,114 @@ const ShuffleButton = (props) => {
         uris: trackUris,
         position: 0,
       },
-    })
-      .then((response) => response.data)
-      .then(() => {
-        startPlayback(playlist);
-      });
-  };
-
-  const fillRandomPlaylist = (playlist) => {
-    const trackCount = config.amountType == 'minutes' ? Math.round(config.trackMinutes / 2) : config.trackCount;
-    const count = Math.min(Math.round(trackCount * 1.5), 1024);
-    const addTracks = (numbers) => {
-      db.tracks.toArray((library) => {
-        let minutes = 0;
-        const normaled = numbers.map(() => random.int(0, library.length - 1));
-        const slices = chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
-        slices.forEach((chunk) => {
-          if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
-            return;
-          }
-          let tracks = chunk
-            .map((number) => {
-              if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
-                return;
-              }
-              minutes += library[number].duration_ms / 60000;
-              return library[number].uri;
-            })
-            .filter((el) => el != null);
-          addRandomTracks(playlist, tracks);
-        });
-      });
-    };
-    addTracks([...Array(count)].map(() => random.float()));
-  };
-
-  const purgePlaylistTracks = (playlist, trackUris) => {
-    return new Promise((resolve) => {
-      const authenticated = getToken();
-      const playlistId = playlist.id;
-      const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
-      if (!trackUris || trackUris.length == 0) {
-        resolve();
-        return;
-      }
-      axios({
-        url,
-        method: 'delete',
-        headers: {
-          Authorization: 'Bearer ' + authenticated,
-        },
-        data: {
-          tracks: trackUris,
-        },
-      })
-        .then((response) => response.data)
-        .then(() => {
-          resolve();
-        });
     });
-  };
+  }, []);
 
-  const purgeRandomPlaylist = (playlist) => {
-    return new Promise((resolve) => {
-      if (!config.purgeOnShuffle) {
-        resolve(playlist);
-        return;
-      }
-      const authenticated = getToken();
-      const preparePurge = (url, uris = []) => {
-        return new Promise((resolve) => {
-          if (!url) {
-            resolve(uris);
-            return;
-          }
-          axios({
-            url,
-            method: 'get',
-            headers: {
-              Authorization: 'Bearer ' + authenticated,
-            },
-          })
-            .then((response) => response.data)
-            .then(async (response) => {
-              const responseUris = response.items.map((element) => {
-                return { uri: element.track.uri };
-              });
-              const trackUris = await preparePurge(response.next, [...uris, ...responseUris]);
-              resolve(trackUris);
-            });
-        });
-      };
-      preparePurge(playlist.tracks.href).then((trackUris) => {
-        const chunks = chunkArray(trackUris, 100);
-        const removeChunk = (chunks) => {
-          return new Promise((resolve) => {
-            const chunk = chunks.slice(0, 1)[0];
-            const chunksLeft = chunks.slice(1, chunks.length);
-            if (!chunks || chunks.length == 0) {
-              resolve();
+  const fillRandomPlaylist = useCallback(
+    (playlist) => {
+      const trackCount = config.amountType == 'minutes' ? Math.round(config.trackMinutes / 2) : config.trackCount;
+      const count = Math.min(Math.round(trackCount * 1.5), 1024);
+      const addTracks = (numbers) => {
+        db.tracks.toArray(async (library) => {
+          let minutes = 0;
+          const normaled = numbers.map(() => random.int(0, library.length - 1));
+          const slices = chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
+
+          const promises = slices.map(async (chunk) => {
+            if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
               return;
             }
-            purgePlaylistTracks(playlist, chunk).then(() => {
-              removeChunk(chunksLeft).then(() => resolve());
-            });
+            let tracks = chunk
+              .map((number) => {
+                if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
+                  return;
+                }
+                minutes += library[number].duration_ms / 60000;
+                return library[number].uri;
+              })
+              .filter((el) => el != null);
+            return addRandomTracks(playlist, tracks);
+          });
+
+          await Promise.all(promises);
+          startPlayback(playlist);
+        });
+      };
+      addTracks([...Array(count)].map(() => random.float()));
+    },
+    [addRandomTracks, config?.amountType, config?.trackCount, config?.trackMinutes]
+  );
+
+  const purgeRandomPlaylist = useCallback(
+    (playlist) => {
+      return new Promise((resolve1) => {
+        if (!config.purgeOnShuffle) {
+          resolve1(playlist);
+          return;
+        }
+        const authenticated = getToken();
+        const preparePurge = (url, uris = []) => {
+          return new Promise((resolve) => {
+            if (!url) {
+              resolve(uris);
+              return;
+            }
+            axios({
+              url,
+              method: 'get',
+              headers: {
+                Authorization: 'Bearer ' + authenticated,
+              },
+            })
+              .then((response) => response.data)
+              .then(async (response) => {
+                const responseUris = response.items.map((element) => {
+                  return { uri: element.track.uri };
+                });
+                const trackUris = await preparePurge(response.next, [...uris, ...responseUris]);
+                resolve(trackUris);
+              });
           });
         };
-        removeChunk(chunks).then(() => resolve(playlist));
+        preparePurge(playlist.tracks.href).then((trackUris) => {
+          const chunks = chunkArray(trackUris, 100);
+          const removeChunk = (chunks) => {
+            return new Promise((resolve) => {
+              const chunk = chunks.slice(0, 1)[0];
+              const chunksLeft = chunks.slice(1, chunks.length);
+              if (!chunks || chunks.length == 0) {
+                resolve();
+                return;
+              }
+              purgePlaylistTracks(playlist, chunk).then(() => {
+                removeChunk(chunksLeft).then(() => resolve());
+              });
+            });
+          };
+          removeChunk(chunks).then(() => resolve1(playlist));
+        });
       });
-    });
-  };
+    },
+    [config?.purgeOnShuffle]
+  );
 
-  const startShuffle = (event) => {
-    event.preventDefault();
-    setIsShuffleLoading(true);
-    const { existingPlaylist } = props;
-    if (!existingPlaylist) {
-      createRandomPlaylist().then((playlist) => {
+  const startShuffle = useCallback(
+    (event) => {
+      event.preventDefault();
+      setIsShuffleLoading(true);
+      const { existingPlaylist } = props;
+      if (!existingPlaylist) {
+        createRandomPlaylist().then((playlist) => {
+          fillRandomPlaylist(playlist);
+        });
+        return;
+      }
+      purgeRandomPlaylist(existingPlaylist).then((playlist) => {
         fillRandomPlaylist(playlist);
       });
-      return;
-    }
-    purgeRandomPlaylist(existingPlaylist).then((playlist) => {
-      fillRandomPlaylist(playlist);
-    });
-  };
+    },
+    [createRandomPlaylist, fillRandomPlaylist, props, purgeRandomPlaylist]
+  );
 
   return (
     <button className="btn btn-primary" disabled={!enabled} onClick={startShuffle}>
@@ -221,6 +204,32 @@ ShuffleButton.propTypes = {
   existingPlaylist: PropTypes.object,
   isLoaded: PropTypes.bool.isRequired,
   librarySize: PropTypes.number.isRequired,
+};
+
+const purgePlaylistTracks = (playlist, trackUris) => {
+  return new Promise((resolve) => {
+    const authenticated = getToken();
+    const playlistId = playlist.id;
+    const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
+    if (!trackUris || trackUris.length == 0) {
+      resolve();
+      return;
+    }
+    axios({
+      url,
+      method: 'delete',
+      headers: {
+        Authorization: 'Bearer ' + authenticated,
+      },
+      data: {
+        tracks: trackUris,
+      },
+    })
+      .then((response) => response.data)
+      .then(() => {
+        resolve();
+      });
+  });
 };
 
 function mapStateToProps({ data }) {
