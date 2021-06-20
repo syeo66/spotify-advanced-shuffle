@@ -99,6 +99,11 @@ export const markDb = () => () => {
 };
 
 export const doPurgeDb = () => () => {
+  const token = getToken();
+  if (!token) {
+    console.log('no purge');
+    return;
+  }
   db.tracks
     .where('isSynced')
     .equals(0)
