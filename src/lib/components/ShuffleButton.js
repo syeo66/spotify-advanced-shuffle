@@ -87,7 +87,7 @@ const ShuffleButton = (props) => {
 
   const fillRandomPlaylist = useCallback(
     (playlist) => {
-      const trackCount = config.amountType == 'minutes' ? Math.round(config.trackMinutes / 2) : config.trackCount;
+      const trackCount = config.amountType === 'minutes' ? Math.round(config.trackMinutes / 2) : config.trackCount;
       const count = Math.min(Math.round(trackCount * 1.5), 1024);
       const addTracks = (numbers) => {
         db.tracks.toArray(async (library) => {
@@ -96,18 +96,18 @@ const ShuffleButton = (props) => {
           const slices = chunkArray([...new Set(normaled)].slice(0, trackCount), 100);
 
           const promises = slices.map(async (chunk) => {
-            if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
+            if (config.amountType === 'minutes' && minutes >= config.trackMinutes) {
               return;
             }
             let tracks = chunk
               .map((number) => {
-                if (config.amountType == 'minutes' && minutes >= config.trackMinutes) {
+                if (config.amountType === 'minutes' && minutes >= config.trackMinutes) {
                   return;
                 }
                 minutes += library[number].duration_ms / 60000;
                 return library[number].uri;
               })
-              .filter((el) => el != null);
+              .filter((el) => el !== null);
             return addRandomTracks(playlist, tracks);
           });
 
@@ -157,7 +157,7 @@ const ShuffleButton = (props) => {
             return new Promise((resolve) => {
               const chunk = chunks.slice(0, 1)[0];
               const chunksLeft = chunks.slice(1, chunks.length);
-              if (!chunks || chunks.length == 0) {
+              if (!chunks || chunks.length === 0) {
                 resolve();
                 return;
               }
@@ -211,7 +211,7 @@ const purgePlaylistTracks = (playlist, trackUris) => {
     const authenticated = getToken();
     const playlistId = playlist.id;
     const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
-    if (!trackUris || trackUris.length == 0) {
+    if (!trackUris || trackUris.length === 0) {
       resolve();
       return;
     }
@@ -239,7 +239,7 @@ function mapStateToProps({ data }) {
     dbSize: data.dbSize,
     existingPlaylist: data.playlists
       ? data.playlists.reduce((accumulator, currentValue) => {
-          return accumulator || (currentValue.name == data.config.randomListName ? currentValue : null);
+          return accumulator || (currentValue.name === data.config.randomListName ? currentValue : null);
         }, null)
       : null,
   };
