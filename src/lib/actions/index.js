@@ -21,7 +21,7 @@ export const getToken = () => window.localStorage.getItem('access_token');
 export const fetchUser = () => () => {
   for (const entry of window.location.hash.substr(1).split('&')) {
     const splitEntry = entry.split('=');
-    if (splitEntry[0] == 'access_token') {
+    if (splitEntry[0] === 'access_token') {
       if (window.opener) {
         window.opener.postMessage(
           {
@@ -138,6 +138,7 @@ export const retrieveLibrary = (_, queue) => (dispatch) => {
     headers: {
       Authorization: 'Bearer ' + authenticated,
     },
+    raxConfig: { retry: 20 },
   })
     .then((response) => response.data)
     .then((response) => {
@@ -288,7 +289,7 @@ export const retrievePlayState = async () => {
   });
 
   if (response.status !== 200) {
-    if (response.status == 401) {
+    if (response.status === 401) {
       signOut();
     }
     throw Error("Player state couldn't be loaded");
