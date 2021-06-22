@@ -108,7 +108,6 @@ const ShuffleButton = (props) => {
                 return library[number].uri;
               })
               .filter((el) => !!el);
-            console.log({ tracks });
             return addRandomTracks(playlist, tracks);
           });
 
