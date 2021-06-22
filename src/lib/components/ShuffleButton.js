@@ -107,7 +107,8 @@ const ShuffleButton = (props) => {
                 minutes += library[number].duration_ms / 60000;
                 return library[number].uri;
               })
-              .filter((el) => el !== null);
+              .filter((el) => !!el);
+            console.log({ tracks });
             return addRandomTracks(playlist, tracks);
           });
 
