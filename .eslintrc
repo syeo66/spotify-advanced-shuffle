@@ -26,6 +26,8 @@
     }
   },
   "rules": {
+    "complexity":"warn",
+    "eqeqeq":"error",
     "linebreak-style": ["error", "unix"],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
