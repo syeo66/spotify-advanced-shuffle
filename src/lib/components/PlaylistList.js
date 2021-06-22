@@ -72,11 +72,12 @@ const PlaylistList = (props) => {
           <input
             type="checkbox"
             checked={
-              props.checkedPlaylists.includes(entry.id) && !(entry.name === getConfigForUser(user.id)('randomListName'))
+              props.checkedPlaylists.includes(entry.id) &&
+              !(entry.name === getConfigForUser(user?.id)('randomListName'))
             }
             value={entry.id}
             onChange={handleClick}
-            disabled={entry.name === getConfigForUser(user.id)('randomListName')}
+            disabled={entry.name === getConfigForUser(user?.id)('randomListName')}
           />
           <span className="ml-3 text-left">{entry.name}</span>
           <span className="badge badge-primary badge-pill ml-auto">{entry.tracks.total}</span>

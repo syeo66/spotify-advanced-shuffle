@@ -85,23 +85,22 @@ const Player = () => {
 
   const item = data?.item;
   const played = item && item.duration_ms ? Math.round((100 * data.progress_ms) / item.duration_ms) : 0;
-  const image =
-    item && item.album.images[0]
-      ? {
-          backgroundImage:
-            'linear-gradient(to right, rgba(255,255,255,.1) 50%, rgba(255,255,255,0)), url(' +
-            item.album.images[0].url +
-            ')',
-          transition: 'background 5s linear',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: '50% ' + played + '%',
-        }
-      : {};
-  const playClass = data.is_playing ? 'fas fa-pause' : 'fas fa-play';
-  const itemName = item && item.name ? item.name : '';
-  const artistName = item && item.artists[0].name ? item.artists[0].name : '';
-  const albumName = item && item.album.name ? item.album.name : '';
+  const image = item?.album.images[0]
+    ? {
+        backgroundImage:
+          'linear-gradient(to right, rgba(255,255,255,.1) 50%, rgba(255,255,255,0)), url(' +
+          item.album.images[0].url +
+          ')',
+        transition: 'background 5s linear',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: '50% ' + played + '%',
+      }
+    : {};
+  const playClass = data?.is_playing ? 'fas fa-pause' : 'fas fa-play';
+  const itemName = item?.name || '';
+  const artistName = item?.artists[0].name || '';
+  const albumName = item?.album.name || '';
 
   return (
     <div className="my-3 border shadow rounded p-3 player" style={image}>
