@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import random from 'random';
 import React, { memo, useCallback, useState } from 'react';
+import { useQuery } from 'react-query';
 
 import db from '../database';
 import { getConfigsForUser, getToken, retrievePlaylists, retrieveUserData } from '../actions';
-import { useQuery } from 'react-query';
 
 const ShuffleButton = (props) => {
   const [isShuffleLoading, setIsShuffleLoading] = useState(false);
