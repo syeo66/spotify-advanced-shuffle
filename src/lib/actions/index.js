@@ -289,9 +289,6 @@ export const retrievePlayState = async () => {
   });
 
   if (response.status !== 200) {
-    if (response.status === 401) {
-      signOut();
-    }
     throw Error("Player state couldn't be loaded");
   }
   return response.data;

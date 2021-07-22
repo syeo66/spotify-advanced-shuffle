@@ -10,6 +10,7 @@ const PlayerInfo = ({ purgeLoadQueue }) => {
 
   const { data, isLoading, isError, error } = useQuery('playerinfo', retrievePlayerInfo, {
     refetchInterval: 5000 + Math.random() * 1000,
+    retry: (count, { response: { status } }) => count < 3 && status !== 404 && status !== 401,
   });
 
   const selectPlayer = useMutation(choosePlayer, {
