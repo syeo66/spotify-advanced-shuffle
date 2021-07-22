@@ -24,7 +24,7 @@ const Signin = ({ history }) => {
         </div>
       </div>
       <div className="row justify-content-center text-muted">
-        <div>
+        <div className="col-auto">
           This website is communicating with the Spotify API only. It never sends or stores any data to its own server.
         </div>
       </div>
