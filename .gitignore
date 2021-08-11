@@ -4,11 +4,3 @@
 /src/js/*.LICENSE.txt
 !/src/js/.gitkeep
 /src/index.html
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-.pnp.*

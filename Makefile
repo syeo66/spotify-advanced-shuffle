@@ -4,24 +4,24 @@ help:
 	@echo "make clean     Clean the build artifacts."
 	@echo "make test      Run tests."
 
-build: .pnp.cjs src
+build: node_modules src
 	yarn build
 	touch src/js
 
-start: .pnp.cjs
+start: node_modules
 	yarn dev
 
-clean: .pnp.cjs
+clean: node_modules
 	yarn clean-dist
 
 distclean: clean
-	rm -rf .pnp.cjs
+	rm -rf node_modules
 
-test: .pnp.cjs
+test: node_modules
 	yarn test
 
 ######################################################################
 
-.pnp.cjs : yarn.lock package.json
+node_modules : yarn.lock package.json
 	yarn
-	touch .pnp.cjs
+	touch node_modules
