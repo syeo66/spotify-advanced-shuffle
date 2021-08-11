@@ -4,24 +4,24 @@ help:
 	@echo "make clean     Clean the build artifacts."
 	@echo "make test      Run tests."
 
-build: node_modules src
+build: .yarn/cache src
 	yarn build
 	touch src/js
 
-start: node_modules
+start: .yarn/cache
 	yarn dev
 
-clean: node_modules
+clean: .yarn/cache
 	yarn clean-dist
 
 distclean: clean
-	rm -rf node_modules
+	rm -rf .yarn/cache
 
-test: node_modules
+test: .yarn/cache
 	yarn test
 
 ######################################################################
 
-node_modules : yarn.lock package.json
+.yarn/cache : yarn.lock package.json
 	yarn
-	touch node_modules
+	touch .yarn/cache
