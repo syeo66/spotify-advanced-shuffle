@@ -17,5 +17,5 @@ pipelines:
                 - apt-get update && apt-get install -y unzip rsync ssh
                 - yarn install
                 - echo "CLIENT_ID=$CLIENT_ID" > .env
-                - yarn run build
+                - yarn run-build
                 - rsync -az --exclude .git --exclude .env --exclude node_modules --delete $BITBUCKET_CLONE_DIR/src/ $PUBLISHING_TARGET
