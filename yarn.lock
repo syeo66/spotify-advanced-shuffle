@@ -30,7 +30,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.15.0, @babel/core@npm:^7.3.4":
+"@babel/core@npm:7.15.0, @babel/core@npm:^7.15.0":
   version: 7.15.0
   resolution: "@babel/core@npm:7.15.0"
   dependencies:
@@ -53,7 +53,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/eslint-parser@npm:^7.14.4":
+"@babel/eslint-parser@npm:^7.15.0":
   version: 7.15.0
   resolution: "@babel/eslint-parser@npm:7.15.0"
   dependencies:
@@ -378,7 +378,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-class-properties@npm:^7.14.5, @babel/plugin-proposal-class-properties@npm:^7.3.4":
+"@babel/plugin-proposal-class-properties@npm:^7.14.5":
   version: 7.14.5
   resolution: "@babel/plugin-proposal-class-properties@npm:7.14.5"
   dependencies:
@@ -586,7 +586,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-syntax-dynamic-import@npm:^7.2.0, @babel/plugin-syntax-dynamic-import@npm:^7.8.3":
+"@babel/plugin-syntax-dynamic-import@npm:^7.8.3":
   version: 7.8.3
   resolution: "@babel/plugin-syntax-dynamic-import@npm:7.8.3"
   dependencies:
@@ -729,7 +729,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-async-to-generator@npm:^7.14.5, @babel/plugin-transform-async-to-generator@npm:^7.3.4":
+"@babel/plugin-transform-async-to-generator@npm:^7.14.5":
   version: 7.14.5
   resolution: "@babel/plugin-transform-async-to-generator@npm:7.14.5"
   dependencies:
@@ -1064,7 +1064,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-runtime@npm:^7.3.4":
+"@babel/plugin-transform-runtime@npm:^7.15.0":
   version: 7.15.0
   resolution: "@babel/plugin-transform-runtime@npm:7.15.0"
   dependencies:
@@ -1159,7 +1159,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.14.4":
+"@babel/preset-env@npm:^7.15.0":
   version: 7.15.0
   resolution: "@babel/preset-env@npm:7.15.0"
   dependencies:
@@ -1257,7 +1257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-react@npm:^7.0.0":
+"@babel/preset-react@npm:^7.14.5":
   version: 7.14.5
   resolution: "@babel/preset-react@npm:7.14.5"
   dependencies:
@@ -1273,12 +1273,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.3.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
   version: 7.14.8
   resolution: "@babel/runtime@npm:7.14.8"
   dependencies:
     regenerator-runtime: ^0.13.4
   checksum: d2dd0ce51ddab78ac93928b04042425145d0dc8cc2b70150d47934f8703f55702eb0b2894f9bd47f66794ad04d8bb03a6a847d0138fbb7aa0b970b5ccd5cc8b7
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.15.3":
+  version: 7.15.3
+  resolution: "@babel/runtime@npm:7.15.3"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: 2f0b8d2d4e36035ab1d84af0ec26aafa098536870f27c8e07de0a0e398f7a394fdea68a88165535ffb52ded6a68912bdc3450bdf91f229eb132e1c89470789f5
   languageName: node
   linkType: hard
 
@@ -1946,7 +1955,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-loader@npm:^8.0.4":
+"babel-loader@npm:^8.2.2":
   version: 8.2.2
   resolution: "babel-loader@npm:8.2.2"
   dependencies:
@@ -2086,7 +2095,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bootstrap@npm:^4.3.1":
+"bootstrap@npm:^4.6.0":
   version: 4.6.0
   resolution: "bootstrap@npm:4.6.0"
   peerDependencies:
@@ -2373,7 +2382,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.2.6":
+"classnames@npm:^2.3.1":
   version: 2.3.1
   resolution: "classnames@npm:2.3.1"
   checksum: 14db8889d56c267a591f08b0834989fe542d47fac659af5a539e110cc4266694e8de86e4e3bbd271157dbd831361310a8293e0167141e80b0f03a0f175c80960
@@ -2920,7 +2929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-webpack@npm:^7.0.2":
+"dotenv-webpack@npm:^7.0.3":
   version: 7.0.3
   resolution: "dotenv-webpack@npm:7.0.3"
   dependencies:
@@ -3272,7 +3281,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.28.0":
+"eslint@npm:^7.32.0":
   version: 7.32.0
   resolution: "eslint@npm:7.32.0"
   dependencies:
@@ -3837,7 +3846,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"html-webpack-plugin@npm:^5.3.1":
+"html-webpack-plugin@npm:^5.3.2":
   version: 5.3.2
   resolution: "html-webpack-plugin@npm:5.3.2"
   dependencies:
@@ -4324,7 +4333,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.3.1":
+"jquery@npm:^3.6.0":
   version: 3.6.0
   resolution: "jquery@npm:3.6.0"
   checksum: 8fd5fef4aa48fd374ec716dd1c1df1af407814a228e15c1260ca140de3a697c2a77c30c54ff1d238b6a3ab4ddc445ddeef9adce6c6d28e4869d85eb9d3951c0e
@@ -4471,7 +4480,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"lite-server@npm:^2.4.0":
+"lite-server@npm:^2.6.1":
   version: 2.6.1
   resolution: "lite-server@npm:2.6.1"
   dependencies:
@@ -5362,7 +5371,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"popper.js@npm:^1.14.7":
+"popper.js@npm:^1.16.1":
   version: 1.16.1
   resolution: "popper.js@npm:1.16.1"
   checksum: c56ae5001ec50a77ee297a8061a0221d99d25c7348d2e6bcd3e45a0d0f32a1fd81bca29d46cb0d4bdf13efb77685bd6a0ce93f9eb3c608311a461f945fffedbe
@@ -5467,7 +5476,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.3.1":
+"prettier@npm:^2.3.2":
   version: 2.3.2
   resolution: "prettier@npm:2.3.2"
   bin:
@@ -5582,7 +5591,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^17.0.1":
+"react-dom@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
   dependencies:
@@ -5602,9 +5611,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.16.0":
-  version: 3.19.2
-  resolution: "react-query@npm:3.19.2"
+"react-query@npm:^3.19.4":
+  version: 3.19.4
+  resolution: "react-query@npm:3.19.4"
   dependencies:
     "@babel/runtime": ^7.5.5
     broadcast-channel: ^3.4.1
@@ -5616,11 +5625,11 @@ fsevents@~2.3.2:
       optional: true
     react-native:
       optional: true
-  checksum: 94bad63adf4fc33b9285f82180efe157220a472717c7231af497ed60b927a4ca2b4c2004b06f2cdc8f78ab3be2f30386ba1c4b5e9f9ceeaedf8fe7f8f0111d49
+  checksum: 2384274b8a04f0d6474bd37bb231205fe1200b796109177feb37c58eb7ef4577000f0346f0cbc9432971ee8e997da18067a603c6a61b64c88608463b99823e85
   languageName: node
   linkType: hard
 
-"react-redux@npm:^7.2.2":
+"react-redux@npm:^7.2.4":
   version: 7.2.4
   resolution: "react-redux@npm:7.2.4"
   dependencies:
@@ -5658,7 +5667,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-router-prop-types@npm:^1.0.4":
+"react-router-prop-types@npm:^1.0.5":
   version: 1.0.5
   resolution: "react-router-prop-types@npm:1.0.5"
   dependencies:
@@ -5688,7 +5697,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react@npm:^17.0.1":
+"react@npm:^17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
@@ -5749,7 +5758,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.0, redux@npm:^4.0.1":
+"redux@npm:^4.0.0, redux@npm:^4.1.1":
   version: 4.1.1
   resolution: "redux@npm:4.1.1"
   dependencies:
@@ -6031,7 +6040,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.0.0":
+"rxjs@npm:^7.3.0":
   version: 7.3.0
   resolution: "rxjs@npm:7.3.0"
   dependencies:
@@ -6475,53 +6484,53 @@ resolve@^2.0.0-next.3:
   version: 0.0.0-use.local
   resolution: "spotify-shuffle@workspace:."
   dependencies:
-    "@babel/core": ^7.3.4
-    "@babel/eslint-parser": ^7.14.4
-    "@babel/plugin-proposal-class-properties": ^7.3.4
-    "@babel/plugin-syntax-dynamic-import": ^7.2.0
-    "@babel/plugin-transform-async-to-generator": ^7.3.4
-    "@babel/plugin-transform-runtime": ^7.3.4
-    "@babel/preset-env": ^7.14.4
-    "@babel/preset-react": ^7.0.0
-    "@babel/runtime": ^7.3.4
+    "@babel/core": ^7.15.0
+    "@babel/eslint-parser": ^7.15.0
+    "@babel/plugin-proposal-class-properties": ^7.14.5
+    "@babel/plugin-syntax-dynamic-import": ^7.8.3
+    "@babel/plugin-transform-async-to-generator": ^7.14.5
+    "@babel/plugin-transform-runtime": ^7.15.0
+    "@babel/preset-env": ^7.15.0
+    "@babel/preset-react": ^7.14.5
+    "@babel/runtime": ^7.15.3
     axios: ^0.21.1
-    babel-loader: ^8.0.4
-    bootstrap: ^4.3.1
-    classnames: ^2.2.6
+    babel-loader: ^8.2.2
+    bootstrap: ^4.6.0
+    classnames: ^2.3.1
     color: ^4.0.1
     css-loader: ^6.2.0
     dexie: ^3.0.3
     dotenv: ^10.0.0
-    dotenv-webpack: ^7.0.2
-    eslint: ^7.28.0
+    dotenv-webpack: ^7.0.3
+    eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^3.4.0
     eslint-plugin-react: ^7.24.0
     eslint-plugin-react-hooks: ^4.2.0
-    html-webpack-plugin: ^5.3.1
-    jquery: ^3.3.1
-    lite-server: ^2.4.0
+    html-webpack-plugin: ^5.3.2
+    jquery: ^3.6.0
+    lite-server: ^2.6.1
     npm-run-all: ^4.1.5
-    popper.js: ^1.14.7
-    prettier: ^2.3.1
+    popper.js: ^1.16.1
+    prettier: ^2.3.2
     prop-types: ^15.7.2
     random: ^2.1.1
-    react: ^17.0.1
-    react-dom: ^17.0.1
-    react-query: ^3.16.0
-    react-redux: ^7.2.2
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-query: ^3.19.4
+    react-redux: ^7.2.4
     react-router-dom: ^5.2.0
-    react-router-prop-types: ^1.0.4
-    redux: ^4.0.1
+    react-router-prop-types: ^1.0.5
+    redux: ^4.1.1
     redux-thunk: ^2.3.0
     retry-axios: ^2.4.0
     rgbaster: ^2.1.1
     rimraf: ^3.0.2
-    rxjs: ^7.0.0
-    style-loader: ^3.1.0
-    webpack: ^5.10.0
-    webpack-cli: ^4.2.0
-    webpack-merge: ^5.4.0
+    rxjs: ^7.3.0
+    style-loader: ^3.2.1
+    webpack: ^5.50.0
+    webpack-cli: ^4.7.2
+    webpack-merge: ^5.8.0
   languageName: unknown
   linkType: soft
 
@@ -6710,7 +6719,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"style-loader@npm:^3.1.0":
+"style-loader@npm:^3.2.1":
   version: 3.2.1
   resolution: "style-loader@npm:3.2.1"
   peerDependencies:
@@ -7084,7 +7093,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"webpack-cli@npm:^4.2.0":
+"webpack-cli@npm:^4.7.2":
   version: 4.7.2
   resolution: "webpack-cli@npm:4.7.2"
   dependencies:
@@ -7118,7 +7127,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"webpack-merge@npm:^5.4.0, webpack-merge@npm:^5.7.3":
+"webpack-merge@npm:^5.7.3, webpack-merge@npm:^5.8.0":
   version: 5.8.0
   resolution: "webpack-merge@npm:5.8.0"
   dependencies:
@@ -7135,9 +7144,9 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.10.0":
-  version: 5.49.0
-  resolution: "webpack@npm:5.49.0"
+"webpack@npm:^5.50.0":
+  version: 5.50.0
+  resolution: "webpack@npm:5.50.0"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.50
@@ -7168,7 +7177,7 @@ resolve@^2.0.0-next.3:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 2b34df73bce8d3c02e45b0130393be6e2a2b5f79ceafe2eab12e85a8b552a3108a77d7dd63851944d72e033896b0bbdc76b53848d921b734978e53ffad48f517
+  checksum: 293bed1d9101ac127605f35a225a5cbc1bc89eac68d6e09e7feb3e284ec2693b3db7c1dd7710fadf6852f89ad39ed09413c35befa1cfc9738074b33299ac2b9e
   languageName: node
   linkType: hard
 
