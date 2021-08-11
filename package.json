@@ -13,7 +13,7 @@
     "run-dev": "lite-server",
     "run-build": "webpack --progress --config webpack.prod.js",
     "run-watch": "webpack --progress --watch --config webpack.dev.js",
-    "clean-dist": "rimraf ./src/js/*.js"
+    "clean-dist": "rimraf -f ./src/js/*.js"
   },
   "repository": {
     "type": "git",
