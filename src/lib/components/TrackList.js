@@ -34,7 +34,7 @@ const TrackList = (props) => {
 
   const previous =
     currentPage > 1 ? (
-      <li className="page-item">
+      <li className="page-item" style={{ cursor: 'pointer' }}>
         <a className="page-link" onClick={props.previousPage}>
           <i className="fas fa-arrow-left" />
         </a>
@@ -44,7 +44,7 @@ const TrackList = (props) => {
     );
   const next =
     currentPage < maxPage ? (
-      <li className="page-item">
+      <li className="page-item" style={{ cursor: 'pointer' }}>
         <a className="page-link" onClick={props.nextPage}>
           <i className="fas fa-arrow-right" />
         </a>
