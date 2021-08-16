@@ -1646,15 +1646,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webpack-cli/serve@npm:^1.5.1":
-  version: 1.5.1
-  resolution: "@webpack-cli/serve@npm:1.5.1"
+"@webpack-cli/serve@npm:^1.5.2":
+  version: 1.5.2
+  resolution: "@webpack-cli/serve@npm:1.5.2"
   peerDependencies:
     webpack-cli: 4.x.x
   peerDependenciesMeta:
     webpack-dev-server:
       optional: true
-  checksum: 62485c3ddfe337c9fbe755423a63990f3544793ca2d380baf03017f49d53e6ff88d37399119865a204dfbb5941d1de2dba6f41cf8737b25145f20762368c1dee
+  checksum: 1666c69606581193574fb5f2cd58fececf933f34725261752d44c8097640474903de8bec4076c717d48838cfc8937fccee699ce74e4c880e1c327157757250fa
   languageName: node
   linkType: hard
 
@@ -5981,12 +5981,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"retry-axios@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "retry-axios@npm:2.4.0"
+"retry-axios@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "retry-axios@npm:2.5.0"
   peerDependencies:
     axios: "*"
-  checksum: 45d1d29230e451bb0f4dcf326a0384cbfad08e6a91e6d75eb0168344eace8cdbaa600286508c26f12d0b08b2c97fcbe3c22872866610c76e2cc77feb1066e21b
+  checksum: ff0be63b94d0b4728002e4b96f3c6d3d27d8c4c59dc191fd24246ccfd50530a491e2b9568a2ed4160f9fcf6fd9a010373df8c6bbd6c6a74b478ac430df3ff0ad
   languageName: node
   linkType: hard
 
@@ -6504,11 +6504,11 @@ resolve@^2.0.0-next.3:
     react-router-prop-types: ^1.0.5
     redux: ^4.1.1
     redux-thunk: ^2.3.0
-    retry-axios: ^2.4.0
+    retry-axios: ^2.5.0
     rgbaster: ^2.1.1
     style-loader: ^3.2.1
     webpack: ^5.50.0
-    webpack-cli: ^4.7.2
+    webpack-cli: ^4.8.0
     webpack-merge: ^5.8.0
   languageName: unknown
   linkType: soft
@@ -7065,14 +7065,14 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"webpack-cli@npm:^4.7.2":
-  version: 4.7.2
-  resolution: "webpack-cli@npm:4.7.2"
+"webpack-cli@npm:^4.8.0":
+  version: 4.8.0
+  resolution: "webpack-cli@npm:4.8.0"
   dependencies:
     "@discoveryjs/json-ext": ^0.5.0
     "@webpack-cli/configtest": ^1.0.4
     "@webpack-cli/info": ^1.3.0
-    "@webpack-cli/serve": ^1.5.1
+    "@webpack-cli/serve": ^1.5.2
     colorette: ^1.2.1
     commander: ^7.0.0
     execa: ^5.0.0
@@ -7095,7 +7095,7 @@ resolve@^2.0.0-next.3:
       optional: true
   bin:
     webpack-cli: bin/cli.js
-  checksum: 4a7ed6099d2da6d0c6e2d4914d45b53a5200cfc811c38eb622b792a364a2bec8104517bf5c33a616a4f21d17d7041e5ed1075c9a81e1593f09a7971bb3107f1a
+  checksum: 3ab4b5af09b56bb14d2ef2dd5613a14d01d9b4319bffb854edc379ef0f44e49ec31f96fb8cdd9dc8df54f6c94e9240d647a82d3cd0871fc5c313ab89fc2cd935
   languageName: node
   linkType: hard
 
