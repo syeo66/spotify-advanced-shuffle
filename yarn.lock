@@ -3193,9 +3193,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "eslint-plugin-prettier@npm:3.4.0"
+"eslint-plugin-prettier@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "eslint-plugin-prettier@npm:3.4.1"
   dependencies:
     prettier-linter-helpers: ^1.0.0
   peerDependencies:
@@ -3204,7 +3204,7 @@ __metadata:
   peerDependenciesMeta:
     eslint-config-prettier:
       optional: true
-  checksum: 30a07e8d12637d2988e371f6a20ff4c86fd7fdc3596d1d18d62c0367804f38e06a65052d0281234aeb2552e4d1908dcb2de20543413e038251a2717a46400a9d
+  checksum: fa6a89f0d7cba1cc87064352f5a4a68dc3739448dd279bec2bced1bfa3b704467e603d13b69dcec853f8fa30b286b8b715912898e9da776e1b016cf0ee48bd99
   languageName: node
   linkType: hard
 
@@ -5602,9 +5602,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.19.6":
-  version: 3.19.6
-  resolution: "react-query@npm:3.19.6"
+"react-query@npm:^3.21.0":
+  version: 3.21.0
+  resolution: "react-query@npm:3.21.0"
   dependencies:
     "@babel/runtime": ^7.5.5
     broadcast-channel: ^3.4.1
@@ -5616,7 +5616,7 @@ fsevents@~2.3.2:
       optional: true
     react-native:
       optional: true
-  checksum: 65cb3e78747467c08c186141ad069fefb095eb8575ef629ca094036246c315134d428c75db33006ec1178545583e0c6a9716a27e40beefd743ecd6848a47d42f
+  checksum: 6684fc2af55f8662c30df2ad2dc9220cf484668ce7cc1a98db1f9630b5ec293ade5fa93224ad09a7dac46404d5b09fed809f58fd71ed739c21975b582f89a2b6
   languageName: node
   linkType: hard
 
@@ -5981,12 +5981,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"retry-axios@npm:^2.5.0":
-  version: 2.5.0
-  resolution: "retry-axios@npm:2.5.0"
+"retry-axios@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "retry-axios@npm:2.6.0"
   peerDependencies:
     axios: "*"
-  checksum: ff0be63b94d0b4728002e4b96f3c6d3d27d8c4c59dc191fd24246ccfd50530a491e2b9568a2ed4160f9fcf6fd9a010373df8c6bbd6c6a74b478ac430df3ff0ad
+  checksum: cf7e63d89f00ead2633e60f00b504ec10217db8165327879b6feb0fa787fffe687d06ee145b2f43d2b4ea8916d42c951d34ee32ee1ea47c9d0b602d4963bd7f9
   languageName: node
   linkType: hard
 
@@ -6486,7 +6486,7 @@ resolve@^2.0.0-next.3:
     dotenv-webpack: ^7.0.3
     eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
-    eslint-plugin-prettier: ^3.4.0
+    eslint-plugin-prettier: ^3.4.1
     eslint-plugin-react: ^7.24.0
     eslint-plugin-react-hooks: ^4.2.0
     html-webpack-plugin: ^5.3.2
@@ -6498,16 +6498,16 @@ resolve@^2.0.0-next.3:
     random: ^2.2.0
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-query: ^3.19.6
+    react-query: ^3.21.0
     react-redux: ^7.2.4
     react-router-dom: ^5.2.0
     react-router-prop-types: ^1.0.5
     redux: ^4.1.1
     redux-thunk: ^2.3.0
-    retry-axios: ^2.5.0
+    retry-axios: ^2.6.0
     rgbaster: ^2.1.1
     style-loader: ^3.2.1
-    webpack: ^5.50.0
+    webpack: ^5.51.1
     webpack-cli: ^4.8.0
     webpack-merge: ^5.8.0
   languageName: unknown
@@ -7116,9 +7116,9 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.50.0":
-  version: 5.50.0
-  resolution: "webpack@npm:5.50.0"
+"webpack@npm:^5.51.1":
+  version: 5.51.1
+  resolution: "webpack@npm:5.51.1"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.50
@@ -7149,7 +7149,7 @@ resolve@^2.0.0-next.3:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 293bed1d9101ac127605f35a225a5cbc1bc89eac68d6e09e7feb3e284ec2693b3db7c1dd7710fadf6852f89ad39ed09413c35befa1cfc9738074b33299ac2b9e
+  checksum: 20060bc197a5e690f12e453e86bd89da5b91626a2032efa907122fe541fedc688b1d573e9f92f7b66f15c609808653e158408ebf7c94783723dfbf4ac894a4a7
   languageName: node
   linkType: hard
 
