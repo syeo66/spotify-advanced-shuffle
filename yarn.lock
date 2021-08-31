@@ -1273,7 +1273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
   version: 7.15.3
   resolution: "@babel/runtime@npm:7.15.3"
   dependencies:
@@ -3193,18 +3193,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "eslint-plugin-prettier@npm:3.4.1"
+"eslint-plugin-prettier@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "eslint-plugin-prettier@npm:4.0.0"
   dependencies:
     prettier-linter-helpers: ^1.0.0
   peerDependencies:
-    eslint: ">=5.0.0"
-    prettier: ">=1.13.0"
+    eslint: ">=7.28.0"
+    prettier: ">=2.0.0"
   peerDependenciesMeta:
     eslint-config-prettier:
       optional: true
-  checksum: fa6a89f0d7cba1cc87064352f5a4a68dc3739448dd279bec2bced1bfa3b704467e603d13b69dcec853f8fa30b286b8b715912898e9da776e1b016cf0ee48bd99
+  checksum: 03d69177a3c21fa2229c7e427ce604429f0b20ab7f411e2e824912f572a207c7f5a41fd1f0a95b9b8afe121e291c1b1f1dc1d44c7aad4b0837487f9c19f5210d
   languageName: node
   linkType: hard
 
@@ -3217,13 +3217,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.24.0":
-  version: 7.24.0
-  resolution: "eslint-plugin-react@npm:7.24.0"
+"eslint-plugin-react@npm:^7.25.1":
+  version: 7.25.1
+  resolution: "eslint-plugin-react@npm:7.25.1"
   dependencies:
     array-includes: ^3.1.3
     array.prototype.flatmap: ^1.2.4
     doctrine: ^2.1.0
+    estraverse: ^5.2.0
     has: ^1.0.3
     jsx-ast-utils: ^2.4.1 || ^3.0.0
     minimatch: ^3.0.4
@@ -3235,7 +3236,7 @@ __metadata:
     string.prototype.matchall: ^4.0.5
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7
-  checksum: bf844f98d93f3617fbd03df4be4f4c9e8e49ea035678762b73a28df730e9518d5ac636293f6326b41b4a0678f9dfa059ce559f6652c7a2d914d477ec3a389619
+  checksum: e22ffbb6d336558cab38717c8c6199b72635500b9bd909891ba45865adae5846912a2b3daa355b0c1b1bfe6664b28ee277c14943acc739e703316eff87c1fce4
   languageName: node
   linkType: hard
 
@@ -5602,9 +5603,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.21.0":
-  version: 3.21.0
-  resolution: "react-query@npm:3.21.0"
+"react-query@npm:^3.21.1":
+  version: 3.21.1
+  resolution: "react-query@npm:3.21.1"
   dependencies:
     "@babel/runtime": ^7.5.5
     broadcast-channel: ^3.4.1
@@ -5616,7 +5617,7 @@ fsevents@~2.3.2:
       optional: true
     react-native:
       optional: true
-  checksum: 6684fc2af55f8662c30df2ad2dc9220cf484668ce7cc1a98db1f9630b5ec293ade5fa93224ad09a7dac46404d5b09fed809f58fd71ed739c21975b582f89a2b6
+  checksum: ea8a42d645e48671d102e74001b25ded9f10499f3e8bcaf62ecc071a5a39ca0bd8b37480ddd7bb7dc731d2165b99e5f789bb480040ef179f8d258f71055a4844
   languageName: node
   linkType: hard
 
@@ -5641,20 +5642,20 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "react-router-dom@npm:5.2.0"
+"react-router-dom@npm:^5.2.1":
+  version: 5.2.1
+  resolution: "react-router-dom@npm:5.2.1"
   dependencies:
-    "@babel/runtime": ^7.1.2
+    "@babel/runtime": ^7.12.13
     history: ^4.9.0
     loose-envify: ^1.3.1
     prop-types: ^15.6.2
-    react-router: 5.2.0
+    react-router: 5.2.1
     tiny-invariant: ^1.0.2
     tiny-warning: ^1.0.0
   peerDependencies:
     react: ">=15"
-  checksum: 98d2d35f9540ac4a3c14dc023623fc8411a6a6338e95d726370e07b27c3bc6e854516537c8e3f9ad2483c4bbd579ba28cce9aff843a19fe8ebff663318886335
+  checksum: d331c9179c291bce798ab7fb041831377a0216e680a031dbf4af6046a02bbbf2ec1215e32bbd1fc0f5a902a37c3ad679de9ae103164b56bf5848749052ac1516
   languageName: node
   linkType: hard
 
@@ -5668,11 +5669,11 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-router@npm:5.2.0":
-  version: 5.2.0
-  resolution: "react-router@npm:5.2.0"
+"react-router@npm:5.2.1":
+  version: 5.2.1
+  resolution: "react-router@npm:5.2.1"
   dependencies:
-    "@babel/runtime": ^7.1.2
+    "@babel/runtime": ^7.12.13
     history: ^4.9.0
     hoist-non-react-statics: ^3.1.0
     loose-envify: ^1.3.1
@@ -5684,7 +5685,7 @@ fsevents@~2.3.2:
     tiny-warning: ^1.0.0
   peerDependencies:
     react: ">=15"
-  checksum: 6fc908729110a65a5676a9e41333e0f511a3c0ff84c93c0dc704330cf3e02124c93aaeab8031b0e2c71712390d9278fff848eeebfbdda36dca3201142f309973
+  checksum: 7daae084bf64531eb619cc5f4cc40ce5ae0a541b64f71d74ec71a38cbf6130ebdbb7cf38f157303fad5846deec259401f96c4d6c7386466dcc989719e01f9aaa
   languageName: node
   linkType: hard
 
@@ -6486,8 +6487,8 @@ resolve@^2.0.0-next.3:
     dotenv-webpack: ^7.0.3
     eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
-    eslint-plugin-prettier: ^3.4.1
-    eslint-plugin-react: ^7.24.0
+    eslint-plugin-prettier: ^4.0.0
+    eslint-plugin-react: ^7.25.1
     eslint-plugin-react-hooks: ^4.2.0
     html-webpack-plugin: ^5.3.2
     jquery: ^3.6.0
@@ -6498,9 +6499,9 @@ resolve@^2.0.0-next.3:
     random: ^2.2.0
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-query: ^3.21.0
+    react-query: ^3.21.1
     react-redux: ^7.2.4
-    react-router-dom: ^5.2.0
+    react-router-dom: ^5.2.1
     react-router-prop-types: ^1.0.5
     redux: ^4.1.1
     redux-thunk: ^2.3.0
