@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
-    "@babel/eslint-parser": "^7.15.4",
+    "@babel/eslint-parser": "^7.15.7",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-async-to-generator": "^7.14.5",
@@ -57,15 +57,15 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.25.1",
+    "eslint-plugin-react": "^7.25.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "html-webpack-plugin": "^5.3.2",
     "lite-server": "^2.6.1",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.4.0",
+    "prettier": "^2.4.1",
     "react-router-prop-types": "^1.0.5",
     "style-loader": "^3.2.1",
-    "webpack": "^5.52.1",
+    "webpack": "^5.53.0",
     "webpack-cli": "^4.8.0",
     "webpack-merge": "^5.8.0"
   }
