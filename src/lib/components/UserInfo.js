@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { useQuery } from 'react-query';
 
-import Loading from './Loading';
 import { retrieveUserData } from '../actions';
+import Loading from './Loading';
 
 const UserInfo = () => {
   const { data, isLoading, isError } = useQuery('userinfo', retrieveUserData);

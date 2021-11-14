@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { signOut, getToken } from '../actions';
+
+import { getToken, signOut } from '../actions';
 
 const Signout = () => {
   const queryClient = useQueryClient();

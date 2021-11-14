@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import random from 'random';
 import React, { memo, useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
+import { connect } from 'react-redux';
 
-import db from '../database';
 import { getConfigsForUser, getToken, retrievePlaylists, retrieveUserData } from '../actions';
+import db from '../database';
 
 const ShuffleButton = (props) => {
   const [isShuffleLoading, setIsShuffleLoading] = useState(false);
@@ -38,7 +38,7 @@ const ShuffleButton = (props) => {
         url,
         method: 'post',
         headers: {
-          Authorization: 'Bearer ' + authenticated,
+          Authorization: `Bearer ${authenticated}`,
         },
         data: {
           name: config.randomListName,
@@ -60,7 +60,7 @@ const ShuffleButton = (props) => {
       url,
       method: 'put',
       headers: {
-        Authorization: 'Bearer ' + authenticated,
+        Authorization: `Bearer ${authenticated}`,
       },
       data: {
         context_uri: playlist.uri,
@@ -71,12 +71,12 @@ const ShuffleButton = (props) => {
   const addRandomTracks = useCallback(async (playlist, trackUris) => {
     const authenticated = getToken();
     const playlistId = playlist.id;
-    const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
+    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
     return axios({
       url,
       method: 'post',
       headers: {
-        Authorization: 'Bearer ' + authenticated,
+        Authorization: `Bearer ${authenticated}`,
       },
       data: {
         uris: trackUris,
@@ -138,7 +138,7 @@ const ShuffleButton = (props) => {
               url,
               method: 'get',
               headers: {
-                Authorization: 'Bearer ' + authenticated,
+                Authorization: `Bearer ${authenticated}`,
               },
             })
               .then((response) => response.data)
@@ -155,7 +155,7 @@ const ShuffleButton = (props) => {
           const chunks = chunkArray(trackUris, 100);
           const removeChunk = (chunks) => {
             return new Promise((resolve) => {
-              const chunk = chunks.slice(0, 1)[0];
+              const [chunk] = chunks.slice(0, 1) || [];
               const chunksLeft = chunks.slice(1, chunks.length);
               if (!chunks || chunks.length === 0) {
                 resolve();
@@ -210,7 +210,7 @@ const purgePlaylistTracks = (playlist, trackUris) => {
   return new Promise((resolve) => {
     const authenticated = getToken();
     const playlistId = playlist.id;
-    const url = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
+    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
     if (!trackUris || trackUris.length === 0) {
       resolve();
       return;
@@ -219,7 +219,7 @@ const purgePlaylistTracks = (playlist, trackUris) => {
       url,
       method: 'delete',
       headers: {
-        Authorization: 'Bearer ' + authenticated,
+        Authorization: `Bearer ${authenticated}`,
       },
       data: {
         tracks: trackUris,

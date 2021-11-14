@@ -1,9 +1,9 @@
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { connect } from 'react-redux';
 
-import { choosePlayer, retrievePlayerInfo, signOut, purgeLoadQueue, getToken } from '../actions';
+import { choosePlayer, getToken, purgeLoadQueue, retrievePlayerInfo, signOut } from '../actions';
 
 const PlayerInfo = ({ purgeLoadQueue }) => {
   const queryClient = useQueryClient();

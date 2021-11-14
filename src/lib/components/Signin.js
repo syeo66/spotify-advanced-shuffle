@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
-import ReactRouterPropTypes from 'react-router-prop-types';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router';
 
-import { signInWithSpotify, getToken } from '../actions';
+import { getToken, signInWithSpotify } from '../actions';
 
-const Signin = ({ history }) => {
+const Signin = () => {
   const { data: auth } = useQuery('token', getToken());
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (auth) {
-      history.push('/app');
+      navigate('/app');
     }
-  }, [auth, history]);
+  }, [auth, navigate]);
 
   return (
     <>
@@ -30,10 +31,6 @@ const Signin = ({ history }) => {
       </div>
     </>
   );
-};
-
-Signin.propTypes = {
-  history: ReactRouterPropTypes.history.isRequired,
 };
 
 export default Signin;

@@ -1,15 +1,15 @@
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { memo, useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { connect } from 'react-redux';
 
 import {
   addToLoadQueue,
-  setCheckedPlaylists,
-  retrievePlaylists,
-  togglePlaylist,
-  retrieveUserData,
   getConfigForUser,
+  retrievePlaylists,
+  retrieveUserData,
+  setCheckedPlaylists,
+  togglePlaylist,
 } from '../actions';
 
 const PlaylistList = (props) => {
@@ -45,7 +45,7 @@ const PlaylistList = (props) => {
 
   const addToQueue = useCallback(
     (id) => {
-      const myUrl = 'https://api.spotify.com/v1/playlists/' + id + '/tracks';
+      const myUrl = `https://api.spotify.com/v1/playlists/${id}/tracks`;
       const found = loadQueue.filter((entry) => entry.origUrl === myUrl);
       if (found.length === 0) {
         addToLoadQueue(myUrl);

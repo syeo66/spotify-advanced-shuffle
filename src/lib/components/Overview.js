@@ -1,12 +1,12 @@
-import { addToLoadQueue, markDb, doPurgeDb, retrieveLibrary, retrieveUserData, getToken } from '../actions';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { lazy, Suspense, useEffect, useCallback } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { connect } from 'react-redux';
 
+import { addToLoadQueue, doPurgeDb, getToken, markDb, retrieveLibrary, retrieveUserData } from '../actions';
 import db from '../database';
-import Fallback from './Fallback';
 import { usePrevProps } from '../hooks';
+import Fallback from './Fallback';
 
 const PlayerInfo = lazy(() => import('./PlayerInfo'));
 const Player = lazy(() => import('./Player'));

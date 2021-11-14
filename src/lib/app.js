@@ -1,15 +1,15 @@
-import { BrowserRouter, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
-import * as rax from 'retry-axios';
 import { useMutation, useQueryClient } from 'react-query';
+import { connect } from 'react-redux';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import * as rax from 'retry-axios';
 
-import db from './database';
-import { fetchUser, doLogin, getToken } from './actions';
+import { doLogin, fetchUser, getToken } from './actions';
 import requireAuth from './components/auth/requireAuth';
 import Signin from './components/Signin';
 import Signout from './components/Signout';
+import db from './database';
 
 const Overview = lazy(() => import('./components/Overview'));
 
@@ -32,7 +32,7 @@ const App = (props) => {
     db.open().then(() => setIsDatabaseReady(true));
 
     const onMessage = (message) => {
-      message.data.type && message.data.type == 'access_token' ? login.mutate(message.data.token) : null;
+      return message.data.type && message.data.type === 'access_token' ? login.mutate(message.data.token) : null;
     };
 
     window.addEventListener('message', onMessage);
@@ -40,6 +40,8 @@ const App = (props) => {
 
     return () => window.removeEventListener('message', onMessage);
   }, [fetchUser, login]);
+
+  const Auth = requireAuth(Overview);
 
   return (
     <div>
@@ -52,9 +54,11 @@ const App = (props) => {
       {isDatabaseReady ? (
         <BrowserRouter>
           <div className="container-fluid">
-            <Route exact path="/" component={Signin} />
             <Suspense fallback={<div />}>
-              <Route path="/app" component={requireAuth(Overview)} />
+              <Routes>
+                <Route exact path="/" element={<Signin />} />
+                <Route path="/app" element={<Auth />} />
+              </Routes>
             </Suspense>
           </div>
         </BrowserRouter>

@@ -1,6 +1,6 @@
+import PropTypes from 'prop-types';
 import React, { lazy, memo, Suspense, useCallback, useState } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import Fallback from './Fallback';
 
@@ -11,7 +11,7 @@ const Configuration = lazy(() => import('./Configuration'));
 const Tools = (props) => {
   const [showConfig, setShowConfig] = useState(false);
 
-  const isLoaded = props.isLoaded;
+  const { isLoaded } = props || {};
 
   const toggleConfig = useCallback(() => setShowConfig((c) => !c), []);
 

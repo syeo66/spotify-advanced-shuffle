@@ -1,8 +1,8 @@
+import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
-import { loadLibraryFromDb, firstPage, nextPage, previousPage } from '../actions';
+import { firstPage, loadLibraryFromDb, nextPage, previousPage } from '../actions';
 
 const TrackList = (props) => {
   const { firstPage, currentPage, itemsPerPage, loadLibraryFromDb } = props;

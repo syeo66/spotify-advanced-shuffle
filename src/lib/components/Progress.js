@@ -1,6 +1,6 @@
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { memo } from 'react';
+import { connect } from 'react-redux';
 
 import ProgressBar from './ProgressBar.js';
 

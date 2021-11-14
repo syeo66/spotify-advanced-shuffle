@@ -1,20 +1,19 @@
 import axios from 'axios';
 
+import db from '../database';
 import {
+  ADD_TO_LOAD_QUEUE,
+  APPEND_PLAYLISTS,
+  CHECKED_PLAYLISTS,
   DB_COUNT,
   FETCH_LIBRARY,
   FIRST_PAGE,
   LOAD_LIBRARY_PAGE,
   NEXT_PAGE,
   PREVIOUS_PAGE,
-  ADD_TO_LOAD_QUEUE,
-  APPEND_PLAYLISTS,
-  CHECKED_PLAYLISTS,
-  TOGGLE_PLAYLIST,
   PURGE_LOAD_QUEUE,
+  TOGGLE_PLAYLIST,
 } from './types';
-
-import db from '../database';
 
 export const getToken = () => window.localStorage.getItem('access_token');
 
@@ -48,13 +47,8 @@ export const signInWithSpotify = (e) => {
   const scopes =
     'user-library-read playlist-read-private playlist-modify-private user-modify-playback-state user-read-playback-state';
   const url =
-    'https://accounts.spotify.com/authorize?client_id=' +
-    process.env.CLIENT_ID +
-    '&redirect_uri=' +
-    appUrl +
-    '&response_type=token' +
-    '&scope=' +
-    encodeURIComponent(scopes);
+    `https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${appUrl}&response_type=token` +
+    `&scope=${encodeURIComponent(scopes)}`;
   window.open(url, 'spotify', 'width=400, height=500');
 };
 
@@ -71,7 +65,7 @@ export const retrieveUserData = async () => {
     url: 'https://api.spotify.com/v1/me',
     method: 'get',
     headers: {
-      Authorization: 'Bearer ' + authenticated,
+      Authorization: `Bearer ${authenticated}`,
     },
   });
 
@@ -108,7 +102,7 @@ export const doPurgeDb = () => () => {
     .where('isSynced')
     .equals(0)
     .delete()
-    .then((count) => console.log('Purged ' + count + ' entries.'));
+    .then((count) => console.log(`Purged ${count} entries.`));
 };
 
 export const addToLoadQueue =
@@ -136,7 +130,7 @@ export const retrieveLibrary = (_, queue) => (dispatch) => {
     url,
     method: 'get',
     headers: {
-      Authorization: 'Bearer ' + authenticated,
+      Authorization: `Bearer ${authenticated}`,
     },
     raxConfig: { retry: 20 },
   })
@@ -144,7 +138,7 @@ export const retrieveLibrary = (_, queue) => (dispatch) => {
     .then((response) => {
       let objects = [];
       for (const item of response.items) {
-        const track = item.track;
+        const { track } = item || {};
         if (!track) {
           continue;
         }
@@ -211,7 +205,7 @@ export const retrievePlaylists =
       url,
       method: 'get',
       headers: {
-        Authorization: 'Bearer ' + authenticated,
+        Authorization: `Bearer ${authenticated}`,
       },
     })
       .then((response) => response.data)
@@ -251,7 +245,7 @@ export const choosePlayer = (id) => {
     url,
     method: 'put',
     headers: {
-      Authorization: 'Bearer ' + authenticated,
+      Authorization: `Bearer ${authenticated}`,
     },
     data: {
       device_ids: [id],
@@ -268,7 +262,7 @@ export const retrievePlayerInfo = async () => {
     url: 'https://api.spotify.com/v1/me/player/devices',
     method: 'get',
     headers: {
-      Authorization: 'Bearer ' + authenticated,
+      Authorization: `Bearer ${authenticated}`,
     },
   });
 
@@ -284,7 +278,7 @@ export const retrievePlayState = async () => {
     url: 'https://api.spotify.com/v1/me/player',
     method: 'get',
     headers: {
-      Authorization: 'Bearer ' + authenticated,
+      Authorization: `Bearer ${authenticated}`,
     },
   });
 
@@ -305,9 +299,8 @@ export const getConfigForUser =
     const store = `${userId}.${key}`;
     const value = window.localStorage.getItem(store);
 
-    switch (key) {
-      case 'purgeOnShuffle':
-        return value === 'true' ? true : value === 'false' ? false : undefined;
+    if (key === 'purgeOnShuffle') {
+      return value === 'true' ? true : value === 'false' ? false : undefined;
     }
 
     return window.localStorage.getItem(store) || defaultValue;

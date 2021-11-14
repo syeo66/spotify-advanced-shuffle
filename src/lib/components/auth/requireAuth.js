@@ -1,13 +1,13 @@
 import React, { memo, useEffect } from 'react';
-import ReactRouterPropTypes from 'react-router-prop-types';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router';
 
 import { getToken } from '../../actions';
 
-export default (ComposedComponent) => {
+const requireAuth = (ComposedComponent) => {
   const Authentication = (props) => {
-    const { history } = props;
     const { data: authenticated, isLoading } = useQuery('token', getToken);
+    const navigate = useNavigate();
 
     useEffect(() => {
       if (isLoading) {
@@ -15,9 +15,9 @@ export default (ComposedComponent) => {
       }
 
       if (!authenticated) {
-        history.push('/');
+        navigate('/');
       }
-    }, [authenticated, history, isLoading]);
+    }, [authenticated, navigate, isLoading]);
 
     if (authenticated) {
       return <ComposedComponent {...{ ...props, authenticated }} />;
@@ -26,9 +26,7 @@ export default (ComposedComponent) => {
     return null;
   };
 
-  Authentication.propTypes = {
-    history: ReactRouterPropTypes.history.isRequired,
-  };
-
   return memo(Authentication);
 };
+
+export default requireAuth;

@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React, { memo, useCallback, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { getConfigsForUser, retrieveUserData, setConfigForUser } from '../actions';
 import Fallback from './Fallback';
-import { retrieveUserData, setConfigForUser, getConfigsForUser } from '../actions';
 
 const Configuration = ({ active }) => {
   const queryClient = useQueryClient();

@@ -1,24 +1,25 @@
 import {
   ADD_TO_LOAD_QUEUE,
-  FETCH_USER,
-  LOAD_LIBRARY_PAGE,
-  FETCH_LIBRARY,
-  FIRST_PAGE,
-  PREVIOUS_PAGE,
-  NEXT_PAGE,
-  FETCH_PLAYLISTS,
   APPEND_PLAYLISTS,
-  FETCH_PLAYER,
-  FETCH_PLAY_STATE,
-  TOGGLE_CONFIG,
-  UPDATE_CONFIG,
-  DB_COUNT,
-  TOGGLE_PLAYLIST,
   CHECKED_PLAYLISTS,
+  DB_COUNT,
+  FETCH_LIBRARY,
+  FETCH_PLAY_STATE,
+  FETCH_PLAYER,
+  FETCH_PLAYLISTS,
+  FETCH_USER,
+  FIRST_PAGE,
+  LOAD_LIBRARY_PAGE,
+  NEXT_PAGE,
+  PREVIOUS_PAGE,
   PURGE_LOAD_QUEUE,
+  TOGGLE_CONFIG,
+  TOGGLE_PLAYLIST,
+  UPDATE_CONFIG,
 } from '../actions/types';
 
-export default (state = {}, action) => {
+// eslint-disable-next-line complexity
+const dataReducer = (state = {}, action) => {
   switch (action.type) {
     case FIRST_PAGE:
       return {
@@ -63,7 +64,7 @@ export default (state = {}, action) => {
     case TOGGLE_PLAYLIST: {
       const { id, userId } = action.payload;
       if (!state.checkedPlaylists) {
-        window.localStorage.setItem(userId + '.checkedPlaylists', JSON.stringify([id]));
+        window.localStorage.setItem(`${userId}.checkedPlaylists`, JSON.stringify([id]));
         return { ...state, checkedPlaylists: [id] };
       }
       const checked =
@@ -73,7 +74,7 @@ export default (state = {}, action) => {
             })
           : [...state.checkedPlaylists, id];
 
-      window.localStorage.setItem(userId + '.checkedPlaylists', JSON.stringify(checked));
+      window.localStorage.setItem(`${userId}.checkedPlaylists`, JSON.stringify(checked));
 
       return {
         ...state,
@@ -163,3 +164,5 @@ export default (state = {}, action) => {
       return state;
   }
 };
+
+export default dataReducer;

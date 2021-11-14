@@ -1,7 +1,7 @@
-import analyze from 'rgbaster';
 import Color from 'color';
 import React, { memo, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import analyze from 'rgbaster';
 
 import { retrievePlayState } from '../actions';
 
@@ -87,14 +87,11 @@ const Player = () => {
   const played = item && item.duration_ms ? Math.round((100 * data.progress_ms) / item.duration_ms) : 0;
   const image = item?.album.images[0]
     ? {
-        backgroundImage:
-          'linear-gradient(to right, rgba(255,255,255,.1) 50%, rgba(255,255,255,0)), url(' +
-          item.album.images[0].url +
-          ')',
+        backgroundImage: `linear-gradient(to right, rgba(255,255,255,.1) 50%, rgba(255,255,255,0)), url(${item.album.images[0].url})`,
         transition: 'background 5s linear',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        backgroundPosition: '50% ' + played + '%',
+        backgroundPosition: `50% ${played}%`,
       }
     : {};
   const playClass = data?.is_playing ? 'fas fa-pause' : 'fas fa-play';
@@ -110,8 +107,8 @@ const Player = () => {
           style={{
             color: secondaryColor,
             backgroundColor: primaryColor,
-            border: '1px solid ' + primaryColor,
-            boxShadow: '0 0 5px ' + secondaryColor,
+            border: `1px solid ${primaryColor}`,
+            boxShadow: `0 0 5px ${secondaryColor}`,
           }}
         >
           <i className={playClass} />
@@ -119,7 +116,7 @@ const Player = () => {
         <div className="" style={{ color: tertiaryColor }}>
           <small
             style={{
-              textShadow: '0 0 10px ' + primaryColor + ', 0 0 5px ' + primaryColor + ', 0 0 3px ' + primaryColor,
+              textShadow: `0 0 10px ${primaryColor}, 0 0 5px ${primaryColor}, 0 0 3px ${primaryColor}`,
             }}
           >
             <strong>{itemName}</strong>
@@ -131,15 +128,15 @@ const Player = () => {
       <div
         className="progress player__player-progress"
         style={{
-          border: '1px solid ' + primaryColor,
-          boxShadow: '0 0 5px ' + secondaryColor,
+          border: `1px solid ${primaryColor}`,
+          boxShadow: `0 0 5px ${secondaryColor}`,
           backgroundColor: secondaryColor,
         }}
       >
         <div
           className="progress-bar"
           role="progressbar"
-          style={{ width: played + '%', backgroundColor: primaryColor }}
+          style={{ width: `${played}%`, backgroundColor: primaryColor }}
           aria-valuenow={played}
           aria-valuemin="0"
           aria-valuemax={100}
