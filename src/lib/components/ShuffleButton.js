@@ -102,12 +102,12 @@ const ShuffleButton = (props) => {
             let tracks = chunk
               .map((number) => {
                 if (config.amountType === 'minutes' && minutes >= config.trackMinutes) {
-                  return;
+                  return null;
                 }
                 minutes += library[number].duration_ms / 60000;
                 return library[number].uri;
               })
-              .filter((el) => !!el);
+              .filter(Boolean);
             return addRandomTracks(playlist, tracks);
           });
 
@@ -153,11 +153,11 @@ const ShuffleButton = (props) => {
         };
         preparePurge(playlist.tracks.href).then((trackUris) => {
           const chunks = chunkArray(trackUris, 100);
-          const removeChunk = (chunks) => {
+          const removeChunk = (chnks) => {
             return new Promise((resolve) => {
-              const [chunk] = chunks.slice(0, 1) || [];
-              const chunksLeft = chunks.slice(1, chunks.length);
-              if (!chunks || chunks.length === 0) {
+              const [chunk] = chnks.slice(0, 1) || [];
+              const chunksLeft = chnks.slice(1, chnks.length);
+              if (!chnks || chnks.length === 0) {
                 resolve();
                 return;
               }

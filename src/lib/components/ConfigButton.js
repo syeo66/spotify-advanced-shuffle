@@ -13,9 +13,9 @@ const ConfigButton = ({ active, onClick }) => {
   );
 
   return (
-    <a href="#" className={classNames('btn btn-light', { active })} onClick={handleClick}>
+    <button className={classNames('btn btn-light', { active })} onClick={handleClick}>
       <i className="fas fa-cog" />
-    </a>
+    </button>
   );
 };
 

@@ -112,12 +112,12 @@ const Configuration = ({ active }) => {
             {type}
           </button>
           <div className="dropdown-menu">
-            <a className="dropdown-item" href="#" onClick={setAmountTypeConfigCount}>
+            <button className="dropdown-item" onClick={setAmountTypeConfigCount}>
               Trackcount
-            </a>
-            <a className="dropdown-item" href="#" onClick={setAmountTypeConfigMinutes}>
+            </button>
+            <button className="dropdown-item" onClick={setAmountTypeConfigMinutes}>
               Minutes
-            </a>
+            </button>
           </div>
         </div>
         <input

@@ -95,6 +95,7 @@ export const markDb = () => () => {
 export const doPurgeDb = () => () => {
   const token = getToken();
   if (!token) {
+    // eslint-disable-next-line no-console
     console.log('no purge');
     return;
   }
@@ -102,6 +103,7 @@ export const doPurgeDb = () => () => {
     .where('isSynced')
     .equals(0)
     .delete()
+    // eslint-disable-next-line no-console
     .then((count) => console.log(`Purged ${count} entries.`));
 };
 
