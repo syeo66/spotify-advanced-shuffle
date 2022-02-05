@@ -46,7 +46,7 @@ const App = (props) => {
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a className="navbar-brand mr-auto" href="#">
+        <a className="navbar-brand mr-auto" href="/">
           Spotify Advanced Shuffle
         </a>
         <Signout />
