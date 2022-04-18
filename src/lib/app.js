@@ -46,10 +46,12 @@ const App = (props) => {
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a className="navbar-brand mr-auto" href="/">
-          Spotify Advanced Shuffle
-        </a>
-        <Signout />
+        <div class="container-fluid">
+          <a className="navbar-brand mr-auto" href="/">
+            Spotify Advanced Shuffle
+          </a>
+          <Signout />
+        </div>
       </nav>
       {isDatabaseReady ? (
         <BrowserRouter>

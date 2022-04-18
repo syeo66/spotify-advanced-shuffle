@@ -68,7 +68,7 @@ const PlaylistList = (props) => {
     })
     .map((entry) => {
       return (
-        <li className="list-group-item d-flex justify-start align-items-center" key={entry.id}>
+        <li className="list-group-item d-flex justify-start align-items-center d-grid gap-2" key={entry.id}>
           <input
             type="checkbox"
             checked={
@@ -79,8 +79,8 @@ const PlaylistList = (props) => {
             onChange={handleClick}
             disabled={entry.name === getConfigForUser(user?.id)('randomListName')}
           />
-          <span className="ml-3 text-left">{entry.name}</span>
-          <span className="badge badge-primary badge-pill ml-auto">{entry.tracks.total}</span>
+          <span className="text-left">{entry.name}</span>
+          <span className="badge rounded-pill bg-primary ms-auto">{entry.tracks.total}</span>
         </li>
       );
     });

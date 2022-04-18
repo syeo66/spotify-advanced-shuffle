@@ -132,17 +132,18 @@ const Configuration = ({ active }) => {
         The playlist will be filled with {sentenceValue} {sentence}
       </small>
 
-      <div className="form-group form-check custom-switch">
+      <div className="form-group form-check form-switch">
         <input
           type="checkbox"
-          className="custom-control-input"
+          className="custom-control-input form-check-input"
           id="purgeOnShuffle"
           onChange={handlePurgeChange}
           checked={config.purgeOnShuffle}
         />
-        <label className="custom-control-label" htmlFor="purgeOnShuffle">
+        <label className="custom-control-label form-check-label" htmlFor="purgeOnShuffle">
           Purge playlist
         </label>
+        <br />
         <small id="purgeHelp" className="form-text text-muted">
           {purgeSentence}
         </small>
