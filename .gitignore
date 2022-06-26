@@ -12,3 +12,4 @@
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+.vscode/*.log
