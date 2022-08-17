@@ -55,7 +55,7 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^6.3.0",
-    "dotenv-webpack": "^7.0.3",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^7.0.0",
