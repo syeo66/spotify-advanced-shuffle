@@ -112,7 +112,8 @@ const ShuffleButton = (props) => {
           });
 
           await Promise.all(promises);
-          startPlayback(playlist);
+
+          setTimeout(() => startPlayback(playlist), 1000);
         });
       };
       addTracks([...Array(count)].map(() => random.float()));
