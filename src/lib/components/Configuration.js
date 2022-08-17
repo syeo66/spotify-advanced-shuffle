@@ -102,22 +102,24 @@ const Configuration = ({ active }) => {
     <div className="pt-2 mt-2 border-top border-bottom">
       <div className="input-group mb-1 ">
         <div className="input-group-prepend">
-          <button
-            className="btn btn-outline-secondary dropdown-toggle"
-            type="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            {type}
-          </button>
-          <div className="dropdown-menu">
-            <button className="dropdown-item" onClick={setAmountTypeConfigCount}>
-              Trackcount
+          <div className="dropdonw">
+            <button
+              className="btn btn-outline-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {type}
             </button>
-            <button className="dropdown-item" onClick={setAmountTypeConfigMinutes}>
-              Minutes
-            </button>
+            <div className="dropdown-menu">
+              <button className="dropdown-item" onClick={setAmountTypeConfigCount}>
+                Trackcount
+              </button>
+              <button className="dropdown-item" onClick={setAmountTypeConfigMinutes}>
+                Minutes
+              </button>
+            </div>
           </div>
         </div>
         <input
