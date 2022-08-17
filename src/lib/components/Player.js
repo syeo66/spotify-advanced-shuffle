@@ -25,8 +25,6 @@ const Player = () => {
     analyze(playStateItemUrl, {
       scale: 0.6,
     }).then((colors) => {
-      const primary = colors[0].color;
-
       const average = colors.reduce(
         (acc, v) => {
           const [r, g, b] = v.color.replace(/[^0-9,]/g, '').split(',');
@@ -40,19 +38,27 @@ const Player = () => {
         { r: 0, g: 0, b: 0, sum: 0 }
       );
 
-      setAverageColor(`rgb(${average.r / average.sum},${average.g / average.sum},${average.b / average.sum})`);
+      const avg = `rgb(${Math.floor(average.r / average.sum)},${Math.floor(average.g / average.sum)},${Math.floor(
+        average.b / average.sum
+      )})`;
+      setAverageColor(avg);
 
       const secondary = colors.reduce((acc, c) => {
         if (
           acc === null &&
           c.color !== primary.color &&
           Color(c.color).chroma() > 20 &&
-          Color(primary).contrast(Color(c.color)) > 4
+          Color(avg).contrast(Color(c.color)) > 4
         ) {
           return c;
         }
         return acc;
       }, null);
+
+      const primary =
+        colors.find((c) => {
+          return c.color !== secondary.color && Color(primary.color).contrast(Color(c.color)) > 4;
+        }) || colors[0];
 
       const tertiary = colors.reduce((acc, c) => {
         if (
@@ -60,7 +66,7 @@ const Player = () => {
           c.color !== primary.color &&
           Color('#fff').contrast(Color(c.color)) > 1 &&
           Color('#000').contrast(Color(c.color)) > 1 &&
-          Color(primary).contrast(Color(c.color)) > 10
+          Color(primary.color).contrast(Color(c.color)) > 10
         ) {
           return c;
         }
@@ -73,7 +79,7 @@ const Player = () => {
           ? secondary.color
           : tertiary
           ? tertiary.color
-          : Color(primary).isLight()
+          : Color(primary.color).isLight()
           ? 'rgb(30,30,30)'
           : 'rgb(240,240,240)'
       );
