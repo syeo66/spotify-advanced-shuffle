@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
@@ -36,11 +36,12 @@ const initialState = {
 
 const store = createStore(reducers, initialState, applyMiddleware(reduxThunk));
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
+root.render(
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 );

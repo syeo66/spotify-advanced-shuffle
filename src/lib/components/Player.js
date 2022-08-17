@@ -100,7 +100,7 @@ const Player = () => {
   const albumName = item?.album.name || '';
 
   return (
-    <div className="my-3 border shadow rounded p-3 player" style={image}>
+    <div className="my-3 border shadow rounded p-3 player flex-row" style={image}>
       <div className="d-flex flex-row mb-2">
         <button
           className="btn btn-primary mr-2 player__player-button"
