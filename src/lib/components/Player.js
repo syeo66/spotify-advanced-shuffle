@@ -43,21 +43,14 @@ const Player = () => {
       )})`;
       setAverageColor(avg);
 
-      const secondary = colors.reduce((acc, c) => {
-        if (
-          acc === null &&
-          c.color !== primary.color &&
-          Color(c.color).chroma() > 20 &&
-          Color(avg).contrast(Color(c.color)) > 4
-        ) {
-          return c;
-        }
-        return acc;
-      }, null);
+      const secondary =
+        colors.find((c) => {
+          return c.color !== avg && Color(c.color).chroma() > 25 && Color(avg).contrast(Color(c.color)) > 4;
+        }) || colors[0];
 
       const primary =
         colors.find((c) => {
-          return c.color !== secondary.color && Color(primary.color).contrast(Color(c.color)) > 4;
+          return c.color !== secondary.color && Color(secondary.color).contrast(Color(c.color)) > 4;
         }) || colors[0];
 
       const tertiary = colors.reduce((acc, c) => {
@@ -73,7 +66,7 @@ const Player = () => {
         return acc;
       }, null);
 
-      setPrimaryColor(colors[0].color);
+      setPrimaryColor(primary.color);
       setSecondaryColor(
         secondary
           ? secondary.color
