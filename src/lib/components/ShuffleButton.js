@@ -42,7 +42,7 @@ const ShuffleButton = (props) => {
         },
         data: {
           name: config.randomListName,
-          description: 'Spotify Advanced Shuffle Helper Playlist',
+          description: 'Advanced Shuffle for Spotify Helper Playlist',
           public: false,
         },
       })

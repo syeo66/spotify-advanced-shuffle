@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import * as rax from 'retry-axios';
+import styled from 'styled-components';
 
 import { doLogin, fetchUser, getToken } from './actions';
 import requireAuth from './components/auth/requireAuth';
@@ -47,9 +48,12 @@ const App = (props) => {
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
-          <a className="navbar-brand mr-auto" href="/">
-            Spotify Advanced Shuffle
-          </a>
+          <HeaderLink className="navbar-brand mr-auto" href="/">
+            <SpotifyIcon>
+              <i className="fab fa-spotify" />
+            </SpotifyIcon>
+            Advanced Shuffle for Spotify
+          </HeaderLink>
           <Signout />
         </div>
       </nav>
@@ -70,6 +74,16 @@ const App = (props) => {
     </div>
   );
 };
+
+const SpotifyIcon = styled.p`
+  display: inline-block;
+  font-size: 22px;
+  color: #1db954;
+  margin: 0 11px 0 0;
+`;
+const HeaderLink = styled.a`
+  white-space: nowrap;
+`;
 
 App.propTypes = {
   fetchUser: PropTypes.func.isRequired,
