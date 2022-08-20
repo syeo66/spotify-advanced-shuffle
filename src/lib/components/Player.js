@@ -135,6 +135,7 @@ const Player = () => {
             boxShadow: `0 0 5px ${secondaryColor}`,
             backgroundColor: secondaryColor,
           }}
+          role="progressbar"
         >
           <div
             className="progress-bar"
@@ -155,8 +156,9 @@ const PlayerContent = styled.div`
 `;
 
 const AlbumImage = styled.img`
-  width: 100px;
+  height: 100px;
   margin-right: 1rem;
+  width: 100px;
 `;
 
 export default memo(Player);
