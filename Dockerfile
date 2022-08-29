@@ -8,7 +8,7 @@ COPY package*.json .
 COPY yarn.lock .
 RUN yarn
 COPY . .
-RUN echo "REACT_APP_CLIENT_ID=$CLIENT_ID" > .env
+RUN echo "CLIENT_ID=$CLIENT_ID" > .env
 RUN make build
 
 FROM nginx as server
