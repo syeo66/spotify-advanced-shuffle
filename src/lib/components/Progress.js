@@ -8,7 +8,7 @@ const Progress = (props) => {
   return (
     <>
       {props.loadQueue.map((queue) => {
-        if (queue.isLoaded) {
+        if (queue.isLoaded || queue.current === 0) {
           return '';
         }
         return <ProgressBar key={queue.origUrl} current={queue.current} target={queue.size} />;

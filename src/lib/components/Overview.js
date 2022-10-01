@@ -1,11 +1,5 @@
-import PropTypes from 'prop-types';
-import React, { lazy, Suspense, useCallback, useEffect } from 'react';
-import { useQuery } from 'react-query';
-import { connect } from 'react-redux';
+import React, { lazy, Suspense } from 'react';
 
-import { addToLoadQueue, doPurgeDb, getToken, markDb, retrieveLibrary, retrieveUserData } from '../actions';
-import db from '../database';
-import { usePrevProps } from '../hooks';
 import Fallback from './Fallback';
 
 const PlayerInfo = lazy(() => import('./PlayerInfo'));
@@ -16,45 +10,7 @@ const Tools = lazy(() => import('./Tools'));
 const TrackList = lazy(() => import('./TrackList'));
 const UserInfo = lazy(() => import('./UserInfo'));
 
-const Overview = (props) => {
-  const prevProps = usePrevProps(props);
-  const authenticated = useQuery('token', getToken);
-
-  const { markDb, addToLoadQueue, loadQueue, retrieveLibrary, doPurgeDb } = props;
-  const { loadQueue: prevLoadQueue } = prevProps || { loadQueue: null };
-
-  const initDb = useCallback(() => {
-    markDb();
-    addToLoadQueue('https://api.spotify.com/v1/me/tracks?limit=50', true);
-  }, [markDb, addToLoadQueue]);
-
-  useEffect(() => {
-    if (db.isOpen) {
-      initDb();
-      return;
-    }
-    db.on('ready', initDb);
-  }, [initDb]);
-
-  useEffect(() => {
-    const isAuthenticated = authenticated;
-
-    if (isAuthenticated && prevLoadQueue) {
-      for (let index in loadQueue) {
-        const queue = loadQueue[index];
-        if ((prevLoadQueue && queue?.url === prevLoadQueue[index]?.url) || queue.isLoaded) {
-          continue;
-        }
-        retrieveLibrary(authenticated, queue);
-      }
-
-      const isAllLoaded = prevLoadQueue && loadQueue.reduce((acc, queue) => queue.isLoaded && acc, true);
-      if (isAllLoaded) {
-        doPurgeDb();
-      }
-    }
-  }, [authenticated, doPurgeDb, loadQueue, prevLoadQueue, retrieveLibrary]);
-
+const Overview = () => {
   return (
     <div>
       <div className="row py-2">
@@ -96,26 +52,6 @@ const Overview = (props) => {
   );
 };
 
-Overview.propTypes = {
-  markDb: PropTypes.func.isRequired,
-  addToLoadQueue: PropTypes.func.isRequired,
-  doPurgeDb: PropTypes.func.isRequired,
-  retrieveLibrary: PropTypes.func.isRequired,
-  retrieveUserData: PropTypes.func.isRequired,
-  loadQueue: PropTypes.array.isRequired,
-  authenticated: PropTypes.string,
-};
+Overview.propTypes = {};
 
-function mapStateToProps({ data }) {
-  return {
-    loadQueue: data.loadQueue ? data.loadQueue : [],
-  };
-}
-
-export default connect(mapStateToProps, {
-  addToLoadQueue,
-  markDb,
-  doPurgeDb,
-  retrieveLibrary,
-  retrieveUserData,
-})(Overview);
+export default Overview;

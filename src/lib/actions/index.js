@@ -73,6 +73,14 @@ export const retrieveUserData = async () => {
 };
 
 export const loadLibraryFromDb = (offset, limit) => (dispatch) => {
+  db.tracks.count().then((count) => {
+    dispatch({
+      type: DB_COUNT,
+      payload: {
+        dbSize: count,
+      },
+    });
+  });
   db.tracks
     .orderBy('name')
     .offset(offset)

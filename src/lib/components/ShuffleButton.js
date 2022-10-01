@@ -13,11 +13,7 @@ const ShuffleButton = (props) => {
   const { data: user, isLoading } = useQuery('userinfo', retrieveUserData);
   const { data: config, isLoading: isConfigLoading } = useQuery(['config', user?.id], getConfigsForUser(user?.id));
 
-  const enabled =
-    !isShuffleLoading &&
-    !isLoading &&
-    !isConfigLoading &&
-    ((props.librarySize && props.dbSize >= props.librarySize * 0.9) || props.isLoaded);
+  const enabled = !isShuffleLoading && !isLoading && !isConfigLoading && props.dbSize > 0;
   const icon = isShuffleLoading ? 'fas fa-compact-disc fa-spin' : 'fas fa-random';
 
   const chunkArray = (myArray, chunk_size) => {
@@ -204,7 +200,6 @@ ShuffleButton.propTypes = {
   dbSize: PropTypes.number.isRequired,
   existingPlaylist: PropTypes.object,
   isLoaded: PropTypes.bool.isRequired,
-  librarySize: PropTypes.number.isRequired,
 };
 
 const purgePlaylistTracks = (playlist, trackUris) => {
@@ -236,7 +231,6 @@ const purgePlaylistTracks = (playlist, trackUris) => {
 function mapStateToProps({ data }) {
   return {
     isLoaded: data.loadQueue.reduce((acc, queue) => acc && queue.isLoaded, true),
-    librarySize: data.loadQueue.reduce((acc, queue) => acc + queue.size, 0),
     dbSize: data.dbSize,
     existingPlaylist: data.playlists
       ? data.playlists.reduce((accumulator, currentValue) => {
