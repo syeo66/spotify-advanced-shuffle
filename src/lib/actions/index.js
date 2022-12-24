@@ -149,7 +149,7 @@ export const retrieveLibrary = (_, queue) => (dispatch) => {
       let objects = [];
       for (const item of response.items) {
         const { track } = item || {};
-        if (!track) {
+        if (!track?.artists?.[0]?.name) {
           continue;
         }
 
