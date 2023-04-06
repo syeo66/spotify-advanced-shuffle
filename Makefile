@@ -14,6 +14,11 @@ start: node_modules
 clean: node_modules
 	yarn clean-dist
 
+deploy: node_modules
+	git switch main && git push all && git push
+	git switch stage && git pull && git merge main && git push all && git push
+	git switch main
+
 distclean: clean
 	rm -rf node_modules
 
