@@ -41,7 +41,8 @@
     "redux-thunk": "^2.3.0",
     "retry-axios": "^3.0.0",
     "rgbaster": "^2.1.1",
-    "styled-components": "^5.3.5"
+    "styled-components": "^6.0.0",
+    "stylis": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
