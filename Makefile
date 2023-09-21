@@ -5,14 +5,14 @@ help:
 	@echo "make test      Run tests."
 
 build: node_modules src
-	yarn build
+	npm run build
 	touch src/js
 
 start: node_modules
-	yarn dev
+	npm run dev
 
 clean: node_modules
-	yarn clean-dist
+	npm run clean-dist
 
 deploy: node_modules
 	git switch main && git push all && git push
@@ -23,10 +23,10 @@ distclean: clean
 	rm -rf node_modules
 
 test: node_modules
-	yarn test
+	npm run test
 
 ######################################################################
 
-node_modules : yarn.lock package.json
-	yarn
+node_modules : package-lock.json package.json
+	npm install
 	touch node_modules
