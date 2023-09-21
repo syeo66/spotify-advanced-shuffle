@@ -1,4 +1,4 @@
-FROM node:16 as node
+FROM node:18 as node
 
 ARG CLIENT_ID=${CLIENT_ID}
 ENV CLIENT_ID=${CLIENT_ID}
