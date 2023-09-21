@@ -6,7 +6,7 @@ ENV CLIENT_ID=${CLIENT_ID}
 WORKDIR /usr/src/app
 COPY package.json .
 COPY package-lock.json .
-RUN npm install
+RUN npm ci
 COPY . .
 RUN echo "CLIENT_ID=$CLIENT_ID" > .env
 RUN make build
