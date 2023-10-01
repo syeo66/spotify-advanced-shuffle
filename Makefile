@@ -5,14 +5,14 @@ help:
 	@echo "make test      Run tests."
 
 build: node_modules src
-	npm run build
+	pnpm run build
 	touch src/js
 
 start: node_modules
-	npm run dev
+	pnpm run dev
 
 clean: node_modules
-	npm run clean-dist
+	pnpm run clean-dist
 
 deploy: node_modules
 	git switch main && git push all && git push
@@ -23,10 +23,10 @@ distclean: clean
 	rm -rf node_modules
 
 test: node_modules
-	npm run test
+	pnpm run test
 
 ######################################################################
 
-node_modules : package-lock.json package.json
-	npm install
+node_modules : pnpm-lock.yaml package.json
+	pnpm install
 	touch node_modules
