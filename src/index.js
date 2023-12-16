@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
-import reduxThunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 
 import App from './lib/app';
 import reducers from './lib/reducers';
@@ -34,7 +34,7 @@ const initialState = {
   },
 };
 
-const store = createStore(reducers, initialState, applyMiddleware(reduxThunk));
+const store = createStore(reducers, initialState, applyMiddleware(thunk));
 
 const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
